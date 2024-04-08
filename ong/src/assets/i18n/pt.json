@@ -1,0 +1,312 @@
+{
+  "HEADER": {
+    "SEARCH": "Buscar...",
+    "MEGA_MENU": "Menu Mega",
+    "NOTIFICATIONS": {
+      "TITLE": "Notificações",
+      "VIEW_ALL": "Ver Todas",
+      "LOAD_MORE": "Ver Mais..",
+      "FIRST": {
+        "TITLE": "Seu pedido foi feito",
+        "TEXT": "Se várias línguas se fundirem na gramática",
+        "TIME": "3 minutos atrás"
+      },
+      "SECOND": {
+        "TITLE": "James Lemire",
+        "TEXT": "Parecerá como inglês simplificado.",
+        "TIME": "1 hora atrás"
+      },
+      "THIRD": {
+        "TITLE": "Seu item foi enviado",
+        "TEXT": "Se várias línguas se fundirem na gramática",
+        "TIME": "3 minutos atrás"
+      },
+      "FOUR": {
+        "TITLE": "Salena Layfield",
+        "TEXT": "Como um amigo cético de Cambridge meu ocidental.",
+        "TIME": "1 hora atrás"
+      }
+    },
+    "SETTINGS": "Configurações",
+    "UI": {
+      "TITLE": "Componentes de UI",
+      "LIGHTBOX": "Caixa de Luz",
+      "RANGE_SLIDER": "Controle Deslizante de Faixa",
+      "SWEET_ALERT": "Alerta Doce",
+      "RATING": "Classificação",
+      "FORMS": "Formulários",
+      "TABLES": "Tabelas",
+      "CHARTS": "Gráficos"
+    },
+    "APPLICATIONS": {
+      "TITLE": "Aplicativos",
+      "ECOMMERCE": "Comércio Eletrônico",
+      "CALENDAR": "Calendário",
+      "EMAIL": "Email",
+      "PROJECTS": "Projetos",
+      "TASKS": "Tarefas",
+      "CONTACTS": "Contatos"
+    },
+    "EXTRA_PAGES": {
+      "TITLE": "Páginas Extras",
+      "LIGHT_SIDEBAR": "Barra Lateral Clara",
+      "COMPACT_SIDEBAR": "Barra Lateral Compacta",
+      "HORIZONTAL_LAYOUT": "Layout Horizontal",
+      "MAINTENANCE": "Manutenção",
+      "COMING_SOON": "Em Breve",
+      "TIMELINE": "Linha do Tempo",
+      "FAQ": "Perguntas Frequentes"
+    },
+    "LOGIN": {
+      "PROFILE": "Perfil",
+      "MY_WALLET": "Minha Carteira",
+      "SETTINGS": "Configurações",
+      "LOCK_SCREEN": "Tela de Bloqueio",
+      "LOGOUT": "Sair"
+    }
+  },
+  "MENUITEMS": {
+    "MENU": {
+      "TEXT": "Menu"
+    },
+    "DASHBOARDS": {
+      "TEXT": "Dashboard",
+      "BADGE": "0"
+    },
+    "LAYOUTS": {
+      "TEXT": "Layouts",
+      "LIST": {
+        "HORIZONTAL": "Horizontal",
+        "LIGHTSIDEBAR": "Barra Lateral Clara",
+        "COMPACTSIDEBAR": "Barra Lateral Compacta",
+        "ICONSIDEBAR": "Barra Lateral de Ícones",
+        "BOXED": "Layout em Caixa",
+        "COLOREDSIDEBAR": "Barra Lateral Colorida",
+        "VERTICAL": "Vertical",
+        "LIGHTTOPBAR": "Barra Superior Clara",
+        "COLOREDHEADER": "Cabeçalho Colorido",
+        "SCROLLABLE": "Rolável"
+      }
+    },
+    "APPS": {
+      "TEXT": "Aplicativos"
+    },
+    "CALENDAR": {
+      "TEXT": "Calendário"
+    },
+    "CHAT": {
+      "TEXT": "Chat",
+      "BADGE": "Novo"
+    },
+    "FILEMANAGER": {
+      "TEXT": "Gerenciador de Arquivos",
+      "BADGE": "Novo"
+    },
+    "ECOMMERCE": {
+      "TEXT": "Comércio Eletrônico",
+      "LIST": {
+        "PRODUCTS": "Produtos",
+        "PRODUCTDETAIL": "Detalhe do Produto",
+        "ORDERS": "Pedidos",
+        "CUSTOMERS": "Clientes",
+        "CART": "Carrinho",
+        "CHECKOUT": "Finalizar Compra",
+        "SHOPS": "Lojas",
+        "ADDPRODUCT": "Adicionar Produto"
+      }
+    },
+    "CRYPTO": {
+      "TEXT": "Criptomoeda",
+      "LIST": {
+        "WALLET": "Carteira",
+        "BUY/SELL": "Comprar/Vender",
+        "EXCHANGE": "Troca",
+        "LENDING": "Empréstimo",
+        "ORDERS": "Pedidos",
+        "KYCAPPLICATION": "Aplicação KYC",
+        "ICOLANDING": "Pousada ICO"
+      }
+    },
+    "EMAIL": {
+      "TEXT": "Email",
+      "LIST": {
+        "INBOX": "Caixa de Entrada",
+        "READEMAIL": "Email Lido",
+        "TEMPLATE": {
+          "BADGE": "Novo",
+          "TEXT": "Modelo",
+          "LIST": {
+            "BASIC": "Ação Básica",
+            "ALERT": "Email de Alerta",
+            "BILLING": "Email de Cobrança"
+          }
+        }
+      }
+    },
+    "INVOICES": {
+      "TEXT": "Faturas",
+      "LIST": {
+        "INVOICELIST": "Lista de Faturas",
+        "INVOICEDETAIL": "Detalhe da Fatura"
+      }
+    },
+    "PROJECTS": {
+      "TEXT": "Projetos",
+      "LIST": {
+        "GRID": "Grade de Projetos",
+        "PROJECTLIST": "Lista de Projetos",
+        "OVERVIEW": "Visão Geral do Projeto",
+        "CREATE": "Criar Novo"
+      }
+    },
+    "TASKS": {
+      "TEXT": "Tarefas",
+      "LIST": {
+        "TASKLIST": "Lista de Tarefas",
+        "KANBAN": "Quadro Kanban",
+        "CREATETASK": "Criar Tarefa"
+      }
+    },
+    "CONTACTS": {
+      "TEXT": "Contatos",
+      "LIST": {
+        "USERGRID": "Grade de Usuários",
+        "USERLIST": "Lista de Usuários",
+        "PROFILE": "Perfil"
+      }
+    },
+    "BLOG": {
+      "TEXT": "Blog",
+      "BADGE": "Novo",
+      "LIST": {
+        "BLOGLIST": "Lista de Blog",
+        "BLOGGRID": "Grade de Blog",
+        "DETAIL": "Detalhes do Blog"
+      }
+    },
+    "JOBS": {
+      "TEXT": "Empregos",
+      "BADGE": "Novo",
+      "LIST": {
+        "JOBLIST": "Lista de Empregos",
+        "JOBGRID": "Grade de Empregos",
+        "APPLYJOB": "Aplicar Emprego",
+        "JOBDETAILS": "Detalhes do Emprego",
+        "JOBCATEGORIES": "Categorias de Empregos",
+        "CANDIDATE": {
+          "TEXT": "Candidato",
+          "LIST": {
+            "LIST": "Lista",
+            "OVERVIEW": "Visão Geral"
+          }
+        }
+      }
+    },
+    "PAGES": {
+      "TEXT": "Páginas"
+    },
+    "AUTHENTICATION": {
+      "TEXT": "Autenticação",
+      "BADGE": "Novo",
+      "LIST": {
+        "LOGIN": "Login",
+        "LOGIN2": "Login 2",
+        "REGISTER": "Registrar",
+        "REGISTER2": "Registrar 2",
+        "RECOVERPWD": "Recuperar Senha",
+        "RECOVERPWD2": "Recuperar Senha 2",
+        "LOCKSCREEN": "Tela de Bloqueio",
+        "LOCKSCREEN2": "Tela de Bloqueio 2",
+        "CONFIRMMAIL": "Confirmar Email",
+        "CONFIRMMAIL2": "Confirmar Email 2",
+        "EMAILVERIFICATION": "Verificação de Email",
+        "EMAILVERIFICATION2": "Verificação de Email 2",
+        "TWOSTEPVERIFICATION": "Verificação em Duas Etapas",
+        "TWOSTEPVERIFICATION2": "Verificação em Duas Etapas 2"
+      }
+    },
+    "UTILITY": {
+      "TEXT": "Utilitário",
+      "LIST": {
+        "STARTER": "Página Inicial",
+        "MAINTENANCE": "Manutenção",
+        "TIMELINE": "Linha do Tempo",
+        "FAQS": "Perguntas Frequentes",
+        "PRICING": "Preços",
+        "ERROR404": "Erro 404",
+        "ERROR500": "Erro 500"
+      }
+    },
+    "COMPONENTS": {
+      "TEXT": "Componentes"
+    },
+    "UIELEMENTS": {
+      "TEXT": "Doações",
+      "LIST": {
+        "ALERTS": "Gerenciar",
+        "HISTORICO": "Histórico"
+      }
+    },
+    "FORMS": {
+      "TEXT": "Formulários",
+      "BADGE": "09",
+      "LIST": {
+        "ELEMENTS": "Elementos de Formulário",
+        "VALIDATION": "Validação de Formulário",
+        "ADVANCED": "Formulário Avançado",
+        "EDITOR": "Editor de Formulário",
+        "FILEUPLOAD": "Envio de Arquivo de Formulário",
+        "REPEATER": "Repetidor de Formulário",
+        "WIZARD": "Assistente de Formulário",
+        "MASK": "Máscara de Formulário",
+        "LAYOUTS": "Layouts de Formulário"
+      }
+    },
+    "TABLES": {
+      "TEXT": "Tabelas",
+      "LIST": {
+        "BASIC": "Tabelas Básicas",
+        "DataTables": "Tabelas de Dados",
+        "EditTableTables": "Tabela Editável"
+      }
+    },
+    "CHARTS": {
+      "TEXT": "Gráficos",
+      "LIST": {
+        "APEX": "Gráfico Apex",
+        "CHARTJS": "Gráfico Chartjs",
+        "CHARTIST": "Gráfico Chartist",
+        "ECHART": "Gráfico E"
+      }
+    },
+    "ICONS": {
+      "TEXT": "Ícones",
+      "LIST": {
+        "BOXICONS": "Boxicons",
+        "MATERIALDESIGN": "Design Material",
+        "DRIPICONS": "Dripicons",
+        "FONTAWESOME": "Font Awesome"
+      }
+    },
+    "MAPS": {
+      "TEXT": "Mapas",
+      "LIST": {
+        "GOOGLEMAP": "Mapas do Google",
+        "LEAFLETMAP": "Mapas de Folhetos"
+      }
+    },
+    "MULTILEVEL": {
+      "TEXT": "Multi Nível",
+      "LIST": {
+        "LEVEL1": {
+          "1": "Nível 1.1",
+          "2": "Nível 1.2",
+          "LEVEL2": {
+            "1": "Nível 2.1",
+            "2": "Nível 2.2"
+          }
+        }
+      }
+    }
+  }
+}
