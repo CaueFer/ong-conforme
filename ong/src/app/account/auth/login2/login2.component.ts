@@ -1,41 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
 
-import { AuthenticationService } from '../../../core/services/auth.service';
-import { AuthfakeauthenticationService } from '../../../core/services/authfake.service';
+import { AuthenticationService } from "../../../core/services/auth.service";
+import { AuthfakeauthenticationService } from "../../../core/services/authfake.service";
 
-import { OwlOptions } from 'ngx-owl-carousel-o';
-import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { OwlOptions } from "ngx-owl-carousel-o";
+import { ActivatedRoute, Router } from "@angular/router";
+import { first } from "rxjs/operators";
 
-import { environment } from '../../../../environments/environment';
+import { environment } from "../../../../environments/environment";
 
 @Component({
-  selector: 'app-login2',
-  templateUrl: './login2.component.html',
-  styleUrls: ['./login2.component.scss']
+  selector: "app-login2",
+  templateUrl: "./login2.component.html",
+  styleUrls: ["./login2.component.scss"],
 })
 /**
  * Login-2 component
  */
 export class Login2Component implements OnInit {
-
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService) { }
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private authFackservice: AuthfakeauthenticationService
+  ) {}
   loginForm: UntypedFormGroup;
-  submitted:boolean = false;
-  error:string = '';
+  submitted: boolean = false;
+  error: string = "";
   returnUrl: string;
+  showPassword: boolean = false;
+  contLoged: boolean = false;
 
   // set the currenr year
   year: number = new Date().getFullYear();
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      email: ['admin@themesbrand.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
+      email: ["admin@ongconforme.com", [Validators.required, Validators.email]],
+      password: ["admin", [Validators.required]],
     });
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
 
   carouselOption: OwlOptions = {
@@ -46,13 +56,15 @@ export class Login2Component implements OnInit {
     dots: true,
     responsive: {
       680: {
-        items: 1
+        items: 1,
       },
-    }
-  }
+    },
+  };
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   /**
    * Form submit
@@ -64,24 +76,37 @@ export class Login2Component implements OnInit {
     if (this.loginForm.invalid) {
       return;
     } else {
-      if (environment.defaultauth === 'firebase') {
-        this.authenticationService.login(this.f.email.value, this.f.password.value).then((res: any) => {
-          this.router.navigate(['/dashboard']);
-        })
-          .catch(error => {
-            this.error = error ? error : '';
+      if (environment.defaultauth === "firebase") {
+        this.authenticationService
+          .login(this.f.email.value, this.f.password.value)
+          .then((res: any) => {
+            this.router.navigate(["/dashboard"]);
+          })
+          .catch((error) => {
+            this.error = error ? error : "";
           });
       } else {
-        this.authFackservice.login(this.f.email.value, this.f.password.value)
+        this.authFackservice
+          .login(this.f.email.value, this.f.password.value, this.contLoged)
           .pipe(first())
-          .subscribe(
-            data => {
-              this.router.navigate(['/dashboard']);
+          .subscribe({
+            next: (data: any) => {
+              this.router.navigate(["/dashboard"]);
             },
-            error => {
-              this.error = error ? error : '';
-            });
+            error: (error: any) => {
+              this.error = error ? error : "";
+            },
+          });
       }
     }
+  }
+
+  togglePass(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleLoged(){
+    this.contLoged = !this.contLoged;
+    console.log(this.contLoged);
   }
 }

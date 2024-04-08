@@ -29,6 +29,7 @@ export class HorizontaltopbarComponent implements OnInit, AfterViewInit {
   flagvalue;
   countryName;
   valueset;
+  user: any;
 
   menuItems = [];
 
@@ -66,13 +67,16 @@ export class HorizontaltopbarComponent implements OnInit, AfterViewInit {
     } else {
       this.flagvalue = val.map(element => element.flag);
     }
+
+    this.user = this.authFackservice.currentUserValue;
+    console.log(this.user);
   }
 
   setLanguage(text: string, lang: string, flag: string) {
     this.countryName = text;
     this.flagvalue = flag;
     this.cookieValue = lang;
-    this.languageService.setLanguage(lang);
+    this.languageService.setLanguage('pt');
   }
 
   /**
@@ -214,7 +218,7 @@ export class HorizontaltopbarComponent implements OnInit, AfterViewInit {
    * on settings button clicked from topbar
    */
   onSettingsButtonClicked() {
-    document.body.classList.toggle('right-bar-enabled');
+    //document.body.classList.toggle('right-bar-enabled');
   }
 
   /**

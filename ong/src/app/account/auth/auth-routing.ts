@@ -11,7 +11,7 @@ import { Recoverpwd2Component } from './recoverpwd2/recoverpwd2.component';
 
 const routes: Routes = [
     {
-        path: 'login',
+        path: 'login-2',
         component: LoginComponent
     },
     {
@@ -31,7 +31,7 @@ const routes: Routes = [
         component: Recoverpwd2Component
     },
     {
-        path: 'login-2',
+        path: 'login',
         component: Login2Component
     }
 ];
