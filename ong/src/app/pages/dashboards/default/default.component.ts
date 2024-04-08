@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { emailSentBarChart, monthlyEarningChart } from './data';
 import { ChartType } from "./dashboard.model";
+import { DatabaseService } from "src/app/core/services/database.service";
 
 @Component({
   selector: "app-default",
@@ -30,7 +31,7 @@ export class DefaultComponent implements OnInit {
 
   isActive: string;
 
-  constructor() {}
+  constructor(private _databaseService: DatabaseService) {}
 
   ngOnInit() {
     this.date = new Date();
@@ -41,6 +42,12 @@ export class DefaultComponent implements OnInit {
     this.actualDay = this.date.getDate();
 
     this.fetchData();
+
+    // const values = [
+    //   ["0", "ATT", "ATT", "ATUALIZADO"]
+    // ];
+    // this._databaseService.updateData(values);
+    //this._databaseService.deleteData("6");
   }
 
   ngAfterViewInit() {}
