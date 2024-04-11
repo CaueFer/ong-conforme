@@ -107,6 +107,5 @@ export class Login2Component implements OnInit {
 
   toggleLoged(){
     this.contLoged = !this.contLoged;
-    console.log(this.contLoged);
   }
 }

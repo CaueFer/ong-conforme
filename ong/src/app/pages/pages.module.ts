@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -23,9 +23,17 @@ import { PagesRoutingModule } from './pages-routing.module';
 
 import { DashboardsModule } from './dashboards/dashboards.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
+import { HistoricoComponent } from './doacoes/historico/historico.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 @NgModule({
-  declarations: [],
+  declarations: [
+    GerenciadorComponent,
+    HistoricoComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -44,7 +52,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
     CollapseModule.forRoot(),
     SimplebarAngularModule,
     LightboxModule,
-    PickerModule
+    PickerModule,
+    BsDatepickerModule.forRoot(),
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
+  providers: [
+    DatePipe,
+    provideNgxMask(),
+  ]
 })
 export class PagesModule { }

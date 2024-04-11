@@ -2,7 +2,7 @@ const { google } = require("googleapis");
 
 async function getAuthSheets() {
     const auth = new google.auth.GoogleAuth({
-      keyFile: "keygoogle.json",
+      keyFile: "./keygoogle.json",
       scopes: "https://www.googleapis.com/auth/spreadsheets",
     });
   

@@ -267,7 +267,7 @@
               </a>
 
               <a *ngIf="item.subItems" class="nav-link dropdown-toggle arrow-none " (click)="onMenuClick($event)"
-                href="javascript: void(0);" id="topnav-components" role="button">
+                href="javascript: void(0);" id="topnav-components" [routerLink]="item.link" role="button">
                 <i class="bx {{item.icon}} me-1"></i>
                 {{item.label| translate }}
                 <div class="arrow-down"></div>

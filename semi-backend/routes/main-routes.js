@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getDatabase, getData, addData, updateValue, deleteValue } = require("../controllers.js");
+const { getDatabase, getData, addData, updateValue, deleteValue } = require("../middleware/controllers.js");
 
 router.get("/getDatabase", getDatabase);
 router.get("/getData", getData);

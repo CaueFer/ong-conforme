@@ -2,16 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DefaultComponent } from './dashboards/default/default.component';
+import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
+import { HistoricoComponent } from './doacoes/historico/historico.component';
 
 const routes: Routes = [
-  // { path: '', redirectTo: 'dashboard' },
-  {
-    path: "",
-    component: DefaultComponent
-  },
   { path: 'dashboard', component: DefaultComponent },
-  { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },
-];
+  { path: 'gerenciador', component: GerenciadorComponent },
+  { path: 'historico', component: HistoricoComponent },
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
