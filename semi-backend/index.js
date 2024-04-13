@@ -1,22 +1,48 @@
+const express = require("express");
+const cors = require("cors");
+const req = require("express/lib/request");
 const { google } = require("googleapis");
-const { getAuthSheets } = require("./database-connection.js");
 
-async function getDatabase(req, res) {
-  try {
-    const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
+const app = express();
 
-    const metadata = await googleSheets.spreadsheets.get({
-      auth,
-      spreadsheetId,
-    });
+app.use(express.json());
+app.use(cors());
 
-    res.send(metadata.data);
-  } catch (error) {
-    res.status(500).json("Erro ao obter o banco de dados");
-  }
+async function getAuthSheets() {
+  const auth = new google.auth.GoogleAuth({
+    keyFile: "credentials.json",
+    scopes: "https://www.googleapis.com/auth/spreadsheets",
+  });
+
+  const client = await auth.getClient();
+
+  const googleSheets = google.sheets({
+    version: "v4",
+    auth: client,
+  });
+
+  const spreadsheetId = "1gEnhslT8NEzlZwF6FPc5VvK6KxEhh2dMW_tl0jxF3X4";
+
+  return {
+    auth,
+    client,
+    googleSheets,
+    spreadsheetId,
+  };
 }
 
-async function getData(req, res) {
+app.get("/getData", async (req, res) => {
+  const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
+
+  const metadata = await googleSheets.spreadsheets.get({
+    auth,
+    spreadsheetId,
+  });
+
+  res.send(metadata.data);
+});
+
+app.get("/getRows", async (req, res) => {
   try {
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
@@ -32,9 +58,9 @@ async function getData(req, res) {
   } catch (error) {
     res.status(500).json("Erro ao obter os dados");
   }
-}
+});
 
-async function addData(req, res) {
+app.post("/addRow", async (req, res) => {
   try {
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
     const values = req.body;
@@ -53,9 +79,9 @@ async function addData(req, res) {
   } catch (error) {
     res.status(500).json("Erro ao adicionar valor");
   }
-}
+});
 
-async function updateValue(req, res) {
+app.post("/updateValue", async (req, res) => {
   try {
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
@@ -75,9 +101,9 @@ async function updateValue(req, res) {
   } catch (error) {
     res.status(500).json("Erro ao atualizar valor");
   }
-}
+});
 
-async function deleteValue(req, res) {
+app.post("/deleteValue", async (req,res) => {
   try {
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
@@ -94,6 +120,7 @@ async function deleteValue(req, res) {
   } catch (error) {
     res.status(500).json("Erro ao deletar valor");
   }
-}
+})
 
-module.exports = { getDatabase, getData, addData, updateValue, deleteValue };
+const PORT = process.env.PORT || 5050;
+app.listen(PORT, () => console.log(`Server on port ${PORT}`));

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, catchError, map, of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -10,13 +10,24 @@ export class DatabaseService {
 
   url: string = "http://localhost:5050";
 
-  async getData() {
-    this.http.get<any>(`${this.url}/getData`).subscribe({
-      next: (data) => {
-        console.log(data.data.values);
-      },
-      error: (err) => {},
-    });
+  getData(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getData`).pipe(
+      map(data => data.sheets[0].properties), 
+      catchError(error => {
+        console.error('Erro ao obter os dados:', error);
+        return of(null); 
+      })
+    );
+  }
+
+  getRows(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getRows`).pipe(
+      map(data => data), 
+      catchError(error => {
+        console.error('Erro ao obter os dados:', error);
+        return of(null); 
+      })
+    );
   }
 
   async addData(newValue: string[][]) {
