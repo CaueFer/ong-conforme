@@ -91,7 +91,7 @@ export class Login2Component implements OnInit {
           .pipe(first())
           .subscribe({
             next: (data: any) => {
-              this.router.navigate(["/dashboard"]);
+              this.router.navigate(["/"]);
             },
             error: (error: any) => {
               this.error = error ? error : "";

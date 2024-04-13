@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DefaultComponent },
   { path: 'gerenciador', component: GerenciadorComponent },
   { path: 'historico', component: HistoricoComponent },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ]
 
 @NgModule({
