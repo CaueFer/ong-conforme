@@ -15,6 +15,7 @@ import { LightboxModule } from 'ngx-lightbox';
 
 import { WidgetModule } from '../shared/widget/widget.module';
 import { UIModule } from '../shared/ui/ui.module';
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 // Emoji Picker
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
@@ -22,7 +23,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { PagesRoutingModule } from './pages-routing.module';
 
 import { DashboardsModule } from './dashboards/dashboards.module';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
 import { HistoricoComponent } from './doacoes/historico/historico.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -56,6 +57,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     BsDatepickerModule.forRoot(),
     NgxMaskDirective,
     NgxMaskPipe,
+    UiSwitchModule,
   ],
   providers: [
     DatePipe,

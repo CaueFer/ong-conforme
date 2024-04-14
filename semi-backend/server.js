@@ -63,7 +63,19 @@ app.get("/getRows", async (req, res) => {
 app.post("/addRow", async (req, res) => {
   try {
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
-    const values = req.body;
+    const values = req.body.values;
+
+    const getRows = await googleSheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: "default",
+      valueRenderOption: "UNFORMATTED_VALUE",
+      dateTimeRenderOption: "FORMATTED_STRING",
+    });
+
+    const lengthRows = getRows.data.values.length;
+
+    values[0].splice(0, 0, `#OC${lengthRows}`);
 
     const response = await googleSheets.spreadsheets.values.append({
       auth,
@@ -75,7 +87,7 @@ app.post("/addRow", async (req, res) => {
       },
     });
 
-    res.status(201).json("Valor adicionado");
+    res.status(201).json("Valor adicionado com sucesso");
   } catch (error) {
     res.status(500).json("Erro ao adicionar valor");
   }

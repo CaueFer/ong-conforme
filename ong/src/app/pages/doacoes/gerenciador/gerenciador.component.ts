@@ -20,6 +20,7 @@ import { DoacaoModel } from "./doacao.model";
 import { NgbdOrdersSortableHeader } from "./orders-sortable.directive";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database.service";
+import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
 
 @Component({
   selector: "app-gerenciador",
@@ -44,6 +45,10 @@ export class GerenciadorComponent implements OnInit {
   total: Observable<number>;
 
   isInput: boolean = true;
+  addInitialMov: boolean = false;
+  selectedCategoria: string = "";
+
+  itemMovs: Object = {};
 
   @ViewChildren(NgbdOrdersSortableHeader)
   headers!: QueryList<NgbdOrdersSortableHeader>;
@@ -59,41 +64,10 @@ export class GerenciadorComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
     private datePipe: DatePipe,
-    private _databaseService: DatabaseService,
-  ) {}
-
-  ngOnInit() {
-    //this.doacoes = Orders;
-
-    this._databaseService.getRows().subscribe({
-      next: (data) => {
-        const result = [];
-        const rows = data.values;
-        //console.log('Dados recebidos:', rows);
-
-        rows.forEach((item, index)=>{
-          const doacao: DoacaoModel = {
-            id: "#SK2541",
-            categoria: "Objeto",
-            itemName: item[0]? item[0]: 'sem nome',
-            dataCreated: "20/20/2020",
-            qntd: item[1],
-            index: index,
-          };
-          this.doacoes.push(doacao);
-        })
-
-        console.log(this.doacoes)
-      },
-      error: (err) => {},
-    });
-
-
-    /**
-     * Form Validation
-     */
+    private _databaseService: DatabaseService
+  ) {
     this.doacaoForm = this.formBuilder.group({
-      id: "#VZ2101",
+      id: [""],
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
@@ -102,32 +76,56 @@ export class GerenciadorComponent implements OnInit {
     });
 
     this.addNewItemForm = this.formBuilder.group({
-      id: "#VZ2101",
+      id: [""],
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
-      qntd: ["", [Validators.required]],
+      qntd: [""],
       categoria: ["", [Validators.required]],
+      personName: [""],
     });
 
     this.attItemForm = this.formBuilder.group({
-      id: "#VZ2101",
+      id: [""],
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
       qntd: ["", [Validators.required]],
       categoria: ["", [Validators.required]],
+      personName: ["", [Validators.required]],
     });
 
     this.movimentacaoForm = this.formBuilder.group({
-      id: "#VZ2101",
-      ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
       qntd: ["", [Validators.required]],
       categoria: ["", [Validators.required]],
+      personName: ["", [Validators.required]],
     });
+  }
 
+  ngOnInit() {
+    this._databaseService.getRows().subscribe({
+      next: (data) => {
+        const rows = data.values;
+        //console.log('Dados recebidos:', rows);
+        rows.forEach((item, index)=>{
+          if(index === 0) return;
+          const doacao: DoacaoModel = {
+            id: item[0]? item[0]: 'n/a',
+            categoria: item[1]? item[1]: 'n/a',
+            itemName: item[2]? item[2]: 'sem nome',
+            dataCreated: item[3]? item[3]: 'n/a',
+            qntd: item[4] !== null? item[4]: 'n/a',
+            movimentacao: item[5] !== 'n/a' ? JSON.parse(item[5]): 'n/a',
+            index: index,
+          };
+          this.doacoes.push(doacao);
+        })
+        console.log(this.doacoes)
+      },
+      error: (err) => {},
+    });
     /**
      * fetches data
      */
@@ -182,47 +180,72 @@ export class GerenciadorComponent implements OnInit {
   }
 
   /**
-   * Save user
+   * add Doacao
    */
-  saveUser() {
-    if (this.doacaoForm.valid) {
-      if (this.doacaoForm.get("ids")?.value) {
-        this.doacaoForm.controls["date"].setValue(
-          this.datePipe.transform(
-            this.doacaoForm.get("date")?.value,
-            "YYYY-mm-dd"
-          )
-        );
-        //this.service.products = Orders.map((data: { id: any; }) => data.id === this.ordersForm.get('ids')?.value ? { ...data, ...this.ordersForm.value } : data)
-        //this.doacoes = this.service.products
-        //  = this.doacoes
-      } else {
-        const itemName = this.doacaoForm.get("itemName")?.value;
-        const dataCreated = this.datePipe.transform(
-          this.doacaoForm.get("data")?.value,
-          "YYYY-mm-dd"
-        );
-        const qntd = this.doacaoForm.get("qntd")?.value;
-        const categoria = this.doacaoForm.get("categoria")?.value;
-        const index = 100;
-        // Orders.push({
-        //   id: this.doacoes.length + 1,
-        //   categoria,
-        //   itemName,
-        //   dataCreated,
-        //   qntd,
-        //   index,
-        // });
-      }
-    }
-    this.showModal?.hide();
-    setTimeout(() => {
-      this.doacaoForm.reset();
-    }, 0);
-    this.doacaoForm.reset();
+  submitAddItem() {
     this.submitted = true;
-  }
 
+    if (this.addInitialMov) {
+      this.addNewItemForm.get("qntd").setValidators(Validators.required);
+      this.addNewItemForm.get("personName").setValidators(Validators.required);
+    } else {
+      this.addNewItemForm.get("qntd").clearValidators();
+      this.addNewItemForm.get("personName").clearValidators();
+    }
+
+    this.addNewItemForm.get("qntd").updateValueAndValidity();
+    this.addNewItemForm.get("personName").updateValueAndValidity();
+
+    if (this.addNewItemForm.valid) {
+      const qntd = this.addNewItemForm.get("qntd").value || "0";
+      if (qntd <= 0 && this.addInitialMov) {
+        this.addNewItemForm.get("qntd").setErrors({ nulo: true });
+        return;
+      }
+
+      const itemName = this.addNewItemForm.get("itemName").value || "n/a";
+      const data = this.datePipe.transform(
+        this.addNewItemForm.get("data").value || "n/a",
+        "dd-MM-YYYY"
+      );
+      const doador = this.addNewItemForm.get("personName").value || "n/a";
+      const categoria = this.addNewItemForm.get("categoria").value || "n/a";
+
+      let movJson;
+      if (this.addInitialMov) {
+        const movimentacao = {
+          movs: [
+            { 
+              tipo: "entrada",
+              qntd: qntd,
+              person: doador
+            }
+          ],
+        };
+        movJson = JSON.stringify(movimentacao);
+      }
+      else movJson = 'n/a';
+
+      let newItem = {
+        categoria,
+        itemName,
+        data,
+        qntd,
+        movJson
+      };
+      this._databaseService.addData(newItem);
+
+      this.showModal?.hide();
+      this.addNewItemForm.reset();
+      this.submitted = false;
+
+      return;
+    }
+
+    setTimeout(() => {
+      this.submitted = false;
+    }, 5000);
+  }
 
   /**
    * MOVIMENTACAO CONFIGS
@@ -230,10 +253,30 @@ export class GerenciadorComponent implements OnInit {
   movModal(id: any) {
     this.movimentacaoModal?.show();
 
-    //var listData = this.doacoes[id];
-    //this.movimentacaoForm.controls["itemName"].setValue(listData.itemName);
-  };
-  submitMov() {};
+    var listData = this.doacoes[id];
+    this.movimentacaoForm.controls["itemName"].setValue(listData.itemName);
+
+    const movs = listData.movimentacao.movs;
+    if(movs){
+      this.itemMovs = movs;
+
+      
+    }
+
+    // const movimentacao = {
+    //   movs: [
+    //     { 
+    //       tipo: "entrada",
+    //       qntd: qntd,
+    //       person: doador
+    //     }
+    //   ],
+    // };
+    // movJson = JSON.stringify(movimentacao);
+  }
+  submitMov() {
+
+  }
 
   /**
    * EDIT CONFIGS
@@ -255,5 +298,19 @@ export class GerenciadorComponent implements OnInit {
   toggleInput(value: string) {
     if (value === "entrada") this.isInput = true;
     else this.isInput = false;
+  }
+
+  toggleCheckbox($event: any) {
+    this.addInitialMov = $event;
+  }
+
+  selectCategoria($event) {
+    this.selectedCategoria = this.removeAccents($event.innerText).toLowerCase();
+
+    this.addNewItemForm.get("categoria").setValue(this.selectedCategoria);
+  }
+
+  removeAccents(value: string) {
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 }

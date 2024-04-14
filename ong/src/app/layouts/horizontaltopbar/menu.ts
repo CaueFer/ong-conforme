@@ -5,7 +5,7 @@ export const MENU: MenuItem[] = [
         id: 1,
         label: 'MENUITEMS.DASHBOARDS.TEXT',
         icon: 'bx-home-circle',
-        link: '/dashboard',
+        link: '/',
     },
     {
         id: 7,
@@ -15,13 +15,13 @@ export const MENU: MenuItem[] = [
             {
                 id: 8,
                 label: 'MENUITEMS.UIELEMENTS.LIST.ALERTS',
-                link: '/gerenciador',
+                link: '/ong-conforme/gerenciador',
                 parentId: 7
             },
             {
                 id: 9,
                 label: 'MENUITEMS.UIELEMENTS.LIST.HISTORICO',
-                link: '/historico',
+                link: '/ong-conforme/historico',
                 parentId: 7
             }
         ]

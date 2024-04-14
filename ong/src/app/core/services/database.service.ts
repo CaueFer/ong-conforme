@@ -12,28 +12,35 @@ export class DatabaseService {
 
   getData(): Observable<any> {
     return this.http.get<any>(`${this.url}/getData`).pipe(
-      map(data => data.sheets[0].properties), 
-      catchError(error => {
-        console.error('Erro ao obter os dados:', error);
-        return of(null); 
+      map((data) => data.sheets[0].properties),
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
       })
     );
   }
 
   getRows(): Observable<any> {
     return this.http.get<any>(`${this.url}/getRows`).pipe(
-      map(data => data), 
-      catchError(error => {
-        console.error('Erro ao obter os dados:', error);
-        return of(null); 
+      map((data) => data),
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
       })
     );
   }
 
-  async addData(newValue: string[][]) {
-    //console.log(newValue)
-    if (newValue && newValue.length > 0) {
-      this.http.post<any>(`${this.url}/addData`, newValue).subscribe({
+  async addData(newValue: any) {
+
+    const values = Object.values(newValue);
+    const newItem: string[] = values.map((item: any) => String(item));
+
+    const data = {
+      values: [newItem]
+    }
+
+    if (newItem && newItem.length > 0) {
+      this.http.post<any>(`${this.url}/addRow`, data).subscribe({
         next: (data) => {
           console.log(data);
         },
@@ -61,7 +68,7 @@ export class DatabaseService {
   async deleteData(valueIndex: string) {
     //console.log(newValue)
     if (valueIndex && valueIndex.length > 0) {
-      this.http.post<any>(`${this.url}/deleteValue`,{ valueIndex }).subscribe({
+      this.http.post<any>(`${this.url}/deleteValue`, { valueIndex }).subscribe({
         next: (data) => {
           console.log(data);
         },
