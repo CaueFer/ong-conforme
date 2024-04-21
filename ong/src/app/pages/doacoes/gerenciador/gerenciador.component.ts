@@ -20,7 +20,10 @@ import { DoacaoModel } from "./doacao.model";
 import { NgbdOrdersSortableHeader } from "./orders-sortable.directive";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database.service";
-import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
+import { BsLocaleService } from "ngx-bootstrap/datepicker";
+import { defineLocale } from "ngx-bootstrap/chronos";
+import { ptBrLocale } from 'ngx-bootstrap/locale';
+
 
 @Component({
   selector: "app-gerenciador",
@@ -64,7 +67,8 @@ export class GerenciadorComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
     private datePipe: DatePipe,
-    private _databaseService: DatabaseService
+    private _databaseService: DatabaseService,
+    private localeService: BsLocaleService,
   ) {
     this.doacaoForm = this.formBuilder.group({
       id: [""],
@@ -102,6 +106,9 @@ export class GerenciadorComponent implements OnInit {
       categoria: ["", [Validators.required]],
       personName: ["", [Validators.required]],
     });
+
+    defineLocale('pt-br', ptBrLocale);
+    this.localeService.use('pt-br');
   }
 
   ngOnInit() {
@@ -109,20 +116,20 @@ export class GerenciadorComponent implements OnInit {
       next: (data) => {
         const rows = data.values;
         //console.log('Dados recebidos:', rows);
-        rows.forEach((item, index)=>{
-          if(index === 0) return;
+        rows.forEach((item, index) => {
+          if (index === 0) return;
           const doacao: DoacaoModel = {
-            id: item[0]? item[0]: 'n/a',
-            categoria: item[1]? item[1]: 'n/a',
-            itemName: item[2]? item[2]: 'sem nome',
-            dataCreated: item[3]? item[3]: 'n/a',
-            qntd: item[4] !== null? item[4]: 'n/a',
-            movimentacao: item[5] !== 'n/a' ? JSON.parse(item[5]): 'n/a',
+            id: item[0] ? item[0] : "n/a",
+            categoria: item[1] ? item[1] : "n/a",
+            itemName: item[2] ? item[2] : "sem nome",
+            dataCreated: item[3] ? item[3] : "n/a",
+            qntd: item[4] !== null ? item[4] : "n/a",
+            movimentacao: item[5] !== "n/a" ? JSON.parse(item[5]) : "n/a",
             index: index,
           };
           this.doacoes.push(doacao);
-        })
-        console.log(this.doacoes)
+        });
+        console.log(this.doacoes);
       },
       error: (err) => {},
     });
@@ -215,23 +222,22 @@ export class GerenciadorComponent implements OnInit {
       if (this.addInitialMov) {
         const movimentacao = {
           movs: [
-            { 
+            {
               tipo: "entrada",
               qntd: qntd,
-              person: doador
-            }
+              person: doador,
+            },
           ],
         };
         movJson = JSON.stringify(movimentacao);
-      }
-      else movJson = 'n/a';
+      } else movJson = "n/a";
 
       let newItem = {
         categoria,
         itemName,
         data,
         qntd,
-        movJson
+        movJson,
       };
       this._databaseService.addData(newItem);
 
@@ -257,25 +263,36 @@ export class GerenciadorComponent implements OnInit {
     this.movimentacaoForm.controls["itemName"].setValue(listData.itemName);
 
     const movs = listData.movimentacao.movs;
-    if(movs){
+    if (movs) {
       this.itemMovs = movs;
-
-      
     }
-
-    // const movimentacao = {
-    //   movs: [
-    //     { 
-    //       tipo: "entrada",
-    //       qntd: qntd,
-    //       person: doador
-    //     }
-    //   ],
-    // };
-    // movJson = JSON.stringify(movimentacao);
+    else this.itemMovs = {};
   }
-  submitMov() {
 
+  submitMov() {
+    if(this.movimentacaoForm.valid){
+      console.log(this.itemMovs);
+
+      let qntd = this.movimentacaoForm.get('itemName');
+      let person = this.movimentacaoForm.get('itemName');
+      
+      let inputOutput;
+      if(this.isInput) inputOutput = 'entrada';
+      else inputOutput = 'saida';
+  
+      const newMov = {
+        movs: [
+          {
+            tipo: inputOutput,
+            qntd: qntd,
+            person: person,
+          },
+        ],
+      };
+      let movJson = JSON.stringify(newMov);
+  
+      console.log(movJson);
+    }
   }
 
   /**

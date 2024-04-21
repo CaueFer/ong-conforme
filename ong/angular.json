@@ -46,7 +46,10 @@
               "./node_modules/ngx-toastr/toastr.css",
               "./node_modules/ngx-toastr/toastr-old.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/moment/locale/pt-br.js"
+            ]
           },
           "configurations": {
             "production": {

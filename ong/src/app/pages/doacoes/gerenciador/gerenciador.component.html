@@ -91,7 +91,7 @@
                       <th class="align-middle">Categoria</th>
                       <th class="align-middle">Item</th>
                       <th class="align-middle">Data Criação</th>
-                      <th class="align-middle">Quantidade</th>
+                      <th class="align-middle">Quantidade Atual</th>
                       <th class="align-middle">Entrada/Saida</th>
                       <th class="align-middle">Ações</th>
                     </tr>
@@ -196,14 +196,13 @@
           (click)="movimentacaoModal?.hide()"
         ></button>
       </div>
-      <div class="modal-body">
-        <form
-          (ngSubmit)="submitMov()"
-          [formGroup]="movimentacaoForm"
-          class="needs-validation createorder-form"
-          id="createorder-form"
-          novalidate
-        >
+      <form
+        (ngSubmit)="submitMov()"
+        [formGroup]="movimentacaoForm"
+        class="needs-validation createorder-form"
+        id="createorder-form"
+      >
+        <div class="modal-body">
           <div class="row">
             <div class="col-lg-12">
               <input type="hidden" class="form-control" id="orderid-input" />
@@ -250,6 +249,9 @@
                   formControlName="qntd"
                   mask="+0*"
                   autocomplete="off"
+                  [ngClass]="{
+                    'is-invalid': submitted && addNewItemForm.get('qntd').errors
+                  }"
                 />
                 <input
                   *ngIf="!isInput"
@@ -259,6 +261,9 @@
                   formControlName="qntd"
                   mask="-0*"
                   autocomplete="off"
+                  [ngClass]="{
+                    'is-invalid': submitted && addNewItemForm.get('qntd').errors
+                  }"
                 />
                 <div class="invalid-feedback">
                   Digite uma quantidade válida.
@@ -267,29 +272,29 @@
               <div class="mb-3"></div>
             </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer d-flex flex-row justify-content-center">
-        <button class="btn btn-secondary" (click)="movimentacaoModal?.hide()">
-          Cancelar
-        </button>
-        <button
-          *ngIf="isInput"
-          type="submit"
-          id="addNewOrder-btn"
-          class="btn btn-success"
-        >
-          Acrescentar
-        </button>
-        <button
-          *ngIf="!isInput"
-          type="submit"
-          id="addNewOrder-btn"
-          class="btn btn-danger"
-        >
-          Diminuir
-        </button>
-      </div>
+        </div>
+        <div class="modal-footer d-flex flex-row justify-content-center">
+          <button class="btn btn-secondary" (click)="movimentacaoModal?.hide()">
+            Cancelar
+          </button>
+          <button
+            *ngIf="isInput"
+            type="submit"
+            id="addNewOrder-btn"
+            class="btn btn-success"
+          >
+            Acrescentar
+          </button>
+          <button
+            *ngIf="!isInput"
+            type="submit"
+            id="addNewOrder-btn"
+            class="btn btn-danger"
+          >
+            Diminuir
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -324,7 +329,7 @@
           id="createorder-form"
         >
           <div
-            class="row overflow-y-scroll"
+            class="row overflow-y-auto"
             style="max-height: 364px !important"
           >
             <div class="col-lg-12">
@@ -340,7 +345,8 @@
                   placeholder="Nome item..."
                   formControlName="itemName"
                   [ngClass]="{
-                    'is-invalid': submitted && addNewItemForm.get('itemName').errors
+                    'is-invalid':
+                      submitted && addNewItemForm.get('itemName').errors
                   }"
                 />
                 <div class="invalid-feedback">Nome inválido.</div>
@@ -351,6 +357,7 @@
                 >
                 <input
                   bsDatepicker
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD/MM/YYYY'}"
                   class="form-control"
                   placeholder="dd/mm/aaaa"
                   formControlName="data"
@@ -358,7 +365,9 @@
                     'is-invalid': submitted && addNewItemForm.get('data').errors
                   }"
                 />
-                <div class="invalid-feedback">Por favor selecione uma data.</div>
+                <div class="invalid-feedback">
+                  Por favor selecione uma data.
+                </div>
               </div>
               <div class="mb-3">
                 <div class="d-flex flex-row gap-3">
@@ -375,7 +384,9 @@
                 </div>
 
                 <div class="mb-3" *ngIf="addInitialMov">
-                  <div class="invalid-feedback">Por favor digite quantidade e doador.</div>
+                  <div class="invalid-feedback">
+                    Por favor digite quantidade e doador.
+                  </div>
                   <label for="customername-field" class="form-label"
                     >Quantidade</label
                   >
@@ -388,23 +399,26 @@
                     autocomplete="off"
                     mask="0*"
                     [ngClass]="{
-                      'is-invalid': submitted && addNewItemForm.get('qntd')?.errors
+                      'is-invalid':
+                        submitted && addNewItemForm.get('qntd')?.errors
                     }"
                   />
                   <div
-                  *ngIf="submitted && addNewItemForm.get('qntd')?.errors"
-                  class="invalid-feedback"
-                >
-                  <div *ngIf="addNewItemForm.get('qntd')?.errors['required']">
-                    Digite uma quantidade valida.
+                    *ngIf="submitted && addNewItemForm.get('qntd')?.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="addNewItemForm.get('qntd')?.errors['required']">
+                      Digite uma quantidade valida.
+                    </div>
+                    <div *ngIf="addNewItemForm.get('qntd')?.errors['nulo']">
+                      Quantidade tem que ser maior que 0.
+                    </div>
                   </div>
-                  <div *ngIf="addNewItemForm.get('qntd')?.errors['nulo']">
-                    Quantidade tem que ser maior que 0.
-                  </div>
-                </div>
                 </div>
                 <div class="mb-3" *ngIf="addInitialMov">
-                  <label for="customername-field" class="form-label">Doador</label>
+                  <label for="customername-field" class="form-label"
+                    >Doador</label
+                  >
                   <input
                     type="text"
                     id="customername-field"
@@ -412,15 +426,22 @@
                     placeholder="Nome doador..."
                     formControlName="personName"
                     [ngClass]="{
-                      'is-invalid': submitted && addNewItemForm.get('personName')?.errors
+                      'is-invalid':
+                        submitted && addNewItemForm.get('personName')?.errors
                     }"
                     autocomplete="off"
                   />
                   <div
-                    *ngIf="submitted && addNewItemForm.get('personName')?.errors"
+                    *ngIf="
+                      submitted && addNewItemForm.get('personName')?.errors
+                    "
                     class="invalid-feedback"
                   >
-                    <div *ngIf="addNewItemForm.get('personName')?.errors['required']">
+                    <div
+                      *ngIf="
+                        addNewItemForm.get('personName')?.errors['required']
+                      "
+                    >
                       Digite um nome valido.
                     </div>
                   </div>
@@ -432,14 +453,17 @@
                 <label for="paystatus-input" class="form-label"
                   >Categoria</label
                 >
-                <div    
-                *ngIf="submitted && addNewItemForm.get('categoria')?.errors"
-                class=""
-              >
-                <div *ngIf="addNewItemForm.get('categoria')?.errors['required']" class="text-danger">
-                  Selecione uma categoria.
+                <div
+                  *ngIf="submitted && addNewItemForm.get('categoria')?.errors"
+                  class=""
+                >
+                  <div
+                    *ngIf="addNewItemForm.get('categoria')?.errors['required']"
+                    class="text-danger"
+                  >
+                    Selecione uma categoria.
+                  </div>
                 </div>
-              </div>
                 <ul
                   class="nav nav-pills d-flex flex-row gap-2 justify-content-center text-center"
                 >
@@ -556,20 +580,8 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="orderdate-input" class="form-label"
-                  >Data de Entrada</label
-                >
-                <input
-                  bsDatepicker
-                  class="form-control"
-                  placeholder="dd/mm/aaaa"
-                  formControlName="data"
-                />
-                <div class="invalid-feedback">Por favor digite uma data.</div>
-              </div>
-              <div class="mb-3">
                 <label for="payamount-input" class="form-label"
-                  >Quantidade inicial de itens</label
+                  >Quantidade inicial de items</label
                 >
                 <input
                   type="text"
