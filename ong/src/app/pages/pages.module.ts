@@ -27,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
 import { HistoricoComponent } from './doacoes/historico/historico.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
@@ -58,6 +59,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     NgxMaskDirective,
     NgxMaskPipe,
     UiSwitchModule,
+    NgxSkeletonLoaderModule
   ],
   providers: [
     DatePipe,
