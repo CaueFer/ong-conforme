@@ -58,6 +58,7 @@ export function createTranslateLoader(http: HttpClient): any {
     TooltipModule.forRoot(),
     ScrollToModule.forRoot(),
     ToastrModule.forRoot(),
+    NgxSkeleton
   ],
   bootstrap: [AppComponent],
   providers: [
