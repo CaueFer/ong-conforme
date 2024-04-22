@@ -1,190 +1,146 @@
-
 <div class="container-fluid">
-    <!-- start page title -->
-    <div class="row">
-      <div class="col-12">
-        <div
-          class="page-title-box d-flex align-items-center justify-content-between"
-        >
-          <h4 class="mb-0 font-size-18">Histórico</h4>
-          <div class="page-title-right">
-            <ol class="breadcrumb m-0">
-              <ng-container>
-                <li class="breadcrumb-item">
-                  <a href="javascript: void(0);">Doações</a>
-                </li>
-                <li class="breadcrumb-item active">Histórico</li>
-              </ng-container>
-            </ol>
-          </div>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="row">
-          <div class="col-4">
-            <div class="row">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <h4 class="card-title mb-4">Arrecadação Mensal</h4>
-                      <p class="text-muted">
-                      </p>
-                      <h3>$34,252</h3>
-                      <p class="text-muted">
-                        <span class="text-success me-2">
-                          12%
-                          <i class="mdi mdi-arrow-up"></i
-                        ></span>
-                        do mês anterior
-                      </p>
-                    </div>
-                    <div class="col-sm-6">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title mb-5">Activity</h4>
-                  <ul class="verti-timeline list-unstyled">
-                    <li class="event-list">
-                      <div class="event-timeline-dot">
-                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                      </div>
-                      <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                          <h5 class="font-size-14">
-                            22 Nov
-                            <i
-                              class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
-                            ></i>
-                          </h5>
-                        </div>
-                        <div class="flex-grow-1">
-                          <div>Responded to need “Volunteer Activities</div>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="event-list">
-                      <div class="event-timeline-dot">
-                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                      </div>
-                      <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                          <h5 class="font-size-14">
-                            17 Nov
-                            <i
-                              class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
-                            ></i>
-                          </h5>
-                        </div>
-                        <div class="flex-grow-1">
-                          <div>
-                            Everyone realizes why a new common language would be
-                            desirable...
-                            <a href="javascript: void(0);">Read more</a>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="event-list active">
-                      <div class="event-timeline-dot">
-                        <i
-                          class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"
-                        ></i>
-                      </div>
-                      <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                          <h5 class="font-size-14">
-                            Hoje
-                            <i
-                              class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
-                            ></i>
-                          </h5>
-                        </div>
-                        <div class="flex-grow-1">
-                          <div>Joined the group “Boardsmanship Forum”</div>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="event-list">
-                      <div class="event-timeline-dot">
-                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                      </div>
-                      <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                          <h5 class="font-size-14">
-                            12 Nov
-                            <i
-                              class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
-                            ></i>
-                          </h5>
-                        </div>
-                        <div class="flex-grow-1">
-                          <div>Testo exemplo atividade recente</div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                  <div class="text-center mt-4">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm"
-                      >View More <i class="mdi mdi-arrow-right ms-1"></i
-                    ></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-8">
-            <div class="row">
-              <div  class="col-md-4">
-              </div>
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-sm-flex flex-wrap">
-                      <h4 class="card-title mb-4">Arrecadações</h4>
-                      <div class="ms-auto">
-                        <ul class="nav nav-pills">
-                          <li class="nav-item">
-                            <a
-                              class="nav-link"
-                              href="javascript: void(0);"
-                              [ngClass]="{ active: isActive === 'week' }"
-                              >Semanal</a
-                            >
-                          </li>
-                          <li class="nav-item">
-                            <a
-                              class="nav-link"
-                              href="javascript: void(0);"
-                              [ngClass]="{ active: isActive === 'month' }"
-                              >Mensal</a
-                            >
-                          </li>
-                          <li class="nav-item">
-                            <a
-                              class="nav-link"
-                              href="javascript: void(0);"
-                              [ngClass]="{ active: isActive === 'year' }"
-                              >Anual</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div
+        class="page-title-box d-flex align-items-center justify-content-between"
+      >
+        <h4 class="mb-0 font-size-18">Histórico</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <ng-container>
+              <li class="breadcrumb-item">
+                <a href="javascript: void(0);">Doações</a>
+              </li>
+              <li class="breadcrumb-item active">Histórico</li>
+            </ng-container>
+          </ol>
         </div>
       </div>
     </div>
-    <!-- end page title -->
+    <div class="col-12">
+      <div class="table-responsive mb-0">
+        <table
+          class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check"
+          id="order-list"
+        >
+          <thead class="table-light">
+            <tr>
+              <th style="width: 20px">
+                <div class="form-check font-size-16 align-middle">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="transactionCheck01"
+                    [(ngModel)]="masterSelected"
+                    (change)="checkUncheckAll($event)"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="transactionCheck01"
+                  ></label>
+                </div>
+              </th>
+              <th class="align-middle">ID</th>
+              <th class="align-middle">Categoria</th>
+              <th class="align-middle">Item</th>
+              <th class="align-middle">Data</th>
+              <th class="align-middle">Tipo</th>
+              <th class="align-middle">Quantidade</th>
+              <th class="align-middle">Doador</th>
+              <th class="align-middle">Histórico/Recentes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let data of historico; let i = index"
+              id="o_{{ data.id }}"
+            >
+              <td>
+                <div class="form-check font-size-16">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="transactionCheck{{ data.index }}"
+                    value="{{ data.id }}"
+                    [(ngModel)]="data.state"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="transactionCheck{{ data.index }}"
+                  ></label>
+                </div>
+              </td>
+              <td>
+                <a href="javascript: void(0);" class="text-body fw-bold">{{
+                  data.id
+                }}</a>
+              </td>
+              <td>{{ data.categoria }}</td>
+              <td>{{ data.itemName }}</td>
+              <td>{{ data.data }}</td>
+              <td *ngIf="data.tipoMov === 'entrada'">
+                <span class="badge badge-soft-success">Entrada</span>
+              </td>
+              <td *ngIf="data.tipoMov === 'saida'">
+                <span class="badge badge-soft-danger">Saida</span>
+              </td>
+              <td>{{ data.qntd }}</td>
+              <td>{{ data.doadorName }}</td>
+              <td>
+                <!-- Button trigger modal -->
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm btn-rounded px-3"
+                  routerLink="/"
+                >
+                  Ver detalhes
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="historico.length <= 0">
+            <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
+              <td>
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ width: '16px', height: '16px' }"
+                />
+              </td>
+              <td>
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ width: '30px' }"
+                />
+              </td>
+              <td><ngx-skeleton-loader animation="pulse" /></td>
+              <td><ngx-skeleton-loader animation="pulse" /></td>
+              <td><ngx-skeleton-loader animation="pulse" /></td>
+              <td><ngx-skeleton-loader animation="pulse" /></td>
+              <td>
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ width: '70px' }"
+                />
+              </td>
+              <td>
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ width: '50px' }"
+                />
+              </td>
+              <td>
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ width: '80px' }"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <!-- container-fluid -->
-  
+  <!-- end page title -->
+</div>
+<!-- container-fluid -->
