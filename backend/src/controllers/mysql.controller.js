@@ -1,10 +1,11 @@
 const db = require('../db');
+const config = require('./config.json');
 
 let doacaoTable = 'doacoes';
-let historicoTable = 'doacoes';
+let historicoTable = 'historicos';
 
 exports.getData = (req, res) => {
-  db.query('SELECT * FROM doacoes', (error, results, fields) => {
+  db.query('SELECT * FROM '+doacaoTable, (error, results, fields) => {
     if (error) {
       console.error('Erro ao obter dados do MySQL:', error);
       res.status(500).json("Erro ao obter os dados do MySQL");
