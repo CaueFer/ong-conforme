@@ -6,9 +6,11 @@ const mysqlController = require('../controllers/mysql.controller.js');
 
 router.get('/getData', mysqlController.getData);
 
-router.post('/addData', mysqlController.addData);
+router.post('/addData', mysqlController.addDoacao);
 
-router.post('/updateData', mysqlController.updateData);
+router.post('/addData', mysqlController.addHistorico);
+
+router.post('/updateData', mysqlController.updateDoacao);
 
 router.post('/deleteData', mysqlController.deleteData);
 

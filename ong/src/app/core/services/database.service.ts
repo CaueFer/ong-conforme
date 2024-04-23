@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, map, of } from "rxjs";
+import config from '../../../../../config.js';
 
 @Injectable({
   providedIn: "root",
@@ -8,11 +9,10 @@ import { Observable, catchError, map, of } from "rxjs";
 export class DatabaseService {
   constructor(private http: HttpClient) {}
 
-  url: string = "http://localhost:5050";
-
+  url: string = config.databaseUrlBack;
+  
   getData(): Observable<any> {
     return this.http.get<any>(`${this.url}/getData`).pipe(
-      map((data) => data.sheets[0].properties),
       catchError((error) => {
         console.error("Erro ao obter os dados:", error);
         return of(null);

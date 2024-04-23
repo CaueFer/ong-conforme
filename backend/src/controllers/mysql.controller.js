@@ -1,5 +1,5 @@
 const db = require('../db');
-const config = require('./config.json');
+const config = require('../../../config');
 
 let doacaoTable = 'doacoes';
 let historicoTable = 'historicos';
@@ -15,9 +15,9 @@ exports.getData = (req, res) => {
   });
 };
 
-exports.addData = (req, res) => {
+exports.addDoacao = (req, res) => {
   const data = req.body;
-  db.query('INSERT INTO sua_tabela SET ?', data, (error, results, fields) => {
+  db.query('INSERT INTO '+doacaoTable+' SET ?', data, (error, results, fields) => {
     if (error) {
       console.error('Erro ao adicionar dados ao MySQL:', error);
       res.status(500).json("Erro ao adicionar dados ao MySQL");
@@ -27,7 +27,19 @@ exports.addData = (req, res) => {
   });
 };
 
-exports.updateData = (req, res) => {
+exports.addHistorico = (req, res) => {
+  const data = req.body;
+  db.query('INSERT INTO '+historicoTable+' SET ?', data, (error, results, fields) => {
+    if (error) {
+      console.error('Erro ao adicionar dados ao MySQL:', error);
+      res.status(500).json("Erro ao adicionar dados ao MySQL");
+      return;
+    }
+    res.status(201).json("Dados adicionados com sucesso ao MySQL");
+  });
+};
+
+exports.updateDoacao = (req, res) => {
   const { id } = req.body;
   const newData = req.body;
   db.query('UPDATE sua_tabela SET ? WHERE id = ?', [newData, id], (error, results, fields) => {
@@ -40,7 +52,6 @@ exports.updateData = (req, res) => {
   });
 };
 
-// Controlador para deletar dados no MySQL
 exports.deleteData = (req, res) => {
   const { id } = req.body;
   db.query('DELETE FROM sua_tabela WHERE id = ?', id, (error, results, fields) => {

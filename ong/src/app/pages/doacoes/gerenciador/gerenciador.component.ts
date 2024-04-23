@@ -22,8 +22,7 @@ import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { defineLocale } from "ngx-bootstrap/chronos";
-import { ptBrLocale } from 'ngx-bootstrap/locale';
-
+import { ptBrLocale } from "ngx-bootstrap/locale";
 
 @Component({
   selector: "app-gerenciador",
@@ -68,7 +67,7 @@ export class GerenciadorComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private datePipe: DatePipe,
     private _databaseService: DatabaseService,
-    private localeService: BsLocaleService,
+    private localeService: BsLocaleService
   ) {
     this.doacaoForm = this.formBuilder.group({
       id: [""],
@@ -107,31 +106,33 @@ export class GerenciadorComponent implements OnInit {
       personName: ["", [Validators.required]],
     });
 
-    defineLocale('pt-br', ptBrLocale);
-    this.localeService.use('pt-br');
+    defineLocale("pt-br", ptBrLocale);
+    this.localeService.use("pt-br");
   }
 
   ngOnInit() {
-    this._databaseService.getRows().subscribe({
+    this._databaseService.getData().subscribe({
       next: (data) => {
         const rows = data.values;
-        //console.log('Dados recebidos:', rows);
-        rows.forEach((item, index) => {
-          if (index === 0) return;
-          const doacao: DoacaoModel = {
-            id: item[0] ? item[0] : "n/a",
-            categoria: item[1] ? item[1] : "n/a",
-            itemName: item[2] ? item[2] : "sem nome",
-            dataCreated: item[3] ? item[3] : "n/a",
-            qntd: item[4] !== null ? item[4] : "n/a",
-            movimentacao: item[5] !== "n/a" ? JSON.parse(item[5]) : "n/a",
-            index: index,
-          };
-          this.doacoes.push(doacao);
-        });
+        console.log("Dados recebidos:", rows);
+        // rows.forEach((item, index) => {
+        //   if (index === 0) return;
+        //   const doacao: DoacaoModel = {
+        //     id: item[0] ? item[0] : "n/a",
+        //     categoria: item[1] ? item[1] : "n/a",
+        //     itemName: item[2] ? item[2] : "sem nome",
+        //     dataCreated: item[3] ? item[3] : "n/a",
+        //     qntd: item[4] !== null ? item[4] : "n/a",
+        //     movimentacao: item[5] !== "n/a" ? JSON.parse(item[5]) : "n/a",
+        //     index: index,
+        //   };
+        //   this.doacoes.push(doacao);
+        // });
         console.log(this.doacoes);
       },
-      error: (err) => {},
+      error: (err) => {
+        console.log(err);
+      },
     });
     /**
      * fetches data
@@ -261,25 +262,19 @@ export class GerenciadorComponent implements OnInit {
 
     var listData = this.doacoes[id];
     this.movimentacaoForm.controls["itemName"].setValue(listData.itemName);
-
-    const movs = listData.movimentacao.movs;
-    if (movs) {
-      this.itemMovs = movs;
-    }
-    else this.itemMovs = {};
   }
 
   submitMov() {
-    if(this.movimentacaoForm.valid){
+    if (this.movimentacaoForm.valid) {
       console.log(this.itemMovs);
 
-      let qntd = this.movimentacaoForm.get('itemName');
-      let person = this.movimentacaoForm.get('itemName');
-      
+      let qntd = this.movimentacaoForm.get("itemName");
+      let person = this.movimentacaoForm.get("itemName");
+
       let inputOutput;
-      if(this.isInput) inputOutput = 'entrada';
-      else inputOutput = 'saida';
-  
+      if (this.isInput) inputOutput = "entrada";
+      else inputOutput = "saida";
+
       const newMov = {
         movs: [
           {
@@ -290,7 +285,7 @@ export class GerenciadorComponent implements OnInit {
         ],
       };
       let movJson = JSON.stringify(newMov);
-  
+
       console.log(movJson);
     }
   }

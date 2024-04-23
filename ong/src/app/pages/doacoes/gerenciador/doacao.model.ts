@@ -5,7 +5,6 @@ export interface DoacaoModel {
     itemName?: string;
     dataCreated?: string;
     qntd?: string;
-    movimentacao?: any;
     index?: any;
 }
   
