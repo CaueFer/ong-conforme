@@ -4,7 +4,7 @@ const config = require('../../../config');
 let doacaoTable = 'doacoes';
 let historicoTable = 'historicos';
 
-exports.getData = (req, res) => {
+exports.getDoacao = (req, res) => {
   db.query('SELECT * FROM '+doacaoTable, (error, results, fields) => {
     if (error) {
       console.error('Erro ao obter dados do MySQL:', error);
@@ -52,7 +52,7 @@ exports.updateDoacao = (req, res) => {
   });
 };
 
-exports.deleteData = (req, res) => {
+exports.deleteDoacao = (req, res) => {
   const { id } = req.body;
   db.query('DELETE FROM sua_tabela WHERE id = ?', id, (error, results, fields) => {
     if (error) {

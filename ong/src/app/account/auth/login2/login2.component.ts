@@ -5,8 +5,8 @@ import {
   Validators,
 } from "@angular/forms";
 
-import { AuthenticationService } from "../../../core/services/auth.service";
-import { AuthfakeauthenticationService } from "../../../core/services/authfake.service";
+import { AuthenticationService } from "../../../core/services/auth/auth.service";
+import { AuthfakeauthenticationService } from "../../../core/services/auth/authfake.service";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
 import { ActivatedRoute, Router } from "@angular/router";

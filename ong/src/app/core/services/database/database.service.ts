@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, map, of } from "rxjs";
-import config from '../../../../../config.js';
+import config from "../../../../../../config.js";
 
 @Injectable({
   providedIn: "root",
@@ -10,9 +10,9 @@ export class DatabaseService {
   constructor(private http: HttpClient) {}
 
   url: string = config.databaseUrlBack;
-  
-  getData(): Observable<any> {
-    return this.http.get<any>(`${this.url}/getData`).pipe(
+
+  getDoacao(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getDoacao`).pipe(
       catchError((error) => {
         console.error("Erro ao obter os dados:", error);
         return of(null);
@@ -20,35 +20,29 @@ export class DatabaseService {
     );
   }
 
-  getRows(): Observable<any> {
-    return this.http.get<any>(`${this.url}/getRows`).pipe(
-      map((data) => data),
-      catchError((error) => {
-        console.error("Erro ao obter os dados:", error);
-        return of(null);
-      })
-    );
-  }
+  async addData(newValue: any): Promise<boolean> {
+    console.log(newValue);
+    let added: boolean;
 
-  async addData(newValue: any) {
+    const itemToAdd = {
+      categoria: newValue.categoria,
+      itemName: newValue.itemName,
+      dataCreated: newValue.data,
+      qntd: newValue.qntd,
+    };
 
-    const values = Object.values(newValue);
-    const newItem: string[] = values.map((item: any) => String(item));
-
-    const data = {
-      values: [newItem]
-    }
-
-    if (newItem && newItem.length > 0) {
-      this.http.post<any>(`${this.url}/addRow`, data).subscribe({
+    return new Promise<boolean>((resolve, reject) => {
+      this.http.post<any>(`${this.url}/addDoacao`, itemToAdd).subscribe({
         next: (data) => {
           console.log(data);
+          resolve(true); 
         },
         error: (err) => {
-          console.log(err);
+          console.error(err);
+          reject(false);
         },
       });
-    }
+    });
   }
 
   async updateData(newValue: string[][]) {

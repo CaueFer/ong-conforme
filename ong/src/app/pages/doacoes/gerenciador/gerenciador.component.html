@@ -159,7 +159,8 @@
                     <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
                       <td>
                         <ngx-skeleton-loader
-                          animation="pulse" [theme]="{ width: '16px', height: '16px' }"
+                          animation="pulse"
+                          [theme]="{ width: '16px', height: '16px' }"
                         />
                       </td>
                       <td>
@@ -369,6 +370,7 @@
                   class="form-control"
                   placeholder="Nome item..."
                   formControlName="itemName"
+                  mask="A*"
                   [ngClass]="{
                     'is-invalid':
                       submitted && addNewItemForm.get('itemName').errors
@@ -386,7 +388,7 @@
                     isAnimated: true,
                     dateInputFormat: 'DD/MM/YYYY'
                   }"
-                  class="form-control"
+                  class="form-control readonly"
                   placeholder="dd/mm/aaaa"
                   formControlName="data"
                   [ngClass]="{

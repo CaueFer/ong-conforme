@@ -19,10 +19,11 @@ import { Observable } from "rxjs";
 import { DoacaoModel } from "./doacao.model";
 import { NgbdOrdersSortableHeader } from "./orders-sortable.directive";
 import { DatePipe } from "@angular/common";
-import { DatabaseService } from "src/app/core/services/database.service";
+import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { defineLocale } from "ngx-bootstrap/chronos";
 import { ptBrLocale } from "ngx-bootstrap/locale";
+import { DateService } from "src/app/core/services/date/date-service.service";
 
 @Component({
   selector: "app-gerenciador",
@@ -67,7 +68,8 @@ export class GerenciadorComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private datePipe: DatePipe,
     private _databaseService: DatabaseService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private _dateService: DateService
   ) {
     this.doacaoForm = this.formBuilder.group({
       id: [""],
@@ -111,7 +113,7 @@ export class GerenciadorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._databaseService.getData().subscribe({
+    this._databaseService.getDoacao().subscribe({
       next: (data) => {
         const rows = data.values;
         console.log("Dados recebidos:", rows);
@@ -128,7 +130,7 @@ export class GerenciadorComponent implements OnInit {
         //   };
         //   this.doacoes.push(doacao);
         // });
-        console.log(this.doacoes);
+        //console.log(this.doacoes);
       },
       error: (err) => {
         console.log(err);
@@ -146,7 +148,7 @@ export class GerenciadorComponent implements OnInit {
   checkUncheckAll(ev: any) {
     if (this.doacoes.length > 0)
       this.doacoes.forEach((doacao: DoacaoModel) => {
-        //doacao.state = ev.target.checked;
+        doacao.marked = ev.target.checked;
       });
   }
 
@@ -211,40 +213,37 @@ export class GerenciadorComponent implements OnInit {
         return;
       }
 
-      const itemName = this.addNewItemForm.get("itemName").value || "n/a";
       const data = this.datePipe.transform(
         this.addNewItemForm.get("data").value || "n/a",
-        "dd-MM-YYYY"
+        "YYYY-MM-dd"
       );
+      console.log(data);
+
+      const itemName = this.addNewItemForm.get("itemName").value || "n/a";
       const doador = this.addNewItemForm.get("personName").value || "n/a";
       const categoria = this.addNewItemForm.get("categoria").value || "n/a";
 
-      let movJson;
-      if (this.addInitialMov) {
-        const movimentacao = {
-          movs: [
-            {
-              tipo: "entrada",
-              qntd: qntd,
-              person: doador,
-            },
-          ],
-        };
-        movJson = JSON.stringify(movimentacao);
-      } else movJson = "n/a";
-
+      // DADOS VALIDADOS
       let newItem = {
         categoria,
         itemName,
         data,
         qntd,
-        movJson,
       };
-      this._databaseService.addData(newItem);
 
-      this.showModal?.hide();
-      this.addNewItemForm.reset();
-      this.submitted = false;
+      this._databaseService.addData(newItem).then((res) => {
+        if (res) {
+            this.addNewItemForm.reset();
+            this.showModal?.hide();
+            this.selectedCategoria = '';
+            this.submitted = false;
+        }
+        else {
+          console.log("Erro ao add doacao");
+          // CHAMAR NOTIFY
+        };
+  
+      });
 
       return;
     }

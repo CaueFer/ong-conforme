@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { emailSentBarChart, monthlyEarningChart } from './data';
 import { ChartType } from "./dashboard.model";
-import { DatabaseService } from "src/app/core/services/database.service";
+import { DatabaseService } from "src/app/core/services/database/database.service";
 
 @Component({
   selector: "app-default",

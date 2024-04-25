@@ -4,14 +4,14 @@ const router = express.Router();
 const mysqlController = require('../controllers/mysql.controller.js');
 
 
-router.get('/getData', mysqlController.getData);
+router.get('/getDoacao', mysqlController.getDoacao);
 
-router.post('/addData', mysqlController.addDoacao);
+router.post('/addDoacao', mysqlController.addDoacao);
 
-router.post('/addData', mysqlController.addHistorico);
+router.post('/addHistorico', mysqlController.addHistorico);
 
-router.post('/updateData', mysqlController.updateDoacao);
+router.post('/updateDoacao', mysqlController.updateDoacao);
 
-router.post('/deleteData', mysqlController.deleteData);
+router.post('/deleteDoacao', mysqlController.deleteDoacao);
 
 module.exports = router;
