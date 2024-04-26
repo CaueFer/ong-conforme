@@ -24,6 +24,7 @@ import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { defineLocale } from "ngx-bootstrap/chronos";
 import { ptBrLocale } from "ngx-bootstrap/locale";
 import { DateService } from "src/app/core/services/date/date-service.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-gerenciador",
@@ -62,6 +63,7 @@ export class GerenciadorComponent implements OnInit {
   @ViewChild("movimentacaoModal", { static: false })
   movimentacaoModal?: ModalDirective;
   deletId: any;
+  disableSubmitBtn: boolean = false;
 
   constructor(
     private modalService: BsModalService,
@@ -69,7 +71,8 @@ export class GerenciadorComponent implements OnInit {
     private datePipe: DatePipe,
     private _databaseService: DatabaseService,
     private localeService: BsLocaleService,
-    private _dateService: DateService
+    private _dateService: DateService,
+    private _toastService: ToastrService
   ) {
     this.doacaoForm = this.formBuilder.group({
       id: [""],
@@ -115,22 +118,9 @@ export class GerenciadorComponent implements OnInit {
   ngOnInit() {
     this._databaseService.getDoacao().subscribe({
       next: (data) => {
-        const rows = data.values;
-        console.log("Dados recebidos:", rows);
-        // rows.forEach((item, index) => {
-        //   if (index === 0) return;
-        //   const doacao: DoacaoModel = {
-        //     id: item[0] ? item[0] : "n/a",
-        //     categoria: item[1] ? item[1] : "n/a",
-        //     itemName: item[2] ? item[2] : "sem nome",
-        //     dataCreated: item[3] ? item[3] : "n/a",
-        //     qntd: item[4] !== null ? item[4] : "n/a",
-        //     movimentacao: item[5] !== "n/a" ? JSON.parse(item[5]) : "n/a",
-        //     index: index,
-        //   };
-        //   this.doacoes.push(doacao);
-        // });
-        //console.log(this.doacoes);
+        this.doacoes = data;
+
+        console.log(this.doacoes);
       },
       error: (err) => {
         console.log(err);
@@ -231,19 +221,22 @@ export class GerenciadorComponent implements OnInit {
         qntd,
       };
 
-      this._databaseService.addData(newItem).then((res) => {
-        if (res) {
+      this.disableSubmitBtn = true;
+      this._databaseService
+        .addData(newItem)
+        .then((resolve) => {
+          if (resolve) {
             this.addNewItemForm.reset();
             this.showModal?.hide();
-            this.selectedCategoria = '';
+            this.selectedCategoria = "";
             this.submitted = false;
-        }
-        else {
-          console.log("Erro ao add doacao");
-          // CHAMAR NOTIFY
-        };
-  
-      });
+
+            this.disableSubmitBtn = false;
+          }
+        })
+        .catch((reject) => {
+          this.showToast("Erro ao adicionar doação");
+        });
 
       return;
     }
@@ -323,5 +316,22 @@ export class GerenciadorComponent implements OnInit {
 
   removeAccents(value: string) {
     return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  showToast(text: string) {
+    var message = text;
+
+    this._toastService.show(message, "", {
+      timeOut: 5000, // ms
+      closeButton: false,
+      progressBar: true,
+      tapToDismiss: true,
+      positionClass: "toast-bottom-right",
+      toastClass: "opacity-100 bg-dark ngx-toastr",
+    });
+  }
+
+  closeToast() {
+    this._toastService.clear();
   }
 }

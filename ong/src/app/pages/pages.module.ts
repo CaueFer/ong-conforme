@@ -31,6 +31,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     GerenciadorComponent,
@@ -59,7 +60,8 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     NgxMaskDirective,
     NgxMaskPipe,
     UiSwitchModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     DatePipe,
