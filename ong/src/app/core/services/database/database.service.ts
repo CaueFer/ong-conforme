@@ -20,7 +20,7 @@ export class DatabaseService {
     );
   }
 
-  async addData(newValue: any): Promise<Number> {
+  async addDoacao(newValue: any): Promise<Number> {
     console.log(newValue);
 
     const itemToAdd = {
@@ -47,66 +47,6 @@ export class DatabaseService {
     });
   }
 
-  async updateQntdInDoacao(newValue: any): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const itemToAtt = {
-        qntd: newValue.qntd,
-        tipoMov: newValue.tipoMov,
-        doacao_id: newValue.doacao_id,
-      };
-  
-      this.http.post<any>(`${this.url}/updateQntdInDoacao`, itemToAtt).subscribe({
-        next: (data) => {
-          console.log(data);
-          resolve();
-        },
-        error: (err) => {
-          console.error(err);
-          reject();
-        },
-      });
-    });
-  }
-  
-
-  async deleteDoacao(id: any): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      if (id) {
-        this.http
-          .post<any>(`${this.url}/deleteDoacao`, { id })
-          .subscribe({
-            next: (data) => {
-              console.log(data);
-              resolve();
-            },
-            error: (err) => {
-              console.log(err);
-              reject();
-            },
-          });
-      }
-    });
-  }
-
-  async deleteHistorico(id: any): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      if (id) {
-        this.http
-          .post<any>(`${this.url}/deleteHistorico`, { id })
-          .subscribe({
-            next: (data) => {
-              console.log(data);
-              resolve();
-            },
-            error: (err) => {
-              console.log(err);
-              reject();
-            },
-          });
-      }
-    });
-  }
-
   async addHistorico(newHistorico: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const newMov = {
@@ -116,10 +56,10 @@ export class DatabaseService {
         doadorName: newHistorico.doadorName,
         doacao_id: newHistorico.doacao_id,
       };
-  
+
       this.http.post<any>(`${this.url}/addHistorico`, newMov).subscribe({
         next: (data) => {
-          console.log(data);
+          //console.log(data);
           resolve();
         },
         error: (err) => {
@@ -127,6 +67,86 @@ export class DatabaseService {
           reject();
         },
       });
+    });
+  }
+
+  async updateDoacao(newValue: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const itemToAtt = {
+        id: newValue.id,
+        categoria: newValue.categoria,
+        itemName: newValue.itemName,
+      };
+
+      this.http
+        .post<any>(`${this.url}/updateDoacao`, itemToAtt)
+        .subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.error(err);
+            reject();
+          },
+        });
+    });
+  }
+
+  async updateQntdInDoacao(newValue: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const itemToAtt = {
+        qntd: newValue.qntd,
+        tipoMov: newValue.tipoMov,
+        doacao_id: newValue.doacao_id,
+      };
+
+      this.http
+        .post<any>(`${this.url}/updateQntdInDoacao`, itemToAtt)
+        .subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.error(err);
+            reject();
+          },
+        });
+    });
+  }
+
+  async deleteDoacao(id: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (id) {
+        this.http.post<any>(`${this.url}/deleteDoacao`, { id }).subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.log(err);
+            reject();
+          },
+        });
+      }
+    });
+  }
+
+  async deleteHistorico(id: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (id) {
+        this.http.post<any>(`${this.url}/deleteHistorico`, { id }).subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.log(err);
+            reject();
+          },
+        });
+      }
     });
   }
 }

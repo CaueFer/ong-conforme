@@ -32,6 +32,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     GerenciadorComponent,
@@ -61,7 +62,7 @@ import { ToastrModule } from 'ngx-toastr';
     NgxMaskPipe,
     UiSwitchModule,
     NgxSkeletonLoaderModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
   providers: [
     DatePipe,

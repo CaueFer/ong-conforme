@@ -110,6 +110,23 @@ exports.updateQntdInDoacao = (req, res) => {
   );
 };
 
+exports.updateDoacao = (req, res) => {
+  const { id, categoria, itemName } = req.body;
+
+  db.query(
+    "UPDATE " + doacaoTable + " SET categoria = ?, itemName = ? WHERE id = ?",
+    [categoria, itemName, id],
+    (error, results) => {
+      if (error) {
+        console.error("Erro ao atualizar doacao:", error);
+        res.status(500).json("Erro ao atualizar doacao");
+        return;
+      }
+      res.status(200).json("Doacao atualizada com sucess");
+    }
+  );
+};
+
 exports.deleteDoacao = (req, res) => {
   const { id } = req.body;
 

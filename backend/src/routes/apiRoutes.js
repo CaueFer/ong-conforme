@@ -12,6 +12,8 @@ router.post('/addHistorico', mysqlController.addHistorico);
 
 router.post('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
 
+router.post('/updateDoacao', mysqlController.updateDoacao);
+
 router.post('/deleteDoacao', mysqlController.deleteDoacao);
 
 router.post('/deleteHistorico', mysqlController.deleteHistorico);

@@ -88,6 +88,11 @@
                                 showWeekNumbers: false
                               }"
                               (bsValueChange)="onFilterDateChange($event)"
+                              [bsValue]="
+                                bsRangeFilterValue
+                                  ? filterSelectedRangeDate
+                                  : null
+                              "
                             />
                           </div>
                         </div>
@@ -98,15 +103,16 @@
                     >
                       <button
                         *ngIf="filteredCategoria !== ''"
-                        class="btn btn-sm btn-soft-secondary"
+                        class="slideInOut In btn btn-sm btn-soft-secondary"
                         (click)="filteredCategoria = ''"
                       >
                         {{ filteredCategoria }}
                         <i class="bx bx-x align-middle"></i>
                       </button>
+
                       <button
                         *ngIf="bsRangeFilterValue !== ''"
-                        class="btn btn-sm btn-soft-secondary"
+                        class="slideInOut In btn btn-sm btn-soft-secondary slideInOut In"
                         (click)="bsRangeFilterValue = ''"
                       >
                         {{ bsRangeFilterValue }}
@@ -134,7 +140,7 @@
                         aria-expanded="false"
                         dropdownToggle
                       >
-                        <i class='bx bx-export' ></i>
+                        <i class="bx bx-export"></i>
                       </button>
                       <ul
                         class="dropdown-menu dropdown-menu dropdown-menu-end show"
@@ -176,22 +182,21 @@
                       >
                         <li>
                           <a class="dropdown-item" href="javascript:void(0);"
-                            >Action</a
+                            >Opcao 1</a
                           >
                         </li>
                         <li>
                           <a class="dropdown-item" href="javascript:void(0);"
-                            >Another action</a
+                            >Opcao 2</a
                           >
                         </li>
                         <li>
                           <a class="dropdown-item" href="javascript:void(0);"
-                            >Something else here</a
+                            >Opcao 3</a
                           >
                         </li>
                       </ul>
                     </div>
-                   
                   </div>
                   <button
                     type="button"
@@ -482,7 +487,11 @@
           </div>
         </div>
         <div class="modal-footer d-flex flex-row justify-content-center">
-          <button class="btn btn-secondary" (click)="movimentacaoModal?.hide()">
+          <button
+            class="btn btn-secondary"
+            (click)="movimentacaoModal?.hide()"
+            [disabled]="disableSubmitBtn"
+          >
             Cancelar
           </button>
           <button
@@ -490,6 +499,7 @@
             type="submit"
             id="addNewOrder-btn"
             class="btn btn-success"
+            [disabled]="disableSubmitBtn"
           >
             Acrescentar
           </button>
@@ -498,6 +508,7 @@
             type="submit"
             id="addNewOrder-btn"
             class="btn btn-danger"
+            [disabled]="disableSubmitBtn"
           >
             Diminuir
           </button>
@@ -731,6 +742,7 @@
                   type="button"
                   class="btn btn-outline-secondary me-1 px-4"
                   (click)="showModal.hide()"
+                  [disabled]="disableSubmitBtn"
                 >
                   Cancelar
                 </button>
@@ -738,6 +750,7 @@
                   type="submit"
                   id="addNewOrder-btn"
                   class="btn btn-success px-4"
+                  [disabled]="disableSubmitBtn"
                 >
                   Adicionar
                 </button>
@@ -776,7 +789,7 @@
       <div class="modal-body">
         <form
           (ngSubmit)="submitEdit()"
-          [formGroup]="attItemForm"
+          [formGroup]="editItemForm"
           class="needs-validation createorder-form"
           id="createorder-form"
           novalidate
@@ -807,30 +820,6 @@
                   </div>
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="payamount-input" class="form-label"
-                  >Quantidade inicial de items</label
-                >
-                <input
-                  type="text"
-                  id="customername-field"
-                  class="form-control"
-                  placeholder="0"
-                  formControlName="qntd"
-                  [ngClass]="{
-                    'is-invalid': submitted && form['qntd'].errors
-                  }"
-                  autocomplete="off"
-                />
-                <div
-                  *ngIf="submitted && form['qntd'].errors"
-                  class="invalid-feedback"
-                >
-                  <div *ngIf="form['qntd'].errors['required']">
-                    Digite uma quantidade válida.
-                  </div>
-                </div>
-              </div>
             </div>
             <div class="col-12 position-relative">
               <div class="mb-3 w-100">
@@ -843,14 +832,30 @@
                   <li class="nav-item col">
                     <a
                       href="javascript: void(0);"
-                      class="nav-link border border-light-subtle active"
-                      >Objeto</a
+                      class="nav-link border border-light-subtle"
+                      [ngClass]="{
+                        active:
+                          this.editItemForm.get('categoria')?.value === 'objeto'
+                      }"
+                      (click)="
+                        this.editItemForm.get('categoria')?.setValue('objeto')
+                      "
                     >
+                      Objeto
+                    </a>
                   </li>
                   <li class="nav-item col">
                     <a
                       href="javascript: void(0);"
                       class="nav-link border border-light-subtle"
+                      [ngClass]="{
+                        active:
+                          this.editItemForm.get('categoria')?.value ===
+                          'alimento'
+                      }"
+                      (click)="
+                        this.editItemForm.get('categoria')?.setValue('alimento')
+                      "
                       >Alimento</a
                     >
                   </li>
@@ -858,6 +863,16 @@
                     <a
                       href="javascript: void(0);"
                       class="nav-link border border-light-subtle"
+                      [ngClass]="{
+                        active:
+                          this.editItemForm.get('categoria')?.value ===
+                          'monetario'
+                      }"
+                      (click)="
+                        this.editItemForm
+                          .get('categoria')
+                          ?.setValue('monetario')
+                      "
                       >Monetário</a
                     >
                   </li>
@@ -868,17 +883,19 @@
               <div class="text-end">
                 <button
                   type="button"
-                  class="btn btn-lg btn-outline-secondary me-1"
-                  (click)="showModal.hide()"
+                  class="btn btn-outline-secondary me-1"
+                  (click)="editItemModal?.hide()"
+                  [disabled]="disableSubmitBtn"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   id="addNewOrder-btn"
-                  class="btn btn-lg btn-success"
+                  class="btn btn-success"
+                  [disabled]="disableSubmitBtn"
                 >
-                  Adicionar
+                  Atualizar
                 </button>
               </div>
             </div>
@@ -890,5 +907,3 @@
   </div>
 </div>
 <!--End Edit Modal -->
-
-

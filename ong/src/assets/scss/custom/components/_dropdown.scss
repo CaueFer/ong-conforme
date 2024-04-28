@@ -16,8 +16,6 @@
   }
 }
 
-
-
 .dropdown-menu-end[style] {
   left: auto !important;
   right: 0 !important;
@@ -30,12 +28,35 @@
   animation: none !important;
 }
 
+.slideInOut {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+
+  &.In {
+    animation-name: DropDownSlide!important;
+  }
+
+  &.Out {
+    animation-name: DropDownSlideOut!important;
+  }
+}
+
 @keyframes DropDownSlide {
   100% {
     transform: translateY(0);
   }
   0% {
     transform: translateY(10px);
+  }
+}
+
+@keyframes DropDownSlideOut {
+  100% {
+    transform: translateY(-10px);
+    display: none;
+  }
+  0% {
+    transform: translateY(0);
   }
 }
 

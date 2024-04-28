@@ -38,7 +38,7 @@ export class GerenciadorComponent implements OnInit {
 
   doacaoForm!: UntypedFormGroup;
   addNewItemForm!: UntypedFormGroup;
-  attItemForm!: UntypedFormGroup;
+  editItemForm!: UntypedFormGroup;
   movimentacaoForm!: UntypedFormGroup;
   submitted = false;
 
@@ -66,14 +66,17 @@ export class GerenciadorComponent implements OnInit {
   removeItemModal?: ModalDirective;
   @ViewChild("movimentacaoModal", { static: false })
   movimentacaoModal?: ModalDirective;
-  deletId: any;
   disableSubmitBtn: boolean = false;
-  selectedDoacao: Number;
 
   txtSearch: string;
-
-  bsRangeFilterValue: string = "";
   filteredCategoria: string = "";
+  bsRangeFilterValue: string = "";
+
+  selectedDoacao: Number;
+  deletId: any;
+  editedId: any;
+  editedCategoria: string = "";
+  filterSelectedRangeDate: Date[];
 
   constructor(
     private modalService: BsModalService,
@@ -103,14 +106,10 @@ export class GerenciadorComponent implements OnInit {
       personName: [""],
     });
 
-    this.attItemForm = this.formBuilder.group({
+    this.editItemForm = this.formBuilder.group({
       id: [""],
-      ids: [""],
       itemName: ["", [Validators.required]],
-      data: ["", [Validators.required]],
-      qntd: [Number, [Validators.required]],
       categoria: ["", [Validators.required]],
-      personName: ["", [Validators.required]],
     });
 
     this.movimentacaoForm = this.formBuilder.group({
@@ -135,6 +134,10 @@ export class GerenciadorComponent implements OnInit {
   }
 
   onFilterDateChange(dates: Date[]) {
+    this.filterSelectedRangeDate = dates;
+
+    if (dates === null) return;
+
     if (dates.length === 2) {
       const startDate = dates[0];
       const endDate = dates[1];
@@ -151,8 +154,6 @@ export class GerenciadorComponent implements OnInit {
       const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
 
       this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
-
-      console.log(this.bsRangeFilterValue);
     } else {
       console.error("O intervalo de datas não contém duas datas.");
     }
@@ -225,13 +226,13 @@ export class GerenciadorComponent implements OnInit {
       .deleteDoacao(this.deletId)
       .then(() => {
         this.deletId = null;
-        this.removeItemModal.hide();
 
         this.alertConfirmDelete();
+
         this.updateListDoacao();
       })
       .catch(() => {
-        this.showToast("Erro ao deletar item");
+        this.showToast("Erro ao deletar item id: " + this.deletId);
       });
   }
 
@@ -255,6 +256,7 @@ export class GerenciadorComponent implements OnInit {
    */
   submitAddItem() {
     this.submitted = true;
+    this.disableSubmitBtn = true;
 
     if (this.addInitialMov) {
       this.addNewItemForm.get("qntd").setValidators(Validators.required);
@@ -293,7 +295,7 @@ export class GerenciadorComponent implements OnInit {
 
       this.disableSubmitBtn = true;
       this._databaseService
-        .addData(newItem)
+        .addDoacao(newItem)
         .then((resolve) => {
           if (this.addInitialMov) {
             const newMov = {
@@ -351,13 +353,13 @@ export class GerenciadorComponent implements OnInit {
 
   submitMov() {
     this.submitted = true;
+    this.disableSubmitBtn = true;
 
     if (this.movimentacaoForm.valid) {
       let qntd = this.movimentacaoForm.get("qntd").value;
       let person = this.movimentacaoForm.get("personName").value;
       let data = this.movimentacaoForm.get("data").value;
 
-      console.log(this.movimentacaoForm.controls["data"].value);
       let inputOutput;
       if (this.isInput) inputOutput = "entrada";
       else inputOutput = "saida";
@@ -397,6 +399,7 @@ export class GerenciadorComponent implements OnInit {
         this.movimentacaoModal?.hide();
 
         this.updateListDoacao();
+        this.disableSubmitBtn = false;
       })
       .catch(() => {});
   }
@@ -404,25 +407,61 @@ export class GerenciadorComponent implements OnInit {
   /**
    * EDIT CONFIGS
    */
-  submitEdit() {}
   editModal(id: any) {
     this.submitted = false;
 
-    this.editItemModal?.show();
+    this.editedId = id;
 
-    var listData = this.doacoes[id];
-    // this.ordersForm.controls['categoria'].setValue(listData.categoria);
-    // this.ordersForm.controls['itemName'].setValue(new Date(listData.itemName));
-    // this.ordersForm.controls['dataCreated'].setValue(listData.data);
-    // this.ordersForm.controls['qntd'].setValue(listData.qntd);
-    // this.ordersForm.controls['ids'].setValue(listData.id);
+    var editData = this.doacoes.find((e) => e.id === id);
+
+    if (editData) {
+      this.editItemForm.patchValue({
+        categoria: editData.categoria,
+        itemName: editData.itemName,
+      });
+    }
+
+    this.editItemModal?.show();
   }
+  submitEdit() {
+    this.submitted = true;
+    this.disableSubmitBtn = true;
+
+    let newCategoria = this.editItemForm.get("categoria")?.value;
+    let newItemName = this.editItemForm.get("itemName")?.value;
+
+    if (this.editItemForm.valid) {
+      this.submitted = false;
+      let newItem = {
+        id: this.editedId,
+        categoria: newCategoria,
+        itemName: newItemName,
+      };
+
+      this._databaseService
+        .updateDoacao(newItem)
+        .then(() => {
+          this.disableSubmitBtn = false;
+          this.editItemForm.reset();
+
+          this.editItemModal?.hide();
+          this.alertSucess("ATUALIZADA!", "Doação atualizada com sucesso.");
+
+          this.updateListDoacao();
+        })
+        .catch(() => {
+          this.showToast("Erro ao atualizar, tente novamente.");
+        });
+    }
+  }
+  /**
+   * EDIT CONFIGS ENDS
+   */
 
   toggleInput(value: string) {
     if (value === "entrada") this.isInput = true;
     else this.isInput = false;
   }
-
   toggleCheckbox($event: any) {
     this.addInitialMov = $event;
   }
@@ -461,35 +500,37 @@ export class GerenciadorComponent implements OnInit {
   alertConfirmDelete() {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-        confirmButton: "btn btn-success",
+        confirmButton: "btn btn-primary",
         cancelButton: "btn btn-danger ms-2",
       },
       buttonsStyling: false,
+      iconHtml:
+        '<i class="fas fa-trash-alt text-danger animate__animated animate__shakeX fs-1"></i>',
     });
 
     swalWithBootstrapButtons.fire(
       "Deletado!",
-      "Doação foi deletada.",
-      "success"
+      "Doação foi deletada com sucesso.",
+      "error"
     );
   }
 
   alertConfirmOrCancel() {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-        confirmButton: "btn btn-success",
         cancelButton: "btn btn-danger ms-2",
+        confirmButton: "btn btn-success",
       },
       buttonsStyling: false,
     });
 
     swalWithBootstrapButtons
       .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
+        title: "Tem certeza?",
+        text: "Essa ação é irreversível!",
+        icon: "question",
+        cancelButtonText: "Cancelar!",
+        confirmButtonText: "Deletar!",
         showCancelButton: true,
       })
       .then((result) => {
@@ -501,10 +542,11 @@ export class GerenciadorComponent implements OnInit {
         ) {
           swalWithBootstrapButtons.fire(
             "Cancelado",
-            "Sua doação está segura!",
+            "Sua doação não foi deletada!",
             "error"
           );
         }
       });
   }
+  
 }
