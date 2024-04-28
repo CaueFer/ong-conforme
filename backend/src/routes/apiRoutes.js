@@ -10,7 +10,7 @@ router.post('/addDoacao', mysqlController.addDoacao);
 
 router.post('/addHistorico', mysqlController.addHistorico);
 
-router.post('/updateDoacao', mysqlController.updateDoacao);
+router.post('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
 
 router.post('/deleteDoacao', mysqlController.deleteDoacao);
 

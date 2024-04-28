@@ -54,6 +54,8 @@ export class GerenciadorComponent implements OnInit {
 
   itemMovs: Object = {};
 
+  isLoadingList: boolean = true;
+
   @ViewChildren(NgbdOrdersSortableHeader)
   headers!: QueryList<NgbdOrdersSortableHeader>;
   @ViewChild("showModal", { static: false }) showModal?: ModalDirective;
@@ -64,6 +66,9 @@ export class GerenciadorComponent implements OnInit {
   movimentacaoModal?: ModalDirective;
   deletId: any;
   disableSubmitBtn: boolean = false;
+  selectedDoacao: Number;
+
+  txtSearch: string;
 
   constructor(
     private modalService: BsModalService,
@@ -79,7 +84,7 @@ export class GerenciadorComponent implements OnInit {
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
-      qntd: ["", [Validators.required]],
+      qntd: [Number, [Validators.required]],
       categoria: ["", [Validators.required]],
     });
 
@@ -88,7 +93,7 @@ export class GerenciadorComponent implements OnInit {
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
-      qntd: [""],
+      qntd: [Number],
       categoria: ["", [Validators.required]],
       personName: [""],
     });
@@ -98,7 +103,7 @@ export class GerenciadorComponent implements OnInit {
       ids: [""],
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
-      qntd: ["", [Validators.required]],
+      qntd: [Number, [Validators.required]],
       categoria: ["", [Validators.required]],
       personName: ["", [Validators.required]],
     });
@@ -106,8 +111,7 @@ export class GerenciadorComponent implements OnInit {
     this.movimentacaoForm = this.formBuilder.group({
       itemName: ["", [Validators.required]],
       data: ["", [Validators.required]],
-      qntd: ["", [Validators.required]],
-      categoria: ["", [Validators.required]],
+      qntd: [Number, [Validators.required]],
       personName: ["", [Validators.required]],
     });
 
@@ -116,16 +120,7 @@ export class GerenciadorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._databaseService.getDoacao().subscribe({
-      next: (data) => {
-        this.doacoes = data;
-
-        console.log(this.doacoes);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.updateListDoacao();
     /**
      * fetches data
      */
@@ -134,16 +129,39 @@ export class GerenciadorComponent implements OnInit {
     // });
   }
 
-  // The master checkbox will check/ uncheck all items
+  updateListDoacao() {
+    this.isLoadingList = true;
+    this._databaseService.getDoacao().subscribe({
+      next: (values) => {
+        if (values) {
+          values.forEach((value) => {
+            const date = new Date(value.dataCreated);
+            const day = date.getDate().toString().padStart(2, "0");
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+            const year = date.getFullYear();
+
+            value.dataCreated = `${day}/${month}/${year}`;
+          });
+
+          this.doacoes = values;
+
+          this.isLoadingList = false;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
   checkUncheckAll(ev: any) {
     if (this.doacoes.length > 0)
       this.doacoes.forEach((doacao: DoacaoModel) => {
         doacao.marked = ev.target.checked;
       });
   }
-
   checkedValGet: any[] = [];
-  // Delete Data
+
   deleteData(id: any) {
     if (id) {
       document.getElementById("lj_" + id)?.remove();
@@ -153,8 +171,8 @@ export class GerenciadorComponent implements OnInit {
       });
     }
   }
-  // Delete Data
-  confirm(id: any) {
+
+  confirmDelete(id: any) {
     this.deletId = id;
     this.removeItemModal.show();
   }
@@ -207,7 +225,6 @@ export class GerenciadorComponent implements OnInit {
         this.addNewItemForm.get("data").value || "n/a",
         "YYYY-MM-dd"
       );
-      console.log(data);
 
       const itemName = this.addNewItemForm.get("itemName").value || "n/a";
       const doador = this.addNewItemForm.get("personName").value || "n/a";
@@ -225,14 +242,22 @@ export class GerenciadorComponent implements OnInit {
       this._databaseService
         .addData(newItem)
         .then((resolve) => {
-          if (resolve) {
-            this.addNewItemForm.reset();
-            this.showModal?.hide();
-            this.selectedCategoria = "";
-            this.submitted = false;
-
-            this.disableSubmitBtn = false;
+          if (this.addInitialMov) {
+            const newMov = {
+              data: data,
+              qntd: qntd,
+              tipoMov: "entrada",
+              doadorName: doador,
+              doacao_id: resolve,
+            };
+            this.addMov(newMov);
           }
+
+          this.addNewItemForm.reset();
+          this.showModal?.hide();
+          this.selectedCategoria = "";
+          this.submitted = false;
+          this.disableSubmitBtn = false;
         })
         .catch((reject) => {
           this.showToast("Erro ao adicionar doação");
@@ -252,34 +277,56 @@ export class GerenciadorComponent implements OnInit {
   movModal(id: any) {
     this.movimentacaoModal?.show();
 
-    var listData = this.doacoes[id];
+    var listData = this.doacoes.find((e) => e.id === id);
     this.movimentacaoForm.controls["itemName"].setValue(listData.itemName);
+
+    let date = new Date();
+    let formattedDate =
+      date.getFullYear() +
+      "/" +
+      ("0" + (date.getMonth() + 1)).slice(-2) +
+      "/" +
+      ("0" + date.getDate()).slice(-2);
+
+    this.movimentacaoForm.controls["data"].setValue(formattedDate);
+
+    this.selectedDoacao = id;
   }
 
   submitMov() {
+    this.submitted = true;
+
     if (this.movimentacaoForm.valid) {
-      console.log(this.itemMovs);
+      let qntd = this.movimentacaoForm.get("qntd").value;
+      let person = this.movimentacaoForm.get("personName").value;
+      let data = this.movimentacaoForm.get("data").value;
 
-      let qntd = this.movimentacaoForm.get("itemName");
-      let person = this.movimentacaoForm.get("itemName");
-
+      console.log(this.movimentacaoForm.controls["data"].value);
       let inputOutput;
       if (this.isInput) inputOutput = "entrada";
       else inputOutput = "saida";
 
       const newMov = {
-        movs: [
-          {
-            tipo: inputOutput,
-            qntd: qntd,
-            person: person,
-          },
-        ],
+        data: data,
+        qntd: qntd,
+        tipoMov: inputOutput,
+        doadorName: person,
+        doacao_id: this.selectedDoacao,
       };
-      let movJson = JSON.stringify(newMov);
 
-      console.log(movJson);
+      this.addMov(newMov);
     }
+
+    setTimeout(() => {
+      this.submitted = false;
+    }, 5000);
+  }
+
+  addMov(movToAdd: any) {
+    //console.log(movToAdd);
+
+    this._databaseService.addHistorico(movToAdd);
+    this._databaseService.updateQntdInDoacao(movToAdd);
   }
 
   /**

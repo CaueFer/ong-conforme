@@ -20,9 +20,8 @@ export class DatabaseService {
     );
   }
 
-  async addData(newValue: any): Promise<boolean> {
+  async addData(newValue: any): Promise<Number> {
     console.log(newValue);
-    let added: boolean;
 
     const itemToAdd = {
       categoria: newValue.categoria,
@@ -31,11 +30,14 @@ export class DatabaseService {
       qntd: newValue.qntd,
     };
 
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<Number>((resolve, reject) => {
       this.http.post<any>(`${this.url}/addDoacao`, itemToAdd).subscribe({
         next: (data) => {
-          console.log(data);
-          resolve(true); 
+          if (data && data.doacaoId) {
+            resolve(data.doacaoId);
+          } else {
+            reject(new Error("ID da doação não encontrado na resposta"));
+          }
         },
         error: (err) => {
           console.error(err);
@@ -45,18 +47,23 @@ export class DatabaseService {
     });
   }
 
-  async updateData(newValue: string[][]) {
-    //console.log(newValue)
-    if (newValue && newValue.length > 0) {
-      this.http.post<any>(`${this.url}/updateValue`, newValue).subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-    }
+  async updateQntdInDoacao(newValue: any) {
+    console.log(newValue)
+
+    const itemToAtt = {
+      qntd: newValue.qntd,
+      tipoMov: newValue.tipoMov,
+      doacao_id: newValue.doacao_id
+    };
+    
+    this.http.post<any>(`${this.url}/updateQntdInDoacao`, itemToAtt).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   async deleteData(valueIndex: string) {
@@ -71,5 +78,26 @@ export class DatabaseService {
         },
       });
     }
+  }
+
+  async addHistorico(newHistorico: any) {
+    //console.log(newHistorico);
+
+    const newMov = {
+      data: newHistorico.data,
+      qntd: newHistorico.qntd,
+      tipoMov: newHistorico.tipoMov,
+      doadorName: newHistorico.doadorName,
+      doacao_id: newHistorico.doacao_id,
+    };
+
+    this.http.post<any>(`${this.url}/addHistorico`, newMov).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 }
