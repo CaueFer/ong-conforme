@@ -246,7 +246,15 @@
                   </thead>
                   <tbody class="position-relative">
                     <tr
-                      *ngFor="let data of doacoes; let i = index"
+                      *ngFor="
+                        let data of doacoes
+                          | paginate
+                            : {
+                                itemsPerPage: itemsPerPage,
+                                currentPage: currentPage
+                              };
+                        let i = index
+                      "
                       id="o_{{ data.id }}"
                     >
                       <td>
@@ -331,6 +339,19 @@
                     </tr>
                   </tbody>
                 </table>
+                <div class="pagination-container d-flex justify-content-end">
+                  <pagination-controls
+                    (pageChange)="pageChanged($event)"
+                    (pageBoundsCorrection)="pageChanged($event)"
+                    maxSize="5"
+                    directionLinks="true"
+                    responsive="true"
+                    previousLabel="Anterior"
+                    nextLabel="Prox"
+                  >
+                  </pagination-controls>
+                </div>
+                
               </div>
               <div
                 *ngIf="this.doacoes.length <= 0 && this.isLoadingList === false"

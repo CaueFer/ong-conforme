@@ -73,6 +73,12 @@
       "TEXT": "Dashboard",
       "BADGE": "0"
     },
+    "FAMILIAS": {
+      "TEXT": "Familias",
+      "LIST": {
+        "GERENCIAR": "Gerenciar"
+      }
+    },
     "LAYOUTS": {
       "TEXT": "Layouts",
       "LIST": {

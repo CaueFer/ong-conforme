@@ -421,3 +421,21 @@ a.ck.ck-button.ck-on {
         justify-content: center;
     }
 }
+
+// PAGINATION
+.ngx-pagination .current{
+    background-color: #556ee6!important;
+    border-radius: 50%;
+}
+.ngx-pagination a{
+    border-radius: 50%!important;
+}
+
+.ngx-pagination {
+    .pagination-next a{
+        border-radius: 0!important;
+    }
+    .pagination-previous a{
+        border-radius: 0!important;
+    }
+}

@@ -33,6 +33,7 @@ import Swal from "sweetalert2";
   styleUrls: ["./gerenciador.component.scss"],
 })
 export class GerenciadorComponent implements OnInit {
+
   modalRef?: BsModalRef;
   masterSelected!: boolean;
 
@@ -77,6 +78,9 @@ export class GerenciadorComponent implements OnInit {
   editedId: any;
   editedCategoria: string = "";
   filterSelectedRangeDate: Date[];
+
+  currentPage = 1;
+  itemsPerPage = 10;
 
   constructor(
     private modalService: BsModalService,
@@ -125,12 +129,6 @@ export class GerenciadorComponent implements OnInit {
 
   ngOnInit() {
     this.updateListDoacao();
-    /**
-     * fetches data
-     */
-    // this.ordersList.subscribe(x => {
-    //   this.doacoes = Object.assign([], x);
-    // });
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -159,6 +157,10 @@ export class GerenciadorComponent implements OnInit {
     }
   }
 
+  pageChanged($event: any) {
+    this.currentPage = $event;
+  }
+
   updateListDoacao() {
     this.isLoadingList = true;
     this.doacoes = [];
@@ -175,7 +177,6 @@ export class GerenciadorComponent implements OnInit {
           });
 
           this.doacoes = values;
-
           this.isLoadingList = false;
         }
       },

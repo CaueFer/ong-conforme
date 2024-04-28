@@ -8,21 +8,34 @@ export const MENU: MenuItem[] = [
         link: '/',
     },
     {
-        id: 7,
+        id: 2,
         label: 'MENUITEMS.UIELEMENTS.TEXT',
-        icon: 'bx-tone',
+        icon: 'bx bx-package',
         subItems: [
             {
-                id: 8,
+                id: 2.1,
                 label: 'MENUITEMS.UIELEMENTS.LIST.ALERTS',
                 link: '/ong-conforme/gerenciador',
-                parentId: 7
+                parentId: 2
             },
             {
-                id: 9,
+                id: 2.2,
                 label: 'MENUITEMS.UIELEMENTS.LIST.HISTORICO',
                 link: '/ong-conforme/historico',
-                parentId: 7
+                parentId: 2
+            }
+        ]
+    },
+    {
+        id: 3,
+        label: 'MENUITEMS.FAMILIAS.TEXT',
+        icon: 'bx bx-package',
+        subItems: [
+            {
+                id: 3.1,
+                label: 'MENUITEMS.FAMILIAS.LIST.GERENCIAR',
+                link: '/',
+                parentId: 3
             }
         ]
     }

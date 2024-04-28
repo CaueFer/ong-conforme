@@ -15,6 +15,17 @@ exports.getDoacao = (req, res) => {
   });
 };
 
+exports.getHistorico = (req, res) => {
+  db.query("SELECT * FROM " + historicoTable, (error, results, fields) => {
+    if (error) {
+      console.error("Erro ao obter historicos :", error);
+      res.status(500).json("Erro ao obter os historicos ");
+      return;
+    }
+    res.send(results);
+  });
+};
+
 exports.addDoacao = (req, res) => {
   const data = req.body;
   db.query(
