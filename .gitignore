@@ -1,0 +1,9 @@
+# Ignorar a pasta de dependências do Node.js
+node_modules/
+
+# Ignorar arquivos de compilação
+dist/
+*.log
+
+# Ignorar arquivos específicos
+config.json
