@@ -25,6 +25,7 @@ import { defineLocale } from "ngx-bootstrap/chronos";
 import { ptBrLocale } from "ngx-bootstrap/locale";
 import { DateService } from "src/app/core/services/date/date-service.service";
 import { ToastrService } from "ngx-toastr";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-gerenciador",
@@ -55,6 +56,7 @@ export class GerenciadorComponent implements OnInit {
   itemMovs: Object = {};
 
   isLoadingList: boolean = true;
+  today: Date = new Date();
 
   @ViewChildren(NgbdOrdersSortableHeader)
   headers!: QueryList<NgbdOrdersSortableHeader>;
@@ -69,6 +71,9 @@ export class GerenciadorComponent implements OnInit {
   selectedDoacao: Number;
 
   txtSearch: string;
+
+  bsRangeFilterValue: string = "";
+  filteredCategoria: string = "";
 
   constructor(
     private modalService: BsModalService,
@@ -129,8 +134,33 @@ export class GerenciadorComponent implements OnInit {
     // });
   }
 
+  onFilterDateChange(dates: Date[]) {
+    if (dates.length === 2) {
+      const startDate = dates[0];
+      const endDate = dates[1];
+
+      const startDay = ("0" + startDate.getDate()).slice(-2);
+      const startMonth = ("0" + (startDate.getMonth() + 1)).slice(-2);
+      const startYear = startDate.getFullYear();
+
+      const endDay = ("0" + endDate.getDate()).slice(-2);
+      const endMonth = ("0" + (endDate.getMonth() + 1)).slice(-2);
+      const endYear = endDate.getFullYear();
+
+      const formattedStartDate = `${startDay}/${startMonth}/${startYear}`;
+      const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
+
+      this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
+
+      console.log(this.bsRangeFilterValue);
+    } else {
+      console.error("O intervalo de datas não contém duas datas.");
+    }
+  }
+
   updateListDoacao() {
     this.isLoadingList = true;
+    this.doacoes = [];
     this._databaseService.getDoacao().subscribe({
       next: (values) => {
         if (values) {
@@ -174,12 +204,35 @@ export class GerenciadorComponent implements OnInit {
 
   confirmDelete(id: any) {
     this.deletId = id;
-    this.removeItemModal.show();
+    this.alertConfirmOrCancel();
   }
 
   deleteOrder() {
-    this.doacoes.splice(this.deletId, 1);
-    this.removeItemModal.hide();
+    if (this.deletId === null) {
+      this.showToast("Erro ao deletar item");
+
+      return;
+    }
+
+    this._databaseService
+      .deleteHistorico(this.deletId)
+      .then(() => {})
+      .catch(() => {
+        console.error("Erro ao deletar historico de id: " + this.deletId);
+      });
+
+    this._databaseService
+      .deleteDoacao(this.deletId)
+      .then(() => {
+        this.deletId = null;
+        this.removeItemModal.hide();
+
+        this.alertConfirmDelete();
+        this.updateListDoacao();
+      })
+      .catch(() => {
+        this.showToast("Erro ao deletar item");
+      });
   }
 
   /**
@@ -258,6 +311,9 @@ export class GerenciadorComponent implements OnInit {
           this.selectedCategoria = "";
           this.submitted = false;
           this.disableSubmitBtn = false;
+
+          this.alertSucess("ADICIONADA!", "Doação foi adicionada.");
+          this.updateListDoacao();
         })
         .catch((reject) => {
           this.showToast("Erro ao adicionar doação");
@@ -325,8 +381,24 @@ export class GerenciadorComponent implements OnInit {
   addMov(movToAdd: any) {
     //console.log(movToAdd);
 
-    this._databaseService.addHistorico(movToAdd);
-    this._databaseService.updateQntdInDoacao(movToAdd);
+    this._databaseService
+      .addHistorico(movToAdd)
+      .then(() => {
+        this.showToast("Movimentação adicionada com sucesso.");
+      })
+      .catch(() => {
+        this.showToast("Erro ao adicionar movimentação de doação.");
+      });
+
+    this._databaseService
+      .updateQntdInDoacao(movToAdd)
+      .then(() => {
+        this.movimentacaoForm.reset();
+        this.movimentacaoModal?.hide();
+
+        this.updateListDoacao();
+      })
+      .catch(() => {});
   }
 
   /**
@@ -380,5 +452,59 @@ export class GerenciadorComponent implements OnInit {
 
   closeToast() {
     this._toastService.clear();
+  }
+
+  alertSucess(msg1, msg2: string) {
+    Swal.fire(msg1, msg2, "success");
+  }
+
+  alertConfirmDelete() {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger ms-2",
+      },
+      buttonsStyling: false,
+    });
+
+    swalWithBootstrapButtons.fire(
+      "Deletado!",
+      "Doação foi deletada.",
+      "success"
+    );
+  }
+
+  alertConfirmOrCancel() {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger ms-2",
+      },
+      buttonsStyling: false,
+    });
+
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        showCancelButton: true,
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deleteOrder();
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            "Cancelado",
+            "Sua doação está segura!",
+            "error"
+          );
+        }
+      });
   }
 }

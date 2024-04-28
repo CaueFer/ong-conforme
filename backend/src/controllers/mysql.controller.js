@@ -7,8 +7,8 @@ let historicoTable = "historico";
 exports.getDoacao = (req, res) => {
   db.query("SELECT * FROM " + doacaoTable, (error, results, fields) => {
     if (error) {
-      console.error("Erro ao obter dados do MySQL:", error);
-      res.status(500).json("Erro ao obter os dados do MySQL");
+      console.error("Erro ao obter dados :", error);
+      res.status(500).json("Erro ao obter os dados ");
       return;
     }
     res.send(results);
@@ -55,7 +55,6 @@ exports.updateQntdInDoacao = (req, res) => {
 
   const quantidadeNova = parseInt(qntd, 10);
 
-
   db.query(
     "SELECT qntd FROM " + doacaoTable + " WHERE id = ?",
     doacao_id,
@@ -85,7 +84,7 @@ exports.updateQntdInDoacao = (req, res) => {
       } else if (tipoMov === "saida") {
         novaQuantidade = quantidadeAtual - quantidadeNova;
       }
-      if(novaQuantidade < 0) novaQuantidade = 0;
+      if (novaQuantidade < 0) novaQuantidade = 0;
 
       db.query(
         "UPDATE " + doacaoTable + " SET qntd = ? WHERE id = ?",
@@ -113,16 +112,34 @@ exports.updateQntdInDoacao = (req, res) => {
 
 exports.deleteDoacao = (req, res) => {
   const { id } = req.body;
+
   db.query(
-    "DELETE FROM sua_tabela WHERE id = ?",
+    "DELETE FROM " + doacaoTable + " WHERE id = ?",
     id,
     (error, results, fields) => {
       if (error) {
-        console.error("Erro ao deletar dados do MySQL:", error);
-        res.status(500).json("Erro ao deletar dados do MySQL");
+        console.error("Erro ao deletar doacao :", error);
+        res.status(500).json("Erro ao deletar doacao ");
         return;
       }
-      res.status(200).json("Dados deletados com sucesso do MySQL");
+      res.status(200).json("Doacao deletado com sucesso ");
     }
   );
 };
+
+exports.deleteHistorico = (req, res) => {
+  const { id } = req.body;
+
+  db.query(
+    "DELETE FROM " + historicoTable + " WHERE doacao_id = ?",
+    id,
+    (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao deletar historico :", error);
+        res.status(500).json("Erro ao deletar historico ");
+        return;
+      }
+      res.status(200).json("Historico deletado com sucesso ");
+    }
+  );
+}

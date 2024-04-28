@@ -25,13 +25,13 @@
             <div class="card-body">
               <div class="row mb-2">
                 <div
-                  class="col-6 position-relative d-flex flex-column gap-2 justify-content-center align-items-start"
+                  class="col-8 position-relative d-flex flex-column gap-2 justify-content-center align-items-start"
                 >
                   <h5 class="mb-0 card-title col">Doações</h5>
                   <div
                     class="d-flex flex-row gap-2 col align-items-center w-100"
                   >
-                    <div class="col-lg-4 position-relative">
+                    <div class="col-lg-3 position-relative">
                       <label
                         class="bx bx-search-alt position-absolute d-flex align-items-center"
                         style="top: 50%; transform: translateY(-50%); left: 5%"
@@ -46,7 +46,7 @@
                       />
                     </div>
                     <div
-                      class="col-lg-3 col-sm-4 dropdown"
+                      class="col-lg-2 col-sm-4 dropdown"
                       dropdown
                       [insideClick]="true"
                     >
@@ -62,9 +62,13 @@
                       </button>
                       <div class="row g-3 dropdown-menu" *dropdownMenu>
                         <div class="col">
-                          <select class="form-select" id="idStatus">
+                          <select
+                            class="form-select"
+                            id="idStatus"
+                            [(ngModel)]="filteredCategoria"
+                          >
                             <option value="" disabled selected hidden>
-                              Categoria
+                              Categorias
                             </option>
                             <option value="objeto">Objetos</option>
                             <option value="alimento">Alimentos</option>
@@ -77,21 +81,42 @@
                               type="text"
                               placeholder="Selecionar data"
                               class="form-control"
-                              bsDatepicker
+                              bsDaterangepicker
                               [bsConfig]="{
                                 isAnimated: true,
                                 dateInputFormat: 'DD/MM/YYYY',
                                 showWeekNumbers: false
                               }"
+                              (bsValueChange)="onFilterDateChange($event)"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="d-flex flex-row align-items-center justify-content-center gap-2"
+                    >
+                      <button
+                        *ngIf="filteredCategoria !== ''"
+                        class="btn btn-sm btn-soft-secondary"
+                        (click)="filteredCategoria = ''"
+                      >
+                        {{ filteredCategoria }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+                      <button
+                        *ngIf="bsRangeFilterValue !== ''"
+                        class="btn btn-sm btn-soft-secondary"
+                        (click)="bsRangeFilterValue = ''"
+                      >
+                        {{ bsRangeFilterValue }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div
-                  class="col-6 d-flex flex-column justify-content-center align-items-end gap-2"
+                  class="col-4 d-flex flex-column justify-content-center align-items-end gap-2"
                 >
                   <div class="d-flex flex-row gap-1 col">
                     <a
@@ -100,6 +125,39 @@
                       (click)="updateListDoacao()"
                       ><i class="mdi mdi-refresh"></i
                     ></a>
+                    <div class="dropdown d-inline-block" dropdown>
+                      <button
+                        type="menu"
+                        class="btn btn-secondary"
+                        id="*dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class='bx bx-export' ></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu dropdown-menu-end show"
+                        aria-labelledby="*dropdownMenuButton1"
+                        *dropdownMenu
+                      >
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >EXCEL</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >PDF</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >WORD</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
                     <div class="dropdown d-inline-block" dropdown>
                       <button
                         type="menu"
@@ -133,13 +191,14 @@
                         </li>
                       </ul>
                     </div>
+                   
                   </div>
                   <button
                     type="button"
-                    class="btn btn-success"
+                    class="btn btn-success col-lg-5 col-sm-4"
                     (click)="showModal.show()"
                   >
-                    <i class="mdi mdi-plus mr-1"></i> doação
+                    <span class="mdi mdi-plus-thick"></span> doação
                   </button>
                 </div>
               </div>
@@ -149,7 +208,12 @@
                   class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check position-relative"
                   id="order-list"
                 >
-                  <thead class="table-light">
+                  <thead
+                    *ngIf="
+                      this.doacoes.length > 0 && this.isLoadingList === false
+                    "
+                    class="table-light"
+                  >
                     <tr>
                       <th style="width: 20px">
                         <div class="form-check font-size-16 align-middle">
@@ -267,19 +331,20 @@
                 *ngIf="this.doacoes.length <= 0 && this.isLoadingList === false"
                 class="d-flex flex-row justify-content-center align-items-center gap-5 py-3"
               >
-                <h2 class="d-flex justify-content-end text-black fw-semibold col-6">
+                <h2
+                  class="d-flex justify-content-end text-dark fw-semibold col-6 text-start"
+                >
                   NENHUMA DOAÇÃO <br />
-                  ADICIONADA
+                  FOI ADICIONADA!
                 </h2>
 
                 <div class="d-flex justify-content-start col-6">
                   <img
-                  src="assets/images/add-item.svg"
-                  alt="add-item img"
-                  height="200px"
-                />
+                    src="assets/images/add-item.svg"
+                    alt="add-item img"
+                    height="200px"
+                  />
                 </div>
-
               </div>
               <!-- end table -->
               <ul
@@ -484,7 +549,7 @@
                   class="form-control"
                   placeholder="Nome item..."
                   formControlName="itemName"
-                  mask="A*"
+                  mask=""
                   [ngClass]="{
                     'is-invalid':
                       submitted && addNewItemForm.get('itemName').errors
@@ -826,54 +891,4 @@
 </div>
 <!--End Edit Modal -->
 
-<!-- Remove doacao model -->
-<div
-  bsModal
-  #removeItemModal="bs-modal"
-  class="modal fade"
-  id="removeItemModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-      <div class="modal-body px-4 py-5 text-center">
-        <button
-          type="button"
-          class="btn-close position-absolute end-0 top-0 m-3"
-          (click)="removeItemModal.hide()"
-        ></button>
-        <div class="avatar-sm mb-4 mx-auto">
-          <div
-            class="avatar-title bg-primary text-primary bg-opacity-10 p-3 rounded-3"
-          >
-            <i class="mdi mdi-trash-can-outline fs-2"></i>
-          </div>
-        </div>
-        <p class="text-muted font-size-16 mb-4">
-          Tem certeza que deseja deletar?
-        </p>
 
-        <div class="hstack gap-2 justify-content-center mb-0">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="close-removeOrderModal"
-            (click)="removeItemModal.hide()"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            id="remove-item"
-            (click)="deleteOrder()"
-          >
-            Deletar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end removeItemModal -->

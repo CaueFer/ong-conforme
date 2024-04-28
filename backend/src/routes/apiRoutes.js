@@ -14,4 +14,6 @@ router.post('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
 
 router.post('/deleteDoacao', mysqlController.deleteDoacao);
 
+router.post('/deleteHistorico', mysqlController.deleteHistorico);
+
 module.exports = router;
