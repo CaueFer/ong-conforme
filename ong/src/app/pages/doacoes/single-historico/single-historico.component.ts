@@ -30,6 +30,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 export class SingleHistoricoComponent {
   @Input() doacaoId: any;
 
+  tooltip: string = "Conteúdo do tooltip";
   private doacaoIdSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
@@ -80,6 +81,7 @@ export class SingleHistoricoComponent {
   itemsPerPage = 10;
   doacoes: any[];
   targetId: any;
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -189,7 +191,7 @@ export class SingleHistoricoComponent {
             (e) => e.tipoMov === "entrada"
           );
           this.historicosIn.push(...historicosIn);
-          
+
           const historicosOut = this.historicos.filter(
             (e) => e.tipoMov === "saida"
           );

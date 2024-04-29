@@ -126,6 +126,7 @@
                     <a
                       href="javascript:void(0);"
                       class="btn btn-light"
+                      ngbTooltip="Recarregar"
                       (click)="updateListHistorico()"
                       ><i class="mdi mdi-refresh"></i
                     ></a>
@@ -133,6 +134,7 @@
                       <button
                         type="menu"
                         class="btn btn-secondary"
+                        ngbTooltip="Exportar"
                         id="*dropdownMenuButton1"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -290,6 +292,7 @@
                           <a
                             href="javascript:void(0);"
                             class="text-black align-middle"
+                            ngbTooltip="Ver detalhes"
                             [routerLink]="['/ong-conforme/historico-single']"
                             [queryParams]="{ id: data.doacao_id }"
                           >
@@ -298,6 +301,7 @@
                           <a
                             href="javascript:void(0);"
                             class="text-danger align-middle"
+                            ngbTooltip="Deletar"
                             (click)="confirmDelete(data.id)"
                             ><i class="mdi mdi-delete font-size-18"></i
                           ></a>

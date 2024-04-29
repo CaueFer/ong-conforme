@@ -36,6 +36,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
 import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { SingleHistoricoComponent } from './doacoes/single-historico/single-hist
     ToastrModule.forRoot(),
     NgxPaginationModule,
     RouterModule,
+    NgbModule,
   ],
   providers: [
     DatePipe,

@@ -128,6 +128,7 @@
                     <a
                       href="javascript:void(0);"
                       class="btn btn-light"
+                      ngbTooltip="Recarregar"
                       (click)="updateListDoacao()"
                       ><i class="mdi mdi-refresh"></i
                     ></a>
@@ -135,6 +136,7 @@
                       <button
                         type="menu"
                         class="btn btn-secondary"
+                        ngbTooltip="Exportar"
                         id="*dropdownMenuButton1"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -296,12 +298,14 @@
                           <a
                             href="javascript:void(0);"
                             class="text-success"
+                            ngbTooltip="Editar"
                             (click)="editModal(data.id)"
                             ><i class="mdi mdi-pencil font-size-18"></i
                           ></a>
                           <a
                             href="javascript:void(0);"
                             class="text-danger"
+                            ngbTooltip="Deletar"
                             (click)="confirmDelete(data.id)"
                             ><i class="mdi mdi-delete font-size-18"></i
                           ></a>

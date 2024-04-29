@@ -126,6 +126,7 @@
                     <a
                       href="javascript:void(0);"
                       class="btn btn-light"
+                      ngbTooltip="Recarregar"
                       (click)="updateListHistorico(this.targetId)"
                       ><i class="mdi mdi-refresh"></i
                     ></a>
@@ -133,6 +134,7 @@
                       <button
                         type="menu"
                         class="btn btn-secondary"
+                        ngbTooltip="Exportar"
                         id="*dropdownMenuButton1"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -199,7 +201,7 @@
                 </div>
               </div>
               <!-- Table data -->
-              <div class="d-flex flex-row ">
+              <div class="d-flex flex-row">
                 <!-- start table -->
                 <div class="table-responsive mb-0 mt-3 col">
                   <h5 class="fw-bold">Entrada</h5>
@@ -348,7 +350,7 @@
                     </pagination-controls>
                   </div>
                 </div>
-                <!-- end table -->  
+                <!-- end table -->
                 <div class="vr mx-2 mt-5 bg-secondary opacity-25"></div>
                 <!-- start table -->
                 <div class="table-responsive mb-0 mt-3 col">
