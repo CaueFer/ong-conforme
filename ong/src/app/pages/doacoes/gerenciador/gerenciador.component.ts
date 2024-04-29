@@ -59,8 +59,6 @@ export class GerenciadorComponent implements OnInit {
   isLoadingList: boolean = true;
   today: Date = new Date();
 
-  @ViewChildren(NgbdOrdersSortableHeader)
-  headers!: QueryList<NgbdOrdersSortableHeader>;
   @ViewChild("showModal", { static: false }) showModal?: ModalDirective;
   @ViewChild("editItemModal", { static: false }) editItemModal?: ModalDirective;
   @ViewChild("removeItemModal", { static: false })
@@ -217,7 +215,7 @@ export class GerenciadorComponent implements OnInit {
     }
 
     this._databaseService
-      .deleteHistorico(this.deletId)
+      .deleteMultiHistorico(this.deletId)
       .then(() => {})
       .catch(() => {
         console.error("Erro ao deletar historico de id: " + this.deletId);

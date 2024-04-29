@@ -33,11 +33,15 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { RouterModule } from '@angular/router';
+import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';
+
 
 @NgModule({
   declarations: [
     GerenciadorComponent,
-    HistoricoComponent
+    HistoricoComponent,
+    SingleHistoricoComponent,
   ],
   imports: [
     CommonModule,
@@ -65,6 +69,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgxSkeletonLoaderModule,
     ToastrModule.forRoot(),
     NgxPaginationModule,
+    RouterModule,
   ],
   providers: [
     DatePipe,

@@ -1,10 +1,16 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, Input, ViewChild } from "@angular/core";
 import { DoacaoModel } from "../gerenciador/doacao.model";
-import { HistoricoModel } from "./historico.model";
-import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
-import { Observable, filter } from "rxjs";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { BsModalRef, BsModalService, ModalDirective } from "ngx-bootstrap/modal";
+import { BehaviorSubject, Observable, filter } from "rxjs";
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
+import {
+  BsModalRef,
+  BsModalService,
+  ModalDirective,
+} from "ngx-bootstrap/modal";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
@@ -12,13 +18,22 @@ import { DateService } from "src/app/core/services/date/date-service.service";
 import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
 import { defineLocale, ptBrLocale } from "ngx-bootstrap/chronos";
+import { HistoricoModel } from "../historico/historico.model";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: "app-historico",
-  templateUrl: "./historico.component.html",
-  styleUrls: ["./historico.component.scss"],
+  selector: "app-single-historico",
+  standalone: false,
+  templateUrl: "./single-historico.component.html",
+  styleUrl: "./single-historico.component.scss",
 })
-export class HistoricoComponent {
+export class SingleHistoricoComponent {
+  @Input() doacaoId: any;
+
+  private doacaoIdSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
+    null
+  );
+  doacaoIdObservable$ = this.doacaoIdSubject.asObservable();
 
   modalRef?: BsModalRef;
   masterSelected!: boolean;
@@ -29,6 +44,8 @@ export class HistoricoComponent {
   // Table data
   content?: any;
   historicos?: HistoricoModel[] = [];
+  historicosIn?: HistoricoModel[] = [];
+  historicosOut?: HistoricoModel[] = [];
   ordersList!: Observable<DoacaoModel[]>;
   total: Observable<number>;
 
@@ -43,8 +60,10 @@ export class HistoricoComponent {
 
   @ViewChild("showModal", { static: false }) showModal?: ModalDirective;
   @ViewChild("editItemModal", { static: false }) editItemModal?: ModalDirective;
-  @ViewChild("removeItemModal", { static: false }) removeItemModal?: ModalDirective;
-  @ViewChild("movimentacaoModal", { static: false })   movimentacaoModal?: ModalDirective;
+  @ViewChild("removeItemModal", { static: false })
+  removeItemModal?: ModalDirective;
+  @ViewChild("movimentacaoModal", { static: false })
+  movimentacaoModal?: ModalDirective;
 
   disableSubmitBtn: boolean = false;
 
@@ -61,6 +80,7 @@ export class HistoricoComponent {
   currentPage = 1;
   itemsPerPage = 10;
   doacoes: any[];
+  targetId: any;
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -68,7 +88,8 @@ export class HistoricoComponent {
     private _databaseService: DatabaseService,
     private localeService: BsLocaleService,
     private _dateService: DateService,
-    private _toastService: ToastrService
+    private _toastService: ToastrService,
+    private route: ActivatedRoute
   ) {
     this.historicoForm = this.formBuilder.group({
       id: [""],
@@ -83,7 +104,15 @@ export class HistoricoComponent {
   }
 
   ngOnInit() {
-    this.updateListHistorico();
+    this.isLoadingList = true;
+    this.targetId = null;
+
+    this.route.queryParams.subscribe((params) => {
+      const id = params["id"];
+
+      this.targetId = id;
+      this.updateListHistorico(this.targetId);
+    });
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -116,9 +145,9 @@ export class HistoricoComponent {
     this.currentPage = $event;
   }
 
-  updateListHistorico() {
+  updateListHistorico(idReceived: any) {
     this.isLoadingList = true;
-    
+
     this.doacoes = [];
     this._databaseService.getDoacao().subscribe({
       next: (values) => {
@@ -132,6 +161,8 @@ export class HistoricoComponent {
     });
 
     this.historicos = [];
+    this.historicosIn = [];
+    this.historicosOut = [];
     this._databaseService.getHistorico().subscribe({
       next: (values) => {
         if (values) {
@@ -143,10 +174,28 @@ export class HistoricoComponent {
 
             value.data = `${day}/${month}/${year}`;
 
-            value.itemName = this.doacoes.find(e => e.id === value.doacao_id)?.itemName;
+            value.itemName = this.doacoes.find(
+              (e) => e.id === value.doacao_id
+            )?.itemName;
           });
 
-          this.historicos = values;
+          const historicosTemp = values.filter(
+            (e) => e.doacao_id.toString() === idReceived
+          );
+          if (historicosTemp.length > 0) {
+            this.historicos.push(...historicosTemp);
+          }
+
+          const historicosIn = this.historicos.filter(
+            (e) => e.tipoMov === "entrada"
+          );
+          this.historicosIn.push(...historicosIn);
+          
+          const historicosOut = this.historicos.filter(
+            (e) => e.tipoMov === "saida"
+          );
+          this.historicosOut.push(...historicosOut);
+
           this.isLoadingList = false;
         }
       },
@@ -163,7 +212,6 @@ export class HistoricoComponent {
       });
   }
   checkedValGet: any[] = [];
-
 
   confirmDelete(id: any) {
     this.deletId = id;
@@ -184,7 +232,7 @@ export class HistoricoComponent {
 
         this.alertConfirmDelete();
 
-        this.updateListHistorico();
+        this.updateListHistorico(this.targetId);
       })
       .catch(() => {
         console.error("Erro ao deletar historico de id: " + this.deletId);
@@ -199,8 +247,6 @@ export class HistoricoComponent {
     this.submitted = false;
     this.modalRef = this.modalService.show(content, { class: "modal-md" });
   }
-
-
 
   toggleInput(value: string) {
     if (value === "entrada") this.isInput = true;
@@ -287,5 +333,4 @@ export class HistoricoComponent {
         }
       });
   }
-  
 }

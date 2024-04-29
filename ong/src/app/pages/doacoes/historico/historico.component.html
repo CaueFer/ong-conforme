@@ -19,125 +19,369 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="table-responsive mb-0">
-        <table
-          class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check"
-          id="order-list"
-        >
-          <thead class="table-light">
-            <tr>
-              <th style="width: 20px">
-                <div class="form-check font-size-16 align-middle">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="transactionCheck01"
-                    [(ngModel)]="masterSelected"
-                    (change)="checkUncheckAll($event)"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="transactionCheck01"
-                  ></label>
-                </div>
-              </th>
-              <th class="align-middle">ID</th>
-              <th class="align-middle">Categoria</th>
-              <th class="align-middle">Item</th>
-              <th class="align-middle">Data</th>
-              <th class="align-middle">Tipo</th>
-              <th class="align-middle">Quantidade</th>
-              <th class="align-middle">Doador</th>
-              <th class="align-middle">Histórico/Recentes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let data of historico; let i = index"
-              id="o_{{ data.id }}"
-            >
-              <td>
-                <div class="form-check font-size-16">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="transactionCheck{{ data.index }}"
-                    value="{{ data.id }}"
-                    [(ngModel)]="data.state"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="transactionCheck{{ data.index }}"
-                  ></label>
-                </div>
-              </td>
-              <td>
-                <a href="javascript: void(0);" class="text-body fw-bold">{{
-                  data.id
-                }}</a>
-              </td>
-              <td>{{ data.categoria }}</td>
-              <td>{{ data.itemName }}</td>
-              <td>{{ data.data }}</td>
-              <td *ngIf="data.tipoMov === 'entrada'">
-                <span class="badge badge-soft-success">Entrada</span>
-              </td>
-              <td *ngIf="data.tipoMov === 'saida'">
-                <span class="badge badge-soft-danger">Saida</span>
-              </td>
-              <td>{{ data.qntd }}</td>
-              <td>{{ data.doadorName }}</td>
-              <td>
-                <!-- Button trigger modal -->
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm btn-rounded px-3"
-                  routerLink="/"
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div
+                  class="col-8 position-relative d-flex flex-column gap-2 justify-content-center align-items-start"
                 >
-                  Ver detalhes
-                </button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody *ngIf="historico.length <= 0">
-            <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
-              <td>
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ width: '16px', height: '16px' }"
-                />
-              </td>
-              <td>
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ width: '30px' }"
-                />
-              </td>
-              <td><ngx-skeleton-loader animation="pulse" /></td>
-              <td><ngx-skeleton-loader animation="pulse" /></td>
-              <td><ngx-skeleton-loader animation="pulse" /></td>
-              <td><ngx-skeleton-loader animation="pulse" /></td>
-              <td>
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ width: '70px' }"
-                />
-              </td>
-              <td>
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ width: '50px' }"
-                />
-              </td>
-              <td>
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ width: '80px' }"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <div
+                    class="d-flex flex-row gap-2 col align-items-center w-100"
+                  >
+                    <div class="col-lg-3 position-relative">
+                      <label
+                        class="bx bx-search-alt position-absolute d-flex align-items-center"
+                        style="top: 50%; transform: translateY(-50%); left: 5%"
+                        for="searchDoacaoList"
+                      ></label>
+                      <input
+                        type="search"
+                        class="form-control ps-4 text-truncate"
+                        id="searchDoacaoList"
+                        placeholder="Pesquisar Item..."
+                        [(ngModel)]="this.txtSearch"
+                      />
+                    </div>
+                    <div
+                      class="col-lg-2 col-sm-4 dropdown"
+                      dropdown
+                      [insideClick]="true"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-soft-secondary w-100 dropdown-toggle position-relative"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="mdi mdi-filter-outline align-middle"></i>
+                        Filtro
+                      </button>
+                      <div class="row g-3 dropdown-menu" *dropdownMenu>
+                        <div class="col">
+                          <select
+                            class="form-select"
+                            id="idStatus"
+                            [(ngModel)]="filteredCategoria"
+                          >
+                            <option value="" disabled selected hidden>
+                              Tipos
+                            </option>
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saida</option>
+                          </select>
+                        </div>
+                        <div class="col">
+                          <div id="datepicker1">
+                            <input
+                              type="text"
+                              placeholder="Selecionar data"
+                              class="form-control"
+                              bsDaterangepicker
+                              [bsConfig]="{
+                                isAnimated: true,
+                                dateInputFormat: 'DD/MM/YYYY',
+                                showWeekNumbers: false
+                              }"
+                              (bsValueChange)="onFilterDateChange($event)"
+                              [bsValue]="
+                                bsRangeFilterValue
+                                  ? filterSelectedRangeDate
+                                  : null
+                              "
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex flex-row align-items-center justify-content-center gap-2"
+                    >
+                      <button
+                        *ngIf="filteredCategoria !== ''"
+                        class="slideInOut In btn btn-sm btn-soft-secondary"
+                        (click)="filteredCategoria = ''"
+                      >
+                        {{ filteredCategoria }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+
+                      <button
+                        *ngIf="bsRangeFilterValue !== ''"
+                        class="slideInOut In btn btn-sm btn-soft-secondary slideInOut In"
+                        (click)="bsRangeFilterValue = ''"
+                      >
+                        {{ bsRangeFilterValue }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-4 d-flex flex-column justify-content-center align-items-end gap-2"
+                >
+                  <div class="d-flex flex-row gap-1 col">
+                    <a
+                      href="javascript:void(0);"
+                      class="btn btn-light"
+                      (click)="updateListHistorico()"
+                      ><i class="mdi mdi-refresh"></i
+                    ></a>
+                    <div class="dropdown d-inline-block" dropdown>
+                      <button
+                        type="menu"
+                        class="btn btn-secondary"
+                        id="*dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="bx bx-export"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu dropdown-menu-end show"
+                        aria-labelledby="*dropdownMenuButton1"
+                        *dropdownMenu
+                      >
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >EXCEL</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >PDF</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >WORD</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="dropdown d-inline-block" dropdown>
+                      <button
+                        type="menu"
+                        class="btn btn-primary"
+                        id="*dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="mdi mdi-dots-vertical"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu dropdown-menu-end show"
+                        aria-labelledby="*dropdownMenuButton1"
+                        *dropdownMenu
+                      >
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 1</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 2</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 3</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Table data -->
+              <div class="table-responsive mb-0">
+                <table
+                  class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check position-relative"
+                  id="order-list"
+                >
+                  <thead
+                    *ngIf="
+                      this.historicos.length > 0 && this.isLoadingList === false
+                    "
+                    class="table-light"
+                  >
+                    <tr>
+                      <th style="width: 20px">
+                        <div class="form-check font-size-16 align-middle">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="transactionCheck01"
+                            [(ngModel)]="masterSelected"
+                            (change)="checkUncheckAll($event)"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="transactionCheck01"
+                          ></label>
+                        </div>
+                      </th>
+                      <th class="align-middle">ID</th>
+                      <th class="align-middle">Item</th>
+                      <th class="align-middle">Quantidade</th>
+                      <th class="align-middle">Tipo</th>
+                      <th class="align-middle">Data</th>
+                      <th class="align-middle">Doador</th>
+                      <th class="align-middle">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody class="position-relative">
+                    <tr
+                      *ngFor="
+                        let data of historicos
+                          | paginate
+                            : {
+                                itemsPerPage: itemsPerPage,
+                                currentPage: currentPage
+                              };
+                        let i = index
+                      "
+                      id="o_{{ data.id }}"
+                    >
+                      <td>
+                        <div class="form-check font-size-16">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="transactionCheck{{ data.index }}"
+                            value="{{ data.id }}"
+                            [(ngModel)]="data.marked"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="transactionCheck{{ data.index }}"
+                          ></label>
+                        </div>
+                      </td>
+                      <td>
+                        <a href="javascript: void(0);" class="text-body fw-bold"
+                          >#MOV{{ data.id }}</a
+                        >
+                      </td>
+                      <td>{{ data.itemName }}</td>
+                      <td *ngIf="data.tipoMov === 'entrada'">
+                        +{{ data.qntd }}
+                      </td>
+                      <td *ngIf="data.tipoMov === 'saida'">-{{ data.qntd }}</td>
+                      <td *ngIf="data.tipoMov === 'entrada'">
+                        <span class="badge badge-soft-success">{{
+                          data.tipoMov
+                        }}</span>
+                      </td>
+                      <td *ngIf="data.tipoMov === 'saida'">
+                        <span class="badge badge-soft-danger">{{
+                          data.tipoMov
+                        }}</span>
+                      </td>
+                      <td>{{ data.data }}</td>
+                      <td class="text-truncate">{{ data.doadorName }}</td>
+                      <td>
+                        <div class="d-flex gap-3">
+                          <a
+                            href="javascript:void(0);"
+                            class="text-success"
+                            [routerLink]="['/ong-conforme/historico-single']"
+                            [queryParams]="{ id: data.doacao_id }"
+                            ><i class="mdi mdi-pencil font-size-18"></i
+                          ></a>
+                          <a
+                            href="javascript:void(0);"
+                            class="text-danger"
+                            (click)="confirmDelete(data.id)"
+                            ><i class="mdi mdi-delete font-size-18"></i
+                          ></a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="isLoadingList">
+                    <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
+                      <td>
+                        <ngx-skeleton-loader
+                          animation="pulse"
+                          [theme]="{ width: '16px', height: '16px' }"
+                        />
+                      </td>
+                      <td>
+                        <ngx-skeleton-loader animation="pulse" />
+                      </td>
+                      <td><ngx-skeleton-loader animation="pulse" /></td>
+                      <td><ngx-skeleton-loader animation="pulse" /></td>
+                      <td><ngx-skeleton-loader animation="pulse" /></td>
+                      <td><ngx-skeleton-loader animation="pulse" /></td>
+                      <td>
+                        <ngx-skeleton-loader
+                          animation="pulse"
+                          [theme]="{ width: '70px' }"
+                        />
+                      </td>
+                      <td>
+                        <ngx-skeleton-loader
+                          animation="pulse"
+                          [theme]="{ width: '50px' }"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div
+                  *ngIf="
+                    this.historicos.length > 0 && this.isLoadingList === false
+                  "
+                  class="pagination-container d-flex justify-content-end"
+                >
+                  <pagination-controls
+                    (pageChange)="pageChanged($event)"
+                    (pageBoundsCorrection)="pageChanged($event)"
+                    maxSize="5"
+                    directionLinks="true"
+                    responsive="true"
+                    previousLabel="Anterior"
+                    nextLabel="Prox"
+                  >
+                  </pagination-controls>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  this.historicos.length <= 0 && this.isLoadingList === false
+                "
+                class="d-flex flex-row justify-content-center align-items-center gap-5 py-3"
+              >
+                <h2
+                  class="d-flex justify-content-end text-dark fw-semibold col-6 text-start"
+                >
+                  NENHUMA MOVIMENTAÇÃO <br />
+                  FOI ADICIONADA!
+                </h2>
+
+                <div class="d-flex justify-content-start col-6">
+                  <img
+                    src="assets/images/add-item.svg"
+                    alt="add-item img"
+                    height="200px"
+                  />
+                </div>
+              </div>
+              <!-- end table -->
+              <ul
+                class="pagination pagination-rounded justify-content-end mb-2"
+              >
+                <!-- <pagination [totalItems]="(total | async)!" [(ngModel)]="service.page" [itemsPerPage]="service.pageSize"></pagination> -->
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

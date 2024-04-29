@@ -339,7 +339,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="pagination-container d-flex justify-content-end">
+                <div *ngIf="this.doacoes.length > 0 && this.isLoadingList === false" class="pagination-container d-flex justify-content-end">
                   <pagination-controls
                     (pageChange)="pageChanged($event)"
                     (pageBoundsCorrection)="pageChanged($event)"
@@ -489,13 +489,28 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="" class="form-label fw-bold">Doador</label>
+                <label *ngIf="isInput" for="" class="form-label fw-bold">Doador</label>
+                <label *ngIf="!isInput" for="" class="form-label fw-bold">Receptor</label>
                 <input
+                  *ngIf="isInput"
                   type="text"
                   class="form-control"
                   placeholder="Nome do doador"
                   formControlName="personName"
-                  mask="A*"
+                  mask=""
+                  autocomplete="on"
+                  [ngClass]="{
+                    'is-invalid':
+                      submitted && movimentacaoForm.get('personName').errors
+                  }"
+                />
+                <input
+                  *ngIf="!isInput"
+                  type="text"
+                  class="form-control"
+                  placeholder="Nome do receptor"
+                  formControlName="personName"
+                  mask=""
                   autocomplete="on"
                   [ngClass]="{
                     'is-invalid':

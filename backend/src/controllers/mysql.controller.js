@@ -155,7 +155,7 @@ exports.deleteDoacao = (req, res) => {
   );
 };
 
-exports.deleteHistorico = (req, res) => {
+exports.deleteMultiHistorico = (req, res) => {
   const { id } = req.body;
 
   db.query(
@@ -168,6 +168,23 @@ exports.deleteHistorico = (req, res) => {
         return;
       }
       res.status(200).json("Historico deletado com sucesso ");
+    }
+  );
+}
+
+exports.deleteSingleHistorico = (req, res) => {
+  const { id } = req.body;
+
+  db.query(
+    "DELETE FROM " + historicoTable + " WHERE id = ?",
+    id,
+    (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao deletar historico individual :", error);
+        res.status(500).json("Erro ao deletar historico individual");
+        return;
+      }
+      res.status(200).json("Historico individual deletado com sucesso ");
     }
   );
 }

@@ -20,6 +20,15 @@ export class DatabaseService {
     );
   }
 
+  getHistorico(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getHistorico`).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   async addDoacao(newValue: any): Promise<Number> {
     console.log(newValue);
 
@@ -133,10 +142,27 @@ export class DatabaseService {
     });
   }
 
-  async deleteHistorico(id: any): Promise<void> {
+  async deleteMultiHistorico(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (id) {
-        this.http.post<any>(`${this.url}/deleteHistorico`, { id }).subscribe({
+        this.http.post<any>(`${this.url}/deleteMultiHistorico`, { id }).subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.log(err);
+            reject();
+          },
+        });
+      }
+    });
+  }
+
+  async deleteSingleHistorico(id: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (id) {
+        this.http.post<any>(`${this.url}/deleteSingleHistorico`, { id }).subscribe({
           next: (data) => {
             //console.log(data);
             resolve();

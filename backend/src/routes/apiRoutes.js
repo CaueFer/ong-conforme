@@ -6,6 +6,8 @@ const mysqlController = require('../controllers/mysql.controller.js');
 
 router.get('/getDoacao', mysqlController.getDoacao);
 
+router.get('/getHistorico', mysqlController.getHistorico);
+
 router.post('/addDoacao', mysqlController.addDoacao);
 
 router.post('/addHistorico', mysqlController.addHistorico);
@@ -16,6 +18,8 @@ router.post('/updateDoacao', mysqlController.updateDoacao);
 
 router.post('/deleteDoacao', mysqlController.deleteDoacao);
 
-router.post('/deleteHistorico', mysqlController.deleteHistorico);
+router.post('/deleteMultiHistorico', mysqlController.deleteMultiHistorico);
+
+router.post('/deleteSingleHistorico', mysqlController.deleteSingleHistorico);
 
 module.exports = router;
