@@ -4,11 +4,11 @@ import { ChartType } from "./dashboard.model";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 
 @Component({
-  selector: "app-default",
-  templateUrl: "./default.component.html",
-  styleUrls: ["./default.component.scss"],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
 })
-export class DefaultComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   date: Date;
   actualMonth: string;
   actualDay: number;

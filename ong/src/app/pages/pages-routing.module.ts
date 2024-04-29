@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DefaultComponent } from './dashboards/default/default.component';
+import { DefaultComponent } from './dashboards/dashboard/default.component';
 import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
 import { HistoricoComponent } from './doacoes/historico/historico.component';
 import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';

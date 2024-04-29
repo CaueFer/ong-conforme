@@ -22,27 +22,26 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 import { PagesRoutingModule } from './pages-routing.module';
 
-import { DashboardsModule } from './dashboards/dashboards.module';
 import { HttpClientModule } from '@angular/common/http';
 import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
 import { HistoricoComponent } from './doacoes/historico/historico.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
 import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
     GerenciadorComponent,
     HistoricoComponent,
     SingleHistoricoComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,
@@ -52,7 +51,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PagesRoutingModule,
     NgApexchartsModule,
     ReactiveFormsModule,
-    DashboardsModule,
     HttpClientModule,
     UIModule,
     WidgetModule,
