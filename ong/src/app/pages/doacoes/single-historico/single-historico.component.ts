@@ -36,7 +36,6 @@ export class SingleHistoricoComponent {
   doacaoIdObservable$ = this.doacaoIdSubject.asObservable();
 
   modalRef?: BsModalRef;
-  masterSelected!: boolean;
 
   historicoForm!: UntypedFormGroup;
   submitted = false;
@@ -211,7 +210,20 @@ export class SingleHistoricoComponent {
         historico.marked = ev.target.checked;
       });
   }
-  checkedValGet: any[] = [];
+
+  checkUncheckOut(ev: any) {
+    if (this.historicosOut.length > 0)
+      this.historicosOut.forEach((historico: HistoricoModel) => {
+        historico.marked = ev.target.checked;
+      });
+  }
+
+  checkUncheckIn(ev: any) {
+    if (this.historicosIn.length > 0)
+      this.historicosIn.forEach((historico: HistoricoModel) => {
+        historico.marked = ev.target.checked;
+      });
+  }
 
   confirmDelete(id: any) {
     this.deletId = id;

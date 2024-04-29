@@ -29,7 +29,7 @@ export const MENU: MenuItem[] = [
     {
         id: 3,
         label: 'MENUITEMS.FAMILIAS.TEXT',
-        icon: 'bx bx-package',
+        icon: 'bx bxs-group',
         subItems: [
             {
                 id: 3.1,

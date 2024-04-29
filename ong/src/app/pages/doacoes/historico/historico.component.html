@@ -289,14 +289,15 @@
                         <div class="d-flex gap-3">
                           <a
                             href="javascript:void(0);"
-                            class="text-success"
+                            class="text-black align-middle"
                             [routerLink]="['/ong-conforme/historico-single']"
                             [queryParams]="{ id: data.doacao_id }"
-                            ><i class="mdi mdi-pencil font-size-18"></i
-                          ></a>
+                          >
+                          <span class="mdi mdi-text-search font-size-18"></span>
+                          </a>
                           <a
                             href="javascript:void(0);"
-                            class="text-danger"
+                            class="text-danger align-middle"
                             (click)="confirmDelete(data.id)"
                             ><i class="mdi mdi-delete font-size-18"></i
                           ></a>
