@@ -8,7 +8,11 @@ router.get('/getDoacao', mysqlController.getDoacao);
 
 router.get('/getSingleDoacao', mysqlController.getSingleDoacao);
 
+router.get('/getUser', mysqlController.getUser);
+
 router.get('/getHistorico', mysqlController.getHistorico);
+
+router.post('/loginUser', mysqlController.loginUser);
 
 router.post('/addDoacao', mysqlController.addDoacao);
 

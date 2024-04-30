@@ -6,46 +6,63 @@ import {
 } from "@angular/forms";
 
 import { AuthenticationService } from "../../../core/services/auth/auth.service";
-import { AuthfakeauthenticationService } from "../../../core/services/auth/authfake.service";
 
 import { OwlOptions } from "ngx-owl-carousel-o";
 import { ActivatedRoute, Router } from "@angular/router";
-import { first } from "rxjs/operators";
-
-import { environment } from "../../../../environments/environment";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-login2",
   templateUrl: "./login2.component.html",
   styleUrls: ["./login2.component.scss"],
 })
-/**
- * Login-2 component
- */
 export class Login2Component implements OnInit {
+  loginForm: UntypedFormGroup;
+  submitted: boolean = false;
+  returnUrl: string;
+  showPassword: boolean = false;
+  continueLogged: boolean = false;
+
+  year: number = new Date().getFullYear();
+
+  successmsg: string = "";
+  errormsg: string = "";
+
+  private authenticatedSub!: Subscription;
+  private isAuthenticated: boolean = false;
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService
-  ) {}
-  loginForm: UntypedFormGroup;
-  submitted: boolean = false;
-  error: string = "";
-  returnUrl: string;
-  showPassword: boolean = false;
-  contLoged: boolean = false;
-
-  // set the currenr year
-  year: number = new Date().getFullYear();
+    private _authService: AuthenticationService
+  ) {
+    this.loginForm = this.formBuilder.group({
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required]],
+    });
+  }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: ["admin@ongconforme.com", [Validators.required, Validators.email]],
-      password: ["admin", [Validators.required]],
-    });
     this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
+
+    this.authenticatedSub = this._authService
+      .getAuthentication()
+      .subscribe((data) => {
+        if (data) {
+          this.isAuthenticated = data;
+          this.router.navigate(["ong-conforme"]);
+        }
+      });
+
+    this._authService.authFromLocalStorage();
+  }
+
+  ngOnDestroy(): void {
+    this.authenticatedSub.unsubscribe();
   }
 
   carouselOption: OwlOptions = {
@@ -61,43 +78,29 @@ export class Login2Component implements OnInit {
     },
   };
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
-  }
-
-  /**
-   * Form submit
-   */
-  onSubmit() {
+  submitLogin() {
     this.submitted = true;
 
-    // stop here if form is invalid
     if (this.loginForm.invalid) {
+      this.errormsg = "Campos invalidos.";
+
       return;
-    } else {
-      if (environment.defaultauth === "firebase") {
-        this.authenticationService
-          .login(this.f.email.value, this.f.password.value)
-          .then((res: any) => {
-            this.router.navigate(["/dashboard"]);
-          })
-          .catch((error) => {
-            this.error = error ? error : "";
-          });
-      } else {
-        this.authFackservice
-          .login(this.f.email.value, this.f.password.value, this.contLoged)
-          .pipe(first())
-          .subscribe({
-            next: (data: any) => {
-              this.router.navigate(["/"]);
-            },
-            error: (error: any) => {
-              this.error = error ? error : "";
-            },
-          });
-      }
+    }
+
+    if (this.loginForm.valid) {
+      this._authService
+        .loginUser(
+          this.f["email"].value,
+          this.f["password"].value,
+          this.continueLogged
+        )
+        .then((data) => {
+          //console.log(data);
+        })
+        .catch((err) => {
+          //console.log(err);
+          this.errormsg = err;
+        });
     }
   }
 
@@ -105,7 +108,7 @@ export class Login2Component implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  toggleLoged(){
-    this.contLoged = !this.contLoged;
+  toggleLoged() {
+    this.continueLogged = !this.continueLogged;
   }
 }

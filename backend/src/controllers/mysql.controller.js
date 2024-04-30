@@ -1,8 +1,13 @@
 const db = require("../db");
 const config = require("../../../config");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
-let doacaoTable = "doacoes";
-let historicoTable = "historico";
+let doacaoTable = config.doacoesTable;
+let historicoTable = config.historicosTable;
+let userTable = config.userTable;
+
+const secretKey = "STRINGMTFODA";
 
 exports.getDoacao = (req, res) => {
   db.query("SELECT * FROM " + doacaoTable, (error, results, fields) => {
@@ -18,13 +23,44 @@ exports.getDoacao = (req, res) => {
 exports.getSingleDoacao = (req, res) => {
   const id = req.query.id;
 
-  db.query("SELECT * FROM " + doacaoTable + " WHERE id = ?", id, (error, results, fields) => {
-    if (error) {
-      console.error("Erro ao obter dados:", error);
-      res.status(500).json("Erro ao obter os dados");
-      return;
+  db.query(
+    "SELECT * FROM " + doacaoTable + " WHERE id = ?",
+    id,
+    (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao obter dados:", error);
+        res.status(500).json("Erro ao obter os dados");
+        return;
+      }
+      res.status(200).json(results);
     }
-    res.status(200).json(results);
+  );
+};
+
+exports.getUser = (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({
+      message: "Token not provided",
+    });
+  }
+
+  jwt.verify(token, secretKey, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({
+        message: "Invalid jwt",
+      });
+    }
+
+    if (decoded) {
+      res.status(200).json({
+        userInfos: {
+          name: decoded.userName,
+          email: decoded.userEmail,
+          roles: decoded.userRoles,
+        },
+      });
+    }
   });
 };
 
@@ -37,6 +73,51 @@ exports.getHistorico = (req, res) => {
     }
     res.send(results);
   });
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  db.query(
+    "SELECT * FROM " + userTable + " WHERE email = ?",
+    [email],
+    async (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao validar login: ", error);
+        res.status(500).json("Erro ao validar login.");
+        return;
+      }
+      if (results.length === 0) {
+        res.status(404).json("Conta não encontrada.");
+        return;
+      }
+
+      const user = results[0];
+      if (user) {
+        const userPass = user.passwordHash;
+        const passwordMatch = await bcrypt.compare(password, userPass);
+
+        if (!passwordMatch) {
+          return res.status(406).json("Senha incorreta.");
+        }
+
+        const token = jwt.sign(
+          {
+            userName: user.userName,
+            userEmail: user.email,
+            userId: user.id,
+            userRoles: user.roles,
+          },
+          secretKey,
+          { expiresIn: "1h" }
+        );
+        res.status(200).json({
+          token: token,
+          expiresIn: 3600,
+          message: "Login efetudo com sucesso.",
+        });
+      }
+    }
+  );
 };
 
 exports.addDoacao = (req, res) => {
@@ -183,7 +264,7 @@ exports.deleteMultiHistorico = (req, res) => {
       res.status(200).json("Historico deletado com sucesso ");
     }
   );
-}
+};
 
 exports.deleteSingleHistorico = (req, res) => {
   const { id } = req.body;
@@ -200,4 +281,4 @@ exports.deleteSingleHistorico = (req, res) => {
       res.status(200).json("Historico individual deletado com sucesso ");
     }
   );
-}
+};

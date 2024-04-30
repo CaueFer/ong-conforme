@@ -1,66 +1,128 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable, Subject, catchError, map, throwError } from "rxjs";
+import { Router } from "@angular/router";
+import { UserModel } from "../../models/user.model";
+import config from "../../../../../../config.js";
 
-import { getFirebaseBackend } from '../../../authUtils';
-
-import { User } from '../../models/auth.models';
-
-@Injectable({ providedIn: 'root' })
-
+@Injectable({ providedIn: "root" })
 export class AuthenticationService {
+  url: string = config.databaseUrlBack;
 
-    user: User;
+  private jwtToken!: string;
+  private authenticationSub = new Subject<boolean>();
+  private isAutheticated = false;
+  logoutTimer: any;
 
-    constructor() {
+  constructor(private http: HttpClient, private router: Router) {}
+
+  getIsAutheticated() {
+    return this.isAutheticated;
+  }
+
+  getAuthentication() {
+    return this.authenticationSub.asObservable();
+  }
+
+  getToken() {
+    return this.jwtToken;
+  }
+
+  async loginUser(
+    email: string,
+    password: string,
+    continueLogged: boolean
+  ): Promise<any> {
+    const userData: UserModel = { email: email, password: password };
+
+    return new Promise<any>((resolve, reject) => {
+      this.http.post<any>(`${this.url}/loginUser`, userData).subscribe({
+        next: (data) => {
+          if (data) {
+            this.jwtToken = data.token;
+            if (this.jwtToken) {
+              this.authenticationSub.next(true);
+              this.isAutheticated = true;
+              this.logoutTimer = setTimeout(() => {
+                this.logout();
+              }, data.expiresIn * 1000);
+
+              const now = new Date();
+              const expiresDate = new Date(
+                now.getTime() + data.expiresIn * 1000
+              );
+
+              if (continueLogged)
+                this.addToLocalstorage(this.jwtToken, expiresDate);
+            }
+            resolve(true);
+          } else {
+            reject(new Error("Conta não encontrado na resposta"));
+          }
+        },
+        error: (err) => {
+          //console.error(err);
+          let msg = '';
+          if(err === 'Not Found') msg = 'Conta não cadastrada!';
+          if(err === 'Not Acceptable') msg = 'Senha incorreta!';
+          reject(msg);
+        },
+      });
+    });
+  }
+
+  getUser(): Observable<any> {
+    return this.http.get<any>(this.url + "/getUser");
+  }
+
+  logout() {
+    this.jwtToken = "";
+    this.authenticationSub.next(false);
+    this.isAutheticated = false;
+    this.router.navigate(["/"]);
+
+    clearTimeout(this.logoutTimer);
+    this.clearFromLocalstorage();
+  }
+
+  addToLocalstorage(token: string, expirationDate: Date) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("expiresIn", expirationDate.toISOString());
+  }
+
+  clearFromLocalstorage() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiresIn");
+  }
+
+  getLocalStorageData() {
+    const token = localStorage.getItem("token");
+    const expiresIn = localStorage.getItem("expiresIn");
+
+    if (!token || !expiresIn) {
+      return;
     }
+    return {
+      token: token,
+      expiresIn: new Date(expiresIn),
+    };
+  }
 
-    /**
-     * Returns the current user
-     */
-    public currentUser(): User {
-        return getFirebaseBackend().getAuthenticatedUser();
-    }
+  authFromLocalStorage() {
+    const localStorageData = this.getLocalStorageData();
 
-    /**
-     * Performs the auth
-     * @param email email of user
-     * @param password password of user
-     */
-    login(email: string, password: string) {
-        return getFirebaseBackend().loginUser(email, password).then((response: any) => {
-            const user = response;
-            return user;
-        });
-    }
+    if (localStorageData) {
+      const now = new Date();
+      const expiresIn = localStorageData.expiresIn.getTime() - now.getTime();
 
-    /**
-     * Performs the register
-     * @param email email
-     * @param password password
-     */
-    register(email: string, password: string) {
-        return getFirebaseBackend().registerUser(email, password).then((response: any) => {
-            const user = response;
-            return user;
-        });
+      if (expiresIn > 0) {
+        this.jwtToken = localStorageData.token;
+        this.isAutheticated = true;
+        this.authenticationSub.next(true);
+        this.logoutTimer = setTimeout(() => {
+          this.logout();
+        }, expiresIn);
+      }
     }
-
-    /**
-     * Reset password
-     * @param email email
-     */
-    resetPassword(email: string) {
-        return getFirebaseBackend().forgetPassword(email).then((response: any) => {
-            const message = response.data;
-            return message;
-        });
-    }
-
-    /**
-     * Logout the user
-     */
-    logout() {
-        // logout the user
-        getFirebaseBackend().logout();
-    }
+  }
 }
-
