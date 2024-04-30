@@ -21,6 +21,38 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12">
+          <div class="row">
+            <div class="col-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="text-black">
+                    <h5 class="text-primary">Dados da doação</h5>
+                    <p class="fw-bold ps-2 fs-4 mt-3">{{ this.doacao && this.doacao[0]?.itemName ? (this.doacao[0]?.itemName | titlecase) : 'carregando...' }}</p>
+                    <ul class="ps-3 mb-0">
+                      <li class="py-1">Categoria: {{ this.doacao && this.doacao[0]?.categoria ? (this.doacao[0]?.categoria | titlecase) : 'carregando...' }}</li>
+                      <li class="py-1">Quantidade: {{ this.doacao && this.doacao[0]?.qntd ? this.doacao[0]?.qntd: 'carregando...' }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="card">
+                <div class="card-body">
+                  <div class="text-black">
+                    <h5 class="text-primary">Dados da Meta</h5>
+                    <p class="fw-bold ps-2 fs-4 mt-3">{{ this.doacao && this.doacao[0]?.itemName ? (this.doacao[0]?.itemName | titlecase) : 'carregando...' }}</p>
+                    <ul class="ps-3 mb-0">
+                      <li class="py-1">Categoria: {{ this.doacao && this.doacao[0]?.categoria ? (this.doacao[0]?.categoria | titlecase) : 'carregando...' }}</li>
+                      <li class="py-1">Quantidade: {{ this.doacao && this.doacao[0]?.qntd ? this.doacao[0]?.qntd: 'carregando...' }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
           <div class="card">
             <div class="card-body">
               <div class="row mb-2">

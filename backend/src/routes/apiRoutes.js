@@ -6,6 +6,8 @@ const mysqlController = require('../controllers/mysql.controller.js');
 
 router.get('/getDoacao', mysqlController.getDoacao);
 
+router.get('/getSingleDoacao', mysqlController.getSingleDoacao);
+
 router.get('/getHistorico', mysqlController.getHistorico);
 
 router.post('/addDoacao', mysqlController.addDoacao);

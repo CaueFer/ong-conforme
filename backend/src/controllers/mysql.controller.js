@@ -15,6 +15,19 @@ exports.getDoacao = (req, res) => {
   });
 };
 
+exports.getSingleDoacao = (req, res) => {
+  const id = req.query.id;
+
+  db.query("SELECT * FROM " + doacaoTable + " WHERE id = ?", id, (error, results, fields) => {
+    if (error) {
+      console.error("Erro ao obter dados:", error);
+      res.status(500).json("Erro ao obter os dados");
+      return;
+    }
+    res.status(200).json(results);
+  });
+};
+
 exports.getHistorico = (req, res) => {
   db.query("SELECT * FROM " + historicoTable, (error, results, fields) => {
     if (error) {

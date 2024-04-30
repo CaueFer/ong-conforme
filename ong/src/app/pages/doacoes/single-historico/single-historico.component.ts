@@ -79,8 +79,10 @@ export class SingleHistoricoComponent {
 
   currentPage = 1;
   itemsPerPage = 10;
-  doacoes: any[];
+
   targetId: any;
+  selectedDoacao: any;
+  doacao: DoacaoModel[];
 
   constructor(
     private modalService: BsModalService,
@@ -149,11 +151,11 @@ export class SingleHistoricoComponent {
   updateListHistorico(idReceived: any) {
     this.isLoadingList = true;
 
-    this.doacoes = [];
-    this._databaseService.getDoacao().subscribe({
+    this.doacao = [];
+    this._databaseService.getSingleDoacao(idReceived).subscribe({
       next: (values) => {
         if (values) {
-          this.doacoes = values;
+          this.doacao = values;
         }
       },
       error: (err) => {
@@ -175,9 +177,7 @@ export class SingleHistoricoComponent {
 
             value.data = `${day}/${month}/${year}`;
 
-            value.itemName = this.doacoes.find(
-              (e) => e.id === value.doacao_id
-            )?.itemName;
+            value.itemName = this.doacao[0].itemName;
           });
 
           const historicosTemp = values.filter(

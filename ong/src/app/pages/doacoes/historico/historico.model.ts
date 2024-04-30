@@ -5,5 +5,6 @@ export interface HistoricoModel {
     tipoMov?: any;
     doadorName?: any;
     doacao_id?: any;
+    itemName?: any;
     marked?: boolean;
 }

@@ -20,6 +20,15 @@ export class DatabaseService {
     );
   }
 
+  getSingleDoacao(id: any): Observable<any> {
+    return this.http.get<any>(`${this.url}/getSingleDoacao`, { params: { id: id } }).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   getHistorico(): Observable<any> {
     return this.http.get<any>(`${this.url}/getHistorico`).pipe(
       catchError((error) => {
@@ -30,8 +39,6 @@ export class DatabaseService {
   }
 
   async addDoacao(newValue: any): Promise<Number> {
-    console.log(newValue);
-
     const itemToAdd = {
       categoria: newValue.categoria,
       itemName: newValue.itemName,
