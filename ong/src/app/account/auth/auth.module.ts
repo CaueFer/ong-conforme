@@ -6,11 +6,11 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
 import { UIModule } from '../../shared/ui/ui.module';
-import { Login2Component } from './login2/login2.component';
+import { LoginComponent } from './login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 
 @NgModule({
-  declarations: [Login2Component],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

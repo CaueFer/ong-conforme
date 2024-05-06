@@ -12,11 +12,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 @Component({
-  selector: "app-login2",
-  templateUrl: "./login2.component.html",
-  styleUrls: ["./login2.component.scss"],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
-export class Login2Component implements OnInit {
+export class LoginComponent implements OnInit {
   loginForm: UntypedFormGroup;
   submitted: boolean = false;
   returnUrl: string;

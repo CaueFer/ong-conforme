@@ -11,7 +11,7 @@ import {
   BsModalService,
   ModalDirective,
 } from "ngx-bootstrap/modal";
-import { DatePipe } from "@angular/common";
+import { DatePipe, Location } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { DateService } from "src/app/core/services/date/date-service.service";
@@ -83,7 +83,7 @@ export class SingleHistoricoComponent {
   filterSelectedRangeDate: Date[];
 
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 4;
 
   targetId: any;
   selectedDoacao: any;
@@ -107,7 +107,8 @@ export class SingleHistoricoComponent {
     private localeService: BsLocaleService,
     private _dateService: DateService,
     private _toastService: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.historicoForm = this.formBuilder.group({
       id: [""],
@@ -141,7 +142,6 @@ export class SingleHistoricoComponent {
     this.formattedDate = format(this.actualDate, "d',' MMMM 'de' yyyy", {
       locale: ptBR,
     });
-
 
     this.metaChart = metaChart;
   }
@@ -196,18 +196,27 @@ export class SingleHistoricoComponent {
   }
 
   updateMetaValues() {
-    const qntd = this.doacao[0].metaQntd;
-    const data = new Date(this.doacao[0].metaDate);
+    const qntd =
+      isNaN(this.doacao[0].metaQntd) || this.doacao[0].metaQntd < 0
+        ? 0
+        : this.doacao[0].metaQntd;
+    const data = this.doacao[0].metaDate
+      ? new Date(this.doacao[0].metaDate)
+      : "";
 
     this.metaForm.reset({
       metaQntd: qntd,
       metaDate: data,
     });
 
-    const day = ("0" + data.getDate()).slice(-2);
-    const month = ("0" + (data.getMonth() + 1)).slice(-2);
-    const year = data.getFullYear();
-    this.customDateString = `${day}/${month}/${year}`;
+    if (data != "") {
+      const day = ("0" + data.getDate()).slice(-2);
+      const month = ("0" + (data.getMonth() + 1)).slice(-2);
+      const year = data.getFullYear();
+      this.customDateString = `${day}/${month}/${year}`;
+    } else {
+      this.customDateString = "Data final";
+    }
 
     this.metaIsEditing = false;
   }
@@ -219,18 +228,24 @@ export class SingleHistoricoComponent {
       this.metaResult = "Dados de doação inválidos";
       return;
     }
+    
+    if (Number(this.metaQntd) <= 0 || Number(this.doacao[0].qntd) <= 0) {
+      this.metaResult = "Nenhuma meta definida.";
 
-
-    const quantidadeFalta =
-      (Number(this.doacao[0].qntd) / Number(this.metaQntd)) * 100;
-
-    if (quantidadeFalta < 100) {
-      this.metaResult = `${quantidadeFalta}% da meta total`;
+      this.metaChart.series = [0];
     } else {
-      this.metaResult = "Meta atingida!";
-    }
+      const quantidadeFalta = Math.floor(
+        (Number(this.doacao[0].qntd) / Number(this.metaQntd)) * 100
+      );
 
-    this.metaChart.series = [quantidadeFalta];
+      if (quantidadeFalta < 100) {
+        this.metaResult = `${quantidadeFalta}% da meta total`;
+      } else {
+        this.metaResult = "Meta atingida!";
+      }
+
+      this.metaChart.series = [quantidadeFalta];
+    }
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -356,6 +371,10 @@ export class SingleHistoricoComponent {
 
   removeAccents(value: string) {
     return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  voltar() {
+    this.location.back();
   }
 
   showToast(text: string) {
