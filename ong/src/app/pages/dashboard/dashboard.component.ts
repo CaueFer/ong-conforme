@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { emailSentBarChart, monthlyEarningChart } from './data';
-import { ChartType } from "./dashboard.model";
+import { ChartType } from "../../core/models/charts.model";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 
 @Component({
@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
 
   sentBarChart: ChartType;
   monthlyEarningChart: ChartType;
+  
   statData = [{
       "icon": "bx bx-copy-alt",
       "title": "Doações Total",
@@ -42,12 +43,6 @@ export class DashboardComponent implements OnInit {
     this.actualDay = this.date.getDate();
 
     this.fetchData();
-
-    // const values = [
-    //   ["0", "ATT", "ATT", "ATUALIZADO"]
-    // ];
-    // this._databaseService.updateData(values);
-    //this._databaseService.deleteData("6");
   }
 
   ngAfterViewInit() {}

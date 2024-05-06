@@ -131,6 +131,29 @@ export class DatabaseService {
         });
     });
   }
+  
+  async updateMetaInDoacao(newValue: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const itemToAtt = {
+        metaQntd: newValue.qntd,
+        metaDate: newValue.data,
+        doacao_id: newValue.doacao_id,
+      };
+
+      this.http
+        .post<any>(`${this.url}/updateMetaInDoacao`, itemToAtt)
+        .subscribe({
+          next: (data) => {
+            //console.log(data);
+            resolve();
+          },
+          error: (err) => {
+            console.error(err);
+            reject();
+          },
+        });
+    });
+  }
 
   async deleteDoacao(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {

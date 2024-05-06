@@ -98,13 +98,13 @@ export class HistoricoComponent {
       const startDay = ("0" + startDate.getDate()).slice(-2);
       const startMonth = ("0" + (startDate.getMonth() + 1)).slice(-2);
       const startYear = startDate.getFullYear();
+      const formattedStartDate = `${startDay}/${startMonth}/${startYear}`;
 
       const endDay = ("0" + endDate.getDate()).slice(-2);
       const endMonth = ("0" + (endDate.getMonth() + 1)).slice(-2);
       const endYear = endDate.getFullYear();
-
-      const formattedStartDate = `${startDay}/${startMonth}/${startYear}`;
       const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
+
 
       this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
     } else {
@@ -146,7 +146,7 @@ export class HistoricoComponent {
             value.itemName = this.doacoes.find(e => e.id === value.doacao_id)?.itemName;
           });
 
-          this.historicos = values;
+          this.historicos = values.reverse();
           this.isLoadingList = false;
         }
       },

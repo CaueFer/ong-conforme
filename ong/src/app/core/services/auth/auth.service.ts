@@ -61,10 +61,11 @@ export class AuthenticationService {
           }
         },
         error: (err) => {
-          //console.error(err);
+          console.error(err);
           let msg = '';
           if(err === 'Not Found') msg = 'Conta não cadastrada!';
           if(err === 'Not Acceptable') msg = 'Senha incorreta!';
+          if(err === 'Internal Server Error') msg = 'Ocorreu um problema, tente novamente mais tarde.';
           reject(msg);
         },
       });
@@ -79,10 +80,10 @@ export class AuthenticationService {
     this.jwtToken = "";
     this.authenticationSub.next(false);
     this.isAutheticated = false;
-    this.router.navigate(["/"]);
-
     clearTimeout(this.logoutTimer);
     this.clearFromLocalstorage();
+
+    this.router.navigate(['/account']);
   }
 
   addToLocalstorage(token: string, expirationDate: Date) {

@@ -67,23 +67,29 @@ export class Login2Component implements OnInit {
 
   carouselOption: OwlOptions = {
     items: 1,
-    loop: false,
+    loop: true,
     margin: 0,
     nav: false,
-    dots: true,
+    dots: false,
     responsive: {
       680: {
         items: 1,
       },
     },
+    autoplay: true,
+    autoplayTimeout: 2500,
+    fluidSpeed: true,
   };
 
   submitLogin() {
     this.submitted = true;
 
     if (this.loginForm.invalid) {
-      this.errormsg = "Campos invalidos.";
+      this.errormsg = "";
 
+      setTimeout(() => {
+        this.submitted = false;
+      }, 2000)
       return;
     }
 
@@ -96,10 +102,16 @@ export class Login2Component implements OnInit {
         )
         .then((data) => {
           //console.log(data);
+          this.submitted = false;
         })
         .catch((err) => {
           //console.log(err);
           this.errormsg = err;
+          this.submitted = false;
+
+          setTimeout(() => {
+            this.errormsg = '';
+          }, 4000)
         });
     }
   }

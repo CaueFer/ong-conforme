@@ -27,10 +27,30 @@
                 <div class="card-body">
                   <div class="text-black">
                     <h5 class="text-primary">Dados da doação</h5>
-                    <p class="fw-bold ps-2 fs-4 mt-3">{{ this.doacao && this.doacao[0]?.itemName ? (this.doacao[0]?.itemName | titlecase) : 'carregando...' }}</p>
+                    <p class="fw-bold ps-2 fs-4 mt-3">
+                      {{
+                        this.doacao && this.doacao[0]?.itemName
+                          ? (this.doacao[0]?.itemName | titlecase)
+                          : "carregando..."
+                      }}
+                    </p>
                     <ul class="ps-3 mb-0">
-                      <li class="py-1">Categoria: {{ this.doacao && this.doacao[0]?.categoria ? (this.doacao[0]?.categoria | titlecase) : 'carregando...' }}</li>
-                      <li class="py-1">Quantidade: {{ this.doacao && this.doacao[0]?.qntd ? this.doacao[0]?.qntd: 'carregando...' }}</li>
+                      <li class="py-1">
+                        Categoria:
+                        {{
+                          this.doacao && this.doacao[0]?.categoria
+                            ? (this.doacao[0]?.categoria | titlecase)
+                            : "carregando..."
+                        }}
+                      </li>
+                      <li class="py-1">
+                        Quantidade:
+                        {{
+                          this.doacao && this.doacao[0]?.qntd
+                            ? this.doacao[0]?.qntd
+                            : "carregando..."
+                        }}
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -40,12 +60,191 @@
               <div class="card">
                 <div class="card-body">
                   <div class="text-black">
-                    <h5 class="text-primary">Dados da Meta</h5>
-                    <p class="fw-bold ps-2 fs-4 mt-3">{{ this.doacao && this.doacao[0]?.itemName ? (this.doacao[0]?.itemName | titlecase) : 'carregando...' }}</p>
-                    <ul class="ps-3 mb-0">
-                      <li class="py-1">Categoria: {{ this.doacao && this.doacao[0]?.categoria ? (this.doacao[0]?.categoria | titlecase) : 'carregando...' }}</li>
-                      <li class="py-1">Quantidade: {{ this.doacao && this.doacao[0]?.qntd ? this.doacao[0]?.qntd: 'carregando...' }}</li>
-                    </ul>
+                    <h5 class="text-primary">Meta da Doação</h5>
+                    <div class="row d-flex flex-row">
+                      <div class="col">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h4 class="card-title mt-3">Arrecadação Atual</h4>
+                            <h3>
+                              {{
+                                this.doacao && this.doacao[0]?.qntd
+                                  ? this.doacao[0]?.qntd
+                                  : "carregando..."
+                              }}
+                            </h3>
+                            <p class="text-muted">
+                              {{ metaResult }}
+                            </p>
+                            <p class="text-muted mb-2">
+                              {{ formattedDate }}
+                            </p>
+                          </div>
+                          <div class="col-sm-6">
+                            <apx-chart
+                              dir="ltr"
+                              class="apex-charts"
+                              [series]="metaChart.series"
+                              [chart]="metaChart.chart"
+                              [legend]="metaChart.legend"
+                              [colors]="metaChart.colors"
+                              [labels]="metaChart.labels"
+                              [stroke]="metaChart.stroke"
+                              [plotOptions]="metaChart.plotOptions"
+                            >
+                            </apx-chart>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex" style="height: auto; width: auto">
+                        <div class="vr"></div>
+                      </div>
+                      <div class="col">
+                        <div
+                          class="d-flex flex-row justify-content-between align-items-center mb-2"
+                        >
+                          <h4 class="card-title mt-3">Configurar Meta</h4>
+                          <div class="" *ngIf="!metaIsEditing">
+                            <button
+                              class="btn text-white bg-primary rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Editar"
+                              placement="top"
+                              (click)="metaIsEditing = true"
+                            >
+                              <i
+                                class="mdi mdi-pencil align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                          </div>
+                          <div
+                            class="d-flex flex-row gap-2"
+                            *ngIf="metaIsEditing"
+                          >
+                            <button
+                              class="btn text-white bg-success rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Salvar"
+                              placement="top"
+                              (click)="submitMeta()"
+                            >
+                              <i
+                                class="mdi mdi-check align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                            <button
+                              class="btn text-white bg-danger rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Cancelar"
+                              placement="top"
+                              (click)="updateMetaValues()"
+                            >
+                              <i
+                                class="mdi mdi-close align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                          </div>
+                        </div>
+                        <form
+                          [formGroup]="metaForm"
+                          class="needs-validation createorder-form"
+                          id="createorder-form"
+                        >
+                          <div class="mb-3 position-relative">
+                            <input
+                              type="text"
+                              id="metaqntd-field"
+                              class="form-control"
+                              placeholder="Meta de quantidade"
+                              formControlName="metaQntd"
+                              [disableTooltip]="metaIsEditing"
+                              mask="9*"
+                              ngbTooltip="Quantidade esperada"
+                              placement="bottom"
+                              [readonly]="!metaIsEditing"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaQntd'].errors
+                              }"
+                            />
+                            <div
+                              *ngIf="submitted && form['metaQntd'].valid"
+                              class="spinner-border spinner-border-sm text-primary position-absolute"
+                              style="left: 90%; top: 10px"
+                              role="status"
+                            ></div>
+                            <i
+                              *ngIf="metaSaved"
+                              class="bx bx-check align-middle position-absolute fs-3 text-success"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <i
+                              *ngIf="form['metaQntd'].dirty && !submitted"
+                              class="bx bx-save align-middle position-absolute fs-4 text-black"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <div
+                              *ngIf="submitted && form['metaQntd'].errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="form['metaQntd'].errors['required']">
+                                Digite uma quantidade válido.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 position-relative">
+                            <input
+                              *ngIf="metaIsEditing"
+                              bsDatepicker
+                              [bsConfig]="{
+                                isAnimated: true,
+                                dateInputFormat: 'DD/MM/YYYY',
+                                showWeekNumbers: false,
+                              }"
+                              class="form-control"
+                              placeholder="Data final"
+                              formControlName="metaDate"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaDate'].errors
+                              }"
+                            />
+                            <input
+                              *ngIf="!metaIsEditing"
+                              class="form-control"
+                              placeholder="Data final"
+                              [value]="customDateString"
+                              [readonly]="true"
+                              ngbTooltip="Data final"
+                              placement="bottom"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaDate'].errors
+                              }"
+                            />
+                            <div
+                              *ngIf="submitted && form['metaDate'].valid"
+                              class="spinner-border spinner-border-sm text-primary position-absolute"
+                              style="left: 90%; top: 10px"
+                              role="status"
+                            ></div>
+                            <i
+                              *ngIf="metaSaved"
+                              class="bx bx-check align-middle position-absolute fs-3 text-success"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <i
+                              *ngIf="form['metaDate'].dirty && !submitted"
+                              class="bx bx-save align-middle position-absolute fs-4 text-black"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <div class="invalid-feedback">
+                              Por favor selecione uma data.
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

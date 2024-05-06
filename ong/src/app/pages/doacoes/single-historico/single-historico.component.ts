@@ -20,6 +20,10 @@ import Swal from "sweetalert2";
 import { defineLocale, ptBrLocale } from "ngx-bootstrap/chronos";
 import { HistoricoModel } from "../historico/historico.model";
 import { ActivatedRoute, Router } from "@angular/router";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ChartType } from "../../../core/models/charts.model";
+import { metaChart } from "./data";
 
 @Component({
   selector: "app-single-historico",
@@ -30,7 +34,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 export class SingleHistoricoComponent {
   @Input() doacaoId: any;
 
-  tooltip: string = "Conteúdo do tooltip";
+  tooltip: string = "";
   private doacaoIdSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
@@ -39,6 +43,7 @@ export class SingleHistoricoComponent {
   modalRef?: BsModalRef;
 
   historicoForm!: UntypedFormGroup;
+  metaForm!: UntypedFormGroup;
   submitted = false;
 
   // Table data
@@ -84,6 +89,16 @@ export class SingleHistoricoComponent {
   selectedDoacao: any;
   doacao: DoacaoModel[];
 
+  metaChart: ChartType;
+
+  actualDate: Date = new Date();
+  formattedDate: string;
+  metaQntd: Number = 0;
+  metaResult: string = "";
+  metaIsEditing: boolean = false;
+  metaSaved: boolean = false;
+  customDateString: string;
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -102,6 +117,12 @@ export class SingleHistoricoComponent {
       doadorName: ["", [Validators.required]],
     });
 
+    this.metaForm = this.formBuilder.group({
+      metaID: [""],
+      metaQntd: ["", [Validators.required]],
+      metaDate: ["", [Validators.required]],
+    });
+
     defineLocale("pt-br", ptBrLocale);
     this.localeService.use("pt-br");
   }
@@ -116,6 +137,100 @@ export class SingleHistoricoComponent {
       this.targetId = id;
       this.updateListHistorico(this.targetId);
     });
+
+    this.formattedDate = format(this.actualDate, "d',' MMMM 'de' yyyy", {
+      locale: ptBR,
+    });
+
+
+    this.metaChart = metaChart;
+  }
+
+  /**
+   * Form data get
+   */
+  get form() {
+    return this.metaForm.controls;
+  }
+
+  submitMeta() {
+    this.submitted = true;
+
+    if (this.metaForm.invalid) {
+      setTimeout(() => {
+        this.submitted = false;
+      }, 2000);
+
+      return;
+    }
+
+    if (this.metaForm.valid) {
+      const qntd = this.metaForm.controls["metaQntd"].value;
+      const data = this.metaForm.controls["metaDate"].value;
+      const doacao_id = this.targetId;
+
+      const metaValues = {
+        qntd,
+        data,
+        doacao_id,
+      };
+
+      this._databaseService
+        .updateMetaInDoacao(metaValues)
+        .then(() => {
+          this.submitted = false;
+          this.metaSaved = true;
+          this.metaIsEditing = false;
+
+          this.metaForm.reset();
+          this.updateListHistorico(this.targetId);
+
+          setTimeout(() => {
+            this.metaSaved = false;
+          }, 2000);
+
+          this.showToast("Meta atualizada.");
+        })
+        .catch((reject) => {});
+    }
+  }
+
+  updateMetaValues() {
+    const qntd = this.doacao[0].metaQntd;
+    const data = new Date(this.doacao[0].metaDate);
+
+    this.metaForm.reset({
+      metaQntd: qntd,
+      metaDate: data,
+    });
+
+    const day = ("0" + data.getDate()).slice(-2);
+    const month = ("0" + (data.getMonth() + 1)).slice(-2);
+    const year = data.getFullYear();
+    this.customDateString = `${day}/${month}/${year}`;
+
+    this.metaIsEditing = false;
+  }
+
+  metaCalc() {
+    this.metaQntd = this.metaForm.controls["metaQntd"].value;
+
+    if (!this.doacao || this.doacao.length === 0) {
+      this.metaResult = "Dados de doação inválidos";
+      return;
+    }
+
+
+    const quantidadeFalta =
+      (Number(this.doacao[0].qntd) / Number(this.metaQntd)) * 100;
+
+    if (quantidadeFalta < 100) {
+      this.metaResult = `${quantidadeFalta}% da meta total`;
+    } else {
+      this.metaResult = "Meta atingida!";
+    }
+
+    this.metaChart.series = [quantidadeFalta];
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -198,6 +313,9 @@ export class SingleHistoricoComponent {
           this.historicosOut.push(...historicosOut);
 
           this.isLoadingList = false;
+
+          this.updateMetaValues();
+          this.metaCalc();
         }
       },
       error: (err) => {
@@ -227,32 +345,6 @@ export class SingleHistoricoComponent {
       });
   }
 
-  confirmDelete(id: any) {
-    this.deletId = id;
-    this.alertConfirmOrCancel();
-  }
-
-  deleteOrder() {
-    if (this.deletId === null) {
-      this.showToast("Erro ao deletar item");
-
-      return;
-    }
-
-    this._databaseService
-      .deleteSingleHistorico(this.deletId)
-      .then(() => {
-        this.deletId = null;
-
-        this.alertConfirmDelete();
-
-        this.updateListHistorico(this.targetId);
-      })
-      .catch(() => {
-        console.error("Erro ao deletar historico de id: " + this.deletId);
-      });
-  }
-
   /**
    * Open modal
    * @param content modal content
@@ -260,15 +352,6 @@ export class SingleHistoricoComponent {
   openModal(content: any) {
     this.submitted = false;
     this.modalRef = this.modalService.show(content, { class: "modal-md" });
-  }
-
-  toggleInput(value: string) {
-    if (value === "entrada") this.isInput = true;
-    else this.isInput = false;
-  }
-
-  toggleCheckbox($event: any) {
-    this.addInitialMov = $event;
   }
 
   removeAccents(value: string) {
@@ -294,57 +377,5 @@ export class SingleHistoricoComponent {
 
   alertSucess(msg1, msg2: string) {
     Swal.fire(msg1, msg2, "success");
-  }
-
-  alertConfirmDelete() {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-danger ms-2",
-      },
-      buttonsStyling: false,
-      iconHtml:
-        '<i class="fas fa-trash-alt text-danger animate__animated animate__shakeX fs-1"></i>',
-    });
-
-    swalWithBootstrapButtons.fire(
-      "Deletado!",
-      "Doação foi deletada com sucesso.",
-      "error"
-    );
-  }
-
-  alertConfirmOrCancel() {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        cancelButton: "btn btn-danger ms-2",
-        confirmButton: "btn btn-success",
-      },
-      buttonsStyling: false,
-    });
-
-    swalWithBootstrapButtons
-      .fire({
-        title: "Tem certeza?",
-        text: "Essa ação é irreversível!",
-        icon: "question",
-        cancelButtonText: "Cancelar!",
-        confirmButtonText: "Deletar!",
-        showCancelButton: true,
-      })
-      .then((result) => {
-        if (result.value) {
-          this.deleteOrder();
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire(
-            "Cancelado",
-            "Seu histórico não foi deletado!",
-            "error"
-          );
-        }
-      });
   }
 }

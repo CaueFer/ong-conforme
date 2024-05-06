@@ -6,6 +6,8 @@ export interface DoacaoModel {
     dataCreated?: string;
     qntd?: string;
     index?: any;
-    marked?: boolean
+    metaQntd?: any;
+    metaDate?: any;
+    marked?: boolean,
 }
   

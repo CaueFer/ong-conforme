@@ -439,3 +439,18 @@ a.ck.ck-button.ck-on {
         border-radius: 0!important;
     }
 }
+
+// MAIN COLOR
+
+$mainThemeColor: #870026;
+
+.mainThemeBtn {
+    background-color: $mainThemeColor;
+    border-color: $mainThemeColor;
+    box-shadow: $mainThemeColor; 
+
+    &:hover,
+    &:active  {
+        @extend .mainThemeBtn;
+    }
+}

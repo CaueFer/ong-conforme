@@ -17,7 +17,6 @@ import {
 } from "ngx-bootstrap/modal";
 import { Observable } from "rxjs";
 import { DoacaoModel } from "./doacao.model";
-import { NgbdOrdersSortableHeader } from "./orders-sortable.directive";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
@@ -44,7 +43,6 @@ export class GerenciadorComponent implements OnInit {
   submitted = false;
 
   transactions: DoacaoModel[] = [];
-  // Table data
   content?: any;
   doacoes?: DoacaoModel[] = [];
   ordersList!: Observable<DoacaoModel[]>;

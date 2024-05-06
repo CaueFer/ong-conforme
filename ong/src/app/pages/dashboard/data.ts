@@ -1,4 +1,4 @@
-import { ChartType } from './dashboard.model';
+import { ChartType } from '../../core/models/charts.model';
 
 const emailSentBarChart: ChartType = {
     chart: {
@@ -147,18 +147,5 @@ const transactions = [
     }
 ];
 
-const statData = [{
-    icon: 'bx bx-copy-alt',
-    title: 'Orders',
-    value: '1,235'
-}, {
-    icon: 'bx bx-archive-in',
-    title: 'Revenue',
-    value: '$35, 723'
-}, {
-    icon: 'bx bx-purchase-tag-alt',
-    title: 'Average Price',
-    value: '$16.2'
-}];
 
-export { emailSentBarChart, monthlyEarningChart, transactions, statData };
+export { emailSentBarChart, monthlyEarningChart, transactions };

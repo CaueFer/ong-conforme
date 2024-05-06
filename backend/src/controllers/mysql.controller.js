@@ -215,6 +215,28 @@ exports.updateQntdInDoacao = (req, res) => {
   );
 };
 
+exports.updateMetaInDoacao = (req, res) => {
+  const { metaQntd, metaDate, doacao_id } = req.body;
+
+  const quantidadeNova = parseInt(metaQntd, 10);
+
+  db.query(
+    "UPDATE " + doacaoTable + " SET metaQntd = ?, metaDate = ? WHERE id = ?",
+    [quantidadeNova, metaDate, doacao_id],
+    (error, results) => {
+      if (error) {
+        console.error("Erro ao atualizar meta do item:", error);
+        res.status(500).json("Erro ao atualizar meta do item");
+        return;
+      }
+
+      res
+        .status(200)
+        .json("Meta do item atualizada com sucesso");
+    }
+  );
+};
+
 exports.updateDoacao = (req, res) => {
   const { id, categoria, itemName } = req.body;
 
