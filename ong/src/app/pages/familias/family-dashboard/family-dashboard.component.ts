@@ -1,12 +1,35 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { nextDay } from "date-fns";
+import { DatabaseService } from "src/app/core/services/database/database.service";
 
 @Component({
-  selector: 'app-family-dashboard',
-  standalone: true,
-  imports: [],
-  templateUrl: './family-dashboard.component.html',
-  styleUrl: './family-dashboard.component.scss'
+  selector: "app-family-dashboard",
+  standalone: false,
+  templateUrl: "./family-dashboard.component.html",
+  styleUrl: "./family-dashboard.component.scss",
 })
 export class FamilyDashboardComponent {
 
+  familias: any;
+  submitted = false;
+  currentPage = 1;
+  itemsPerPage = 10;
+  
+  isLoading: boolean = false;
+
+  constructor(
+    private _databaseService: DatabaseService,
+
+  ) {}
+  ngOnInit() {
+    this._databaseService.getFamilias().subscribe({
+      next: (familias) => {
+        this.familias = familias;
+        console.log(this.familias);
+      },
+      error: (error) => {
+      }
+    });
+
+  }
 }

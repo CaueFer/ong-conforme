@@ -8,6 +8,7 @@ const config = {
     familiaTable: "familias",
     enderecoTable: "enderecos",
     userTable: "users",
+    familyTable: "familias",
 };
 
 module.exports = config;

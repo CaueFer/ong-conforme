@@ -34,7 +34,7 @@ export const MENU: MenuItem[] = [
             {
                 id: 3.1,
                 label: 'MENUITEMS.FAMILIAS.LIST.GERENCIAR',
-                link: '/',
+                link: '/ong-conforme/familia-dashboard',
                 parentId: 3
             }
         ]

@@ -1,0 +1,421 @@
+<div class="container-fluid">
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div
+        class="page-title-box d-flex align-items-center justify-content-between"
+      >
+        <h4 class="mb-0 font-size-18">Dashboard</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <ng-container>
+              <li class="breadcrumb-item">
+                <a href="javascript: void(0);">...</a>
+              </li>
+              <li class="breadcrumb-item active">Dashboard</li>
+            </ng-container>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 d-none d-lg-block">
+      <div class="row">
+        <div class="col-4">
+          <div class="row">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h4 class="card-title mb-4">Arrecadação Mensal</h4>
+                    <p class="text-muted"></p>
+                    <h3>$34,252</h3>
+                    <p class="text-muted">
+                      <span class="text-success me-2">
+                        12%
+                        <i class="mdi mdi-arrow-up"></i
+                      ></span>
+                      do mês anterior
+                    </p>
+                  </div>
+                  <div class="col-sm-6"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title mb-5">Recentes</h4>
+                <ul class="verti-timeline list-unstyled">
+                  <li class="event-list">
+                    <div class="event-timeline-dot">
+                      <i class="bx bx-right-arrow-circle font-size-18"></i>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-shrink-0 me-3">
+                        <h5 class="font-size-14">
+                          22 Nov
+                          <i
+                            class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                          ></i>
+                        </h5>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div>Responded to need “Volunteer Activities</div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="event-list">
+                    <div class="event-timeline-dot">
+                      <i class="bx bx-right-arrow-circle font-size-18"></i>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-shrink-0 me-3">
+                        <h5 class="font-size-14">
+                          17 Nov
+                          <i
+                            class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                          ></i>
+                        </h5>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div>
+                          Everyone realizes why a new common language would be
+                          desirable...
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="event-list active">
+                    <div class="event-timeline-dot">
+                      <i
+                        class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"
+                      ></i>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-shrink-0 me-3">
+                        <h5 class="font-size-14">
+                          Hoje
+                          <i
+                            class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                          ></i>
+                        </h5>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div>Joined the group “Boardsmanship Forum”</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="text-center mt-4">
+                  <a
+                    href="javascript: void(0);"
+                    routerLink="/ong-conforme/historico"
+                    class="btn btn-primary btn-sm"
+                    >Ver mais <i class="mdi mdi-arrow-right ms-1"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="row">
+            <div *ngFor="let stat of statData" class="col">
+              <app-stat
+                [title]="stat.title"
+                [value]="stat.value"
+                [icon]="stat.icon"
+              ></app-stat>
+            </div>
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 d-block d-lg-none">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <h4 class="card-title mb-4">Arrecadação Mensal</h4>
+                  <p class="text-muted"></p>
+                  <h3>$34,252</h3>
+                  <p class="text-muted">
+                    <span class="text-success me-2">
+                      12%
+                      <i class="mdi mdi-arrow-up"></i
+                    ></span>
+                    do mês anterior
+                  </p>
+                </div>
+                <div class="col-sm-6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-5">Recentes</h4>
+              <ul class="verti-timeline list-unstyled">
+                <li class="event-list">
+                  <div class="event-timeline-dot">
+                    <i class="bx bx-right-arrow-circle font-size-18"></i>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <h5 class="font-size-14">
+                        22 Nov
+                        <i
+                          class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                        ></i>
+                      </h5>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div>Responded to need “Volunteer Activities</div>
+                    </div>
+                  </div>
+                </li>
+                <li class="event-list">
+                  <div class="event-timeline-dot">
+                    <i class="bx bx-right-arrow-circle font-size-18"></i>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <h5 class="font-size-14">
+                        17 Nov
+                        <i
+                          class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                        ></i>
+                      </h5>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div>
+                        Everyone realizes why a new common language would be
+                        desirable...
+                        <a href="javascript: void(0);">Read more</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="event-list active">
+                  <div class="event-timeline-dot">
+                    <i
+                      class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"
+                    ></i>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <h5 class="font-size-14">
+                        Hoje
+                        <i
+                          class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
+                        ></i>
+                      </h5>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div>Joined the group “Boardsmanship Forum”</div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="text-center mt-4">
+                <a href="javascript: void(0);" class="btn btn-primary btn-sm"
+                  >View More <i class="mdi mdi-arrow-right ms-1"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <!-- Table data -->
+            <div class="table-responsive mb-0">
+              <table
+                class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check position-relative"
+                id="order-list"
+              >
+                <thead
+                  *ngIf="
+                    this.historicos.length > 0 && this.isLoadingList === false
+                  "
+                  class="table-light"
+                >
+                  <tr>
+                    <th style="width: 20px">
+                      <div class="form-check font-size-16 align-middle">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="transactionCheck01"
+                          [(ngModel)]="masterSelected"
+                          (change)="checkUncheckAll($event)"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="transactionCheck01"
+                        ></label>
+                      </div>
+                    </th>
+                    <th class="align-middle">ID</th>
+                    <th class="align-middle">Item</th>
+                    <th class="align-middle">Quantidade</th>
+                    <th class="align-middle">Tipo</th>
+                    <th class="align-middle">Data</th>
+                    <th class="align-middle">Doador</th>
+                    <th class="align-middle">Ações</th>
+                  </tr>
+                </thead>
+                <tbody class="position-relative">
+                  <tr
+                    *ngFor="
+                      let data of familia
+                        | paginate
+                          : {
+                              itemsPerPage: itemsPerPage,
+                              currentPage: currentPage
+                            };
+                      let i = index
+                    "
+                    id="o_{{ data.id }}"
+                  >
+                    <td>
+                      <div class="form-check font-size-16">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="transactionCheck{{ data.index }}"
+                          value="{{ data.id }}"
+                          [(ngModel)]="data.marked"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="transactionCheck{{ data.index }}"
+                        ></label>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="javascript: void(0);" class="text-body fw-bold"
+                        >#MOV{{ data.id }}</a
+                      >
+                    </td>
+                    <td>{{ data.itemName }}</td>
+                    <td *ngIf="data.tipoMov === 'entrada'">+{{ data.qntd }}</td>
+                    <td *ngIf="data.tipoMov === 'saida'">-{{ data.qntd }}</td>
+                    <td *ngIf="data.tipoMov === 'entrada'">
+                      <span class="badge badge-soft-success">{{
+                        data.tipoMov
+                      }}</span>
+                    </td>
+                    <td *ngIf="data.tipoMov === 'saida'">
+                      <span class="badge badge-soft-danger">{{
+                        data.tipoMov
+                      }}</span>
+                    </td>
+                    <td>{{ data.data }}</td>
+                    <td class="text-truncate">{{ data.doadorName }}</td>
+                    <td>
+                      <div class="d-flex gap-3">
+                        <a
+                          href="javascript:void(0);"
+                          class="text-black align-middle"
+                          ngbTooltip="Ver detalhes"
+                          [routerLink]="['/ong-conforme/historico-single']"
+                          [queryParams]="{ id: data.doacao_id }"
+                        >
+                          <span class="mdi mdi-text-search font-size-18"></span>
+                        </a>
+                        <a
+                          href="javascript:void(0);"
+                          class="text-danger align-middle"
+                          ngbTooltip="Deletar"
+                          (click)="confirmDelete(data.id)"
+                          ><i class="mdi mdi-delete font-size-18"></i
+                        ></a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="isLoadingList">
+                  <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
+                    <td>
+                      <ngx-skeleton-loader
+                        animation="pulse"
+                        [theme]="{ width: '16px', height: '16px' }"
+                      />
+                    </td>
+                    <td>
+                      <ngx-skeleton-loader animation="pulse" />
+                    </td>
+                    <td><ngx-skeleton-loader animation="pulse" /></td>
+                    <td><ngx-skeleton-loader animation="pulse" /></td>
+                    <td><ngx-skeleton-loader animation="pulse" /></td>
+                    <td><ngx-skeleton-loader animation="pulse" /></td>
+                    <td>
+                      <ngx-skeleton-loader
+                        animation="pulse"
+                        [theme]="{ width: '70px' }"
+                      />
+                    </td>
+                    <td>
+                      <ngx-skeleton-loader
+                        animation="pulse"
+                        [theme]="{ width: '50px' }"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div
+                *ngIf="
+                  this.historicos.length > 0 && this.isLoadingList === false
+                "
+                class="pagination-container d-flex justify-content-end"
+              >
+                <pagination-controls
+                  (pageChange)="pageChanged($event)"
+                  (pageBoundsCorrection)="pageChanged($event)"
+                  maxSize="5"
+                  directionLinks="true"
+                  responsive="true"
+                  previousLabel="Anterior"
+                  nextLabel="Prox"
+                >
+                </pagination-controls>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                this.familias.length <= 0 && this.isLoadingList === false
+              "
+              class="d-flex flex-row justify-content-center align-items-center gap-5 py-3"
+            >
+              <h2
+                class="d-flex justify-content-end text-dark fw-semibold col-6 text-start"
+              >
+                NENHUMA MOVIMENTAÇÃO <br />
+                FOI ADICIONADA!
+              </h2>
+
+              <div class="d-flex justify-content-start col-6">
+                <img
+                  src="assets/images/add-item.svg"
+                  alt="add-item img"
+                  height="200px"
+                />
+              </div>
+            </div>
+            <!-- end table -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end page title -->
+</div>
+<!-- container-fluid -->

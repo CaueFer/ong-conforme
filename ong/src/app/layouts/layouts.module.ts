@@ -9,7 +9,6 @@ import { UIModule } from '../shared/ui/ui.module';
 import { LayoutComponent } from './layout.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
-import { RightsidebarComponent } from './rightsidebar/rightsidebar.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
 import { HorizontaltopbarComponent } from './horizontaltopbar/horizontaltopbar.component';
 import { LanguageService } from '../core/services/language.service';
@@ -17,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [LayoutComponent, SidebarComponent, FooterComponent, RightsidebarComponent, HorizontalComponent, HorizontaltopbarComponent],
+  declarations: [LayoutComponent, SidebarComponent, FooterComponent, HorizontalComponent, HorizontaltopbarComponent],
   imports: [
     CommonModule,
     TranslateModule,

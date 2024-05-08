@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 let doacaoTable = config.doacoesTable;
 let historicoTable = config.historicosTable;
 let userTable = config.userTable;
+let familyTable = config.familyTable;
 
 const secretKey = "STRINGMTFODA";
 
@@ -69,6 +70,17 @@ exports.getHistorico = (req, res) => {
     if (error) {
       console.error("Erro ao obter historicos :", error);
       res.status(500).json("Erro ao obter os historicos ");
+      return;
+    }
+    res.send(results);
+  });
+};
+
+exports.getFamilias = (req, res) => {
+  db.query("SELECT * FROM " + familyTable, (error, results, fields) => {
+    if (error) {
+      console.error("Erro ao obter familias :", error);
+      res.status(500).json("Erro ao obter os familias ");
       return;
     }
     res.send(results);

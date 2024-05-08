@@ -3,4 +3,5 @@
 1 - BAIXAR NODE NA MAQUINA
 2 - BAIXAR GIT NA MAQUINA
 3 - ABRIR O TERMINAL (ATALHO: FN + ") 
-4 - DIGITAR NPM UPDATE
+4 - DIGITAR 'npm update' E APERTAR ENTER
+5 - DIGITAR 'npm update @angular/cli nodemon'

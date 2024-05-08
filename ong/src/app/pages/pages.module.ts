@@ -35,13 +35,17 @@ import { RouterModule } from '@angular/router';
 import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { FamilyDashboardComponent } from './familias/family-dashboard/family-dashboard.component';
+import { SingleFamilyComponent } from './familias/single-family/single-family.component';
 
 @NgModule({
   declarations: [
     GerenciadorComponent,
     HistoricoComponent,
     SingleHistoricoComponent,
-    DashboardComponent
+    DashboardComponent,
+    FamilyDashboardComponent,
+    SingleFamilyComponent,
   ],
   imports: [
     CommonModule,

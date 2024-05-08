@@ -38,6 +38,15 @@ export class DatabaseService {
     );
   }
 
+  getFamilias(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getFamilias`).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   async addDoacao(newValue: any): Promise<Number> {
     const itemToAdd = {
       categoria: newValue.categoria,
