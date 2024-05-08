@@ -297,6 +297,17 @@
                         <div class="d-flex gap-3">
                           <a
                             href="javascript:void(0);"
+                            class="text-black align-middle"
+                            ngbTooltip="Ver detalhes"
+                            [routerLink]="['/ong-conforme/historico-single']"
+                            [queryParams]="{ id: data.id }"
+                          >
+                            <span
+                              class="mdi mdi-text-search font-size-18"
+                            ></span>
+                          </a>
+                          <a
+                            href="javascript:void(0);"
                             class="text-success"
                             ngbTooltip="Editar"
                             (click)="editModal(data.id)"
@@ -343,7 +354,12 @@
                     </tr>
                   </tbody>
                 </table>
-                <div *ngIf="this.doacoes.length > 0 && this.isLoadingList === false" class="pagination-container d-flex justify-content-end">
+                <div
+                  *ngIf="
+                    this.doacoes.length > 0 && this.isLoadingList === false
+                  "
+                  class="pagination-container d-flex justify-content-end"
+                >
                   <pagination-controls
                     (pageChange)="pageChanged($event)"
                     (pageBoundsCorrection)="pageChanged($event)"
@@ -355,7 +371,6 @@
                   >
                   </pagination-controls>
                 </div>
-                
               </div>
               <div
                 *ngIf="this.doacoes.length <= 0 && this.isLoadingList === false"
@@ -493,8 +508,12 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label *ngIf="isInput" for="" class="form-label fw-bold">Doador</label>
-                <label *ngIf="!isInput" for="" class="form-label fw-bold">Receptor</label>
+                <label *ngIf="isInput" for="" class="form-label fw-bold"
+                  >Doador</label
+                >
+                <label *ngIf="!isInput" for="" class="form-label fw-bold"
+                  >Receptor</label
+                >
                 <input
                   *ngIf="isInput"
                   type="text"
@@ -735,13 +754,28 @@
                       class="nav-link border"
                       (click)="selectCategoria($event.currentTarget)"
                       [ngClass]="{
-                        active: selectedCategoria === 'objeto',
+                        active: selectedCategoria === 'mobilia',
                         'border-light-subtle':
                           addNewItemForm.get('categoria')?.valid,
                         'border-danger text-danger':
                           submitted && addNewItemForm.get('categoria')?.errors
                       }"
-                      >Objeto</a
+                      >Mobilia</a
+                    >
+                  </li>
+                  <li class="nav-item col">
+                    <a
+                      href="javascript: void(0);"
+                      class="nav-link border"
+                      (click)="selectCategoria($event.currentTarget)"
+                      [ngClass]="{
+                        active: selectedCategoria === 'roupa',
+                        'border-light-subtle':
+                          addNewItemForm.get('categoria')?.valid,
+                        'border-danger text-danger':
+                          submitted && addNewItemForm.get('categoria')?.errors
+                      }"
+                      >Roupa</a
                     >
                   </li>
                   <li class="nav-item col">
@@ -772,6 +806,21 @@
                           submitted && addNewItemForm.get('categoria')?.errors
                       }"
                       >Monetário</a
+                    >
+                  </li>
+                  <li class="nav-item col">
+                    <a
+                      href="javascript: void(0);"
+                      class="nav-link border border-light-subtle"
+                      (click)="selectCategoria($event.currentTarget)"
+                      [ngClass]="{
+                        active: selectedCategoria === 'outro',
+                        'border-light-subtle':
+                          addNewItemForm.get('categoria')?.valid,
+                        'border-danger text-danger':
+                          submitted && addNewItemForm.get('categoria')?.errors
+                      }"
+                      >Outro</a
                     >
                   </li>
                 </ul>
@@ -876,13 +925,29 @@
                       class="nav-link border border-light-subtle"
                       [ngClass]="{
                         active:
-                          this.editItemForm.get('categoria')?.value === 'objeto'
+                          this.editItemForm.get('categoria')?.value ===
+                          'mobilia'
                       }"
                       (click)="
-                        this.editItemForm.get('categoria')?.setValue('objeto')
+                        this.editItemForm.get('categoria')?.setValue('mobilia')
                       "
                     >
-                      Objeto
+                      Mobilia
+                    </a>
+                  </li>
+                  <li class="nav-item col">
+                    <a
+                      href="javascript: void(0);"
+                      class="nav-link border border-light-subtle"
+                      [ngClass]="{
+                        active:
+                          this.editItemForm.get('categoria')?.value === 'roupa'
+                      }"
+                      (click)="
+                        this.editItemForm.get('categoria')?.setValue('roupa')
+                      "
+                    >
+                      Roupa
                     </a>
                   </li>
                   <li class="nav-item col">
@@ -916,6 +981,21 @@
                       "
                       >Monetário</a
                     >
+                  </li>
+                  <li class="nav-item col">
+                    <a
+                      href="javascript: void(0);"
+                      class="nav-link border border-light-subtle"
+                      [ngClass]="{
+                        active:
+                          this.editItemForm.get('categoria')?.value === 'outros'
+                      }"
+                      (click)="
+                        this.editItemForm.get('categoria')?.setValue('outros')
+                      "
+                    >
+                      Outros
+                    </a>
                   </li>
                 </ul>
               </div>
