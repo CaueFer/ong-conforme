@@ -67,14 +67,19 @@
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <h5 class="font-size-14">
-                          22 Nov
+                          {{ this.historico[2]?.dataFormated }}
                           <i
                             class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
                           ></i>
                         </h5>
                       </div>
                       <div class="flex-grow-1">
-                        <div>Responded to need “Volunteer Activities</div>
+                        <div *ngIf="this.historico[2]?.tipoMov === 'entrada'">
+                          {{ this.historico[2]?.doadorName }} fez uma doação
+                        </div>
+                        <div *ngIf="this.historico[2]?.tipoMov === 'saida'">
+                          {{ this.historico[2]?.doadorName }} recebeu uma doação
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -85,16 +90,18 @@
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <h5 class="font-size-14">
-                          17 Nov
+                          {{ this.historico[1]?.dataFormated }}
                           <i
                             class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
                           ></i>
                         </h5>
                       </div>
                       <div class="flex-grow-1">
-                        <div>
-                          Everyone realizes why a new common language would be
-                          desirable...
+                        <div *ngIf="this.historico[1]?.tipoMov === 'entrada'">
+                          {{ this.historico[1]?.doadorName }} fez uma doação
+                        </div>
+                        <div *ngIf="this.historico[1]?.tipoMov === 'saida'">
+                          {{ this.historico[1]?.doadorName }} recebeu uma doação
                         </div>
                       </div>
                     </div>
@@ -115,13 +122,26 @@
                         </h5>
                       </div>
                       <div class="flex-grow-1">
-                        <div>Joined the group “Boardsmanship Forum”</div>
+                        <div>
+                          <div *ngIf="this.todayItem[0]?.tipoMov === 'entrada'">
+                            {{ this.todayItem[0]?.doadorName }} fez uma doação
+                          </div>
+                          <div *ngIf="this.todayItem[0]?.tipoMov === 'saida'">
+                            {{ this.todayItem[0]?.doadorName }} recebeu uma doação
+                          </div>
+                          <div *ngIf="this.todayItem[0]?.tipoMov === null">
+                            Ainda nada foi cadastrado hoje :)
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </li>
                 </ul>
                 <div class="text-center mt-4">
-                  <a href="javascript: void(0);" routerLink="/ong-conforme/historico" class="btn btn-primary btn-sm"
+                  <a
+                    href="javascript: void(0);"
+                    routerLink="/ong-conforme/historico"
+                    class="btn btn-primary btn-sm"
                     >Ver mais <i class="mdi mdi-arrow-right ms-1"></i
                   ></a>
                 </div>

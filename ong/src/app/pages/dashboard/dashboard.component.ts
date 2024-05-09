@@ -1,12 +1,16 @@
 import { Component, OnInit } from "@angular/core";
-import { emailSentBarChart, monthlyEarningChart } from './data';
+import { emailSentBarChart, monthlyEarningChart } from "./data";
 import { ChartType } from "../../core/models/charts.model";
 import { DatabaseService } from "src/app/core/services/database/database.service";
+import { DoacaoModel } from "../doacoes/gerenciador/doacao.model";
+import { HistoricoModel } from "../doacoes/historico/historico.model";
+import { pt } from "date-fns/locale";
+import { format, parseISO } from "date-fns";
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: "app-dashboard",
+  templateUrl: "./dashboard.component.html",
+  styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit {
   date: Date;
@@ -15,22 +19,16 @@ export class DashboardComponent implements OnInit {
 
   sentBarChart: ChartType;
   monthlyEarningChart: ChartType;
-  
-  statData = [{
-      "icon": "bx bx-copy-alt",
-      "title": "Doações Total",
-      "value": "1,235"
-    }, {
-      "icon": "bx bx-archive-in",
-      "title": "Arrecadação Total",
-      "value": "R$5, 723"
-    }, {
-      "icon": "bx bx-group",
-      "title": "Familias Ajudadas",
-      "value": "+300"
-  }];
+  statData: any;
 
   isActive: string;
+
+  historico: HistoricoModel[] = [];
+  todayItem: HistoricoModel[] = [];
+
+  historicoLength: Number;
+  doacoesLength: Number;
+  familiasLength: Number;
 
   constructor(private _databaseService: DatabaseService) {}
 
@@ -39,7 +37,8 @@ export class DashboardComponent implements OnInit {
     const fullMonthName: string = this.date.toLocaleString("pt-BR", {
       month: "long",
     });
-    this.actualMonth = fullMonthName.charAt(0).toUpperCase() + fullMonthName.slice(1);
+    this.actualMonth =
+      fullMonthName.charAt(0).toUpperCase() + fullMonthName.slice(1);
     this.actualDay = this.date.getDate();
 
     this.fetchData();
@@ -48,45 +47,117 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit() {}
 
   private fetchData() {
+    this._databaseService.getHistorico().subscribe({
+      next: (value) => {
+        const dateFormat = "dd  MMM";
+
+        this.historico = value.map((item) => {
+          const dataFormatada = format(new Date(item.data), dateFormat, {
+            locale: pt,
+          });
+
+          const nameFormated =
+            item.doadorName.charAt(0).toUpperCase() + item.doadorName.slice(1);
+
+          return {
+            ...item,
+            dataFormated: dataFormatada,
+            doadorName: nameFormated,
+          };
+        });
+
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+
+        const findedItem = this.historico.find((item) => {
+          const dataItem = parseISO(item.data);
+          dataItem.setHours(0, 0, 0, 0);
+          return dataItem.getTime() === hoje.getTime();
+        });
+        this.todayItem.push(findedItem);
+      },
+      error: () => {},
+    });
+
     this.sentBarChart = emailSentBarChart;
     this.monthlyEarningChart = monthlyEarningChart;
+    this.isActive = "year";
 
-    this.isActive = 'year';
+    this._databaseService.getTableLength().subscribe({
+      next: (value) => {
+        if (value) {
+          this.familiasLength = value.totalFamilias;
+          this.doacoesLength = value.totalDoacoes;
+          this.historicoLength = value.totalHistoricos;
+        }
+
+        this.statsReport();
+      },
+    });
+  }
+
+  statsReport() {
+    this.statData = [
+      {
+        icon: "bx bx-copy-alt",
+        title: "Doações Total",
+        value: this.doacoesLength,
+      },
+      {
+        icon: "bx bx-archive-in",
+        title: "Arrecadação Total",
+        value: "R$5, 723",
+      },
+      {
+        icon: "bx bx-group",
+        title: "Familias Ajudadas",
+        value: '+'+this.familiasLength,
+      },
+    ];
   }
 
   weeklyreport() {
-    this.isActive = 'week';
-    this.sentBarChart.series =
-      [{
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48]
-      }, {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18]
-      }, {
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22]
-      }];
+    this.isActive = "week";
+    this.sentBarChart.series = [
+      {
+        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
+      },
+      {
+        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
+      },
+      {
+        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
+      },
+    ];
   }
 
   monthlyreport() {
-    this.isActive = 'month';
-    this.sentBarChart.series =
-      [{
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48]
-      }, {
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22]
-      }, {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18]
-      }];
+    this.isActive = "month";
+    this.sentBarChart.series = [
+      {
+        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
+      },
+      {
+        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
+      },
+      {
+        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
+      },
+    ];
   }
 
   yearlyreport() {
-    this.isActive = 'year';
-    this.sentBarChart.series =
-      [{
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22]
-      }, {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18]
-      }, {
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48]
-      }];
+    this.isActive = "year";
+    this.sentBarChart.series = [
+      {
+        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
+      },
+      {
+        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
+      },
+      {
+        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
+      },
+    ];
   }
 }

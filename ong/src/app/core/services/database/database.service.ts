@@ -47,6 +47,15 @@ export class DatabaseService {
     );
   }
 
+  getTableLength(): Observable<any> {
+    return this.http.get<any>(`${this.url}/getTableLength`).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   async addDoacao(newValue: any): Promise<Number> {
     const itemToAdd = {
       categoria: newValue.categoria,

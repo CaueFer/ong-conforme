@@ -105,7 +105,7 @@
                     <div class="form-floating position-relative">
                       <input
                         [type]="showPassword ? 'text' : 'password'"
-                        class="form-control"
+                        class="form-control fs-6"
                         formControlName="password"
                         [ngClass]="{
                           'is-invalid': submitted && f.password.errors
@@ -144,10 +144,9 @@
                         >
                       </div>
 
-                      <label for="userpassword">Senha</label>
+                      <label for="userpassword fs-3">Senha</label>
                     </div>
                   </div>
-
                   <label class="form-check" for="remember-check">
                     <input
                       class="form-check-input"

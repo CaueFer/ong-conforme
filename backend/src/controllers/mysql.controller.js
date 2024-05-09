@@ -87,6 +87,33 @@ exports.getFamilias = (req, res) => {
   });
 };
 
+exports.getTableLength = (req, res) => {
+  db.query(
+    `
+    SELECT
+      (SELECT COUNT(*) FROM ${familyTable}) AS total_familias,
+      (SELECT COUNT(*) FROM ${doacaoTable}) AS total_doacoes,
+      (SELECT COUNT(*) FROM ${historicoTable}) AS total_historicos
+  `,
+    (error, results, fields) => {
+      if (error) {
+        console.error(
+          "Erro ao obter o número de registros das tabelas:",
+          error
+        );
+        res.status(500).json("Erro ao obter o número de registros das tabelas");
+        return;
+      }
+      const tableLengths = {
+        totalFamilias: results[0].total_familias,
+        totalDoacoes: results[0].total_doacoes,
+        totalHistoricos: results[0].total_historicos,
+      };
+      res.json(tableLengths);
+    }
+  );
+};
+
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   db.query(
@@ -242,9 +269,7 @@ exports.updateMetaInDoacao = (req, res) => {
         return;
       }
 
-      res
-        .status(200)
-        .json("Meta do item atualizada com sucesso");
+      res.status(200).json("Meta do item atualizada com sucesso");
     }
   );
 };

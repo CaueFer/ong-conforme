@@ -14,6 +14,8 @@ router.get('/getHistorico', mysqlController.getHistorico);
 
 router.get('/getFamilias', mysqlController.getFamilias);
 
+router.get('/getTableLength', mysqlController.getTableLength);
+
 router.post('/loginUser', mysqlController.loginUser);
 
 router.post('/addDoacao', mysqlController.addDoacao);
