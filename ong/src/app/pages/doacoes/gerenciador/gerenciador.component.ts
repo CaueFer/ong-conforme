@@ -16,7 +16,7 @@ import {
   ModalDirective,
 } from "ngx-bootstrap/modal";
 import { Observable } from "rxjs";
-import { DoacaoModel } from "./doacao.model";
+import { DoacaoModel } from "../../../core/models/doacao.model";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";

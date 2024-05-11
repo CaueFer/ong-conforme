@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { emailSentBarChart, monthlyEarningChart } from "./data";
+import { columnChart, radialBarChart } from "./data";
 import { ChartType } from "../../core/models/charts.model";
 import { DatabaseService } from "src/app/core/services/database/database.service";
-import { DoacaoModel } from "../doacoes/gerenciador/doacao.model";
+import { DoacaoModel } from "../../core/models/doacao.model";
 import { HistoricoModel } from "../doacoes/historico/historico.model";
 import { pt } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
@@ -25,6 +25,8 @@ export class DashboardComponent implements OnInit {
 
   historico: HistoricoModel[] = [];
   todayItem: HistoricoModel[] = [];
+  doacoes: DoacaoModel[] = [];
+  metasFixas: DoacaoModel[] = [];
 
   historicoLength: Number;
   doacoesLength: Number;
@@ -79,10 +81,6 @@ export class DashboardComponent implements OnInit {
       error: () => {},
     });
 
-    this.sentBarChart = emailSentBarChart;
-    this.monthlyEarningChart = monthlyEarningChart;
-    this.isActive = "year";
-
     this._databaseService.getTableLength().subscribe({
       next: (value) => {
         if (value) {
@@ -90,10 +88,21 @@ export class DashboardComponent implements OnInit {
           this.doacoesLength = value.totalDoacoes;
           this.historicoLength = value.totalHistoricos;
         }
-
         this.statsReport();
       },
     });
+
+    this._databaseService.getDoacao().subscribe({
+      next: (value) => {
+        this.doacoes = value;
+
+        console.log(this.doacoes);
+      },
+    });
+
+    this.sentBarChart = columnChart;
+    this.monthlyEarningChart = radialBarChart;
+    this.isActive = "year";
   }
 
   statsReport() {
@@ -111,7 +120,7 @@ export class DashboardComponent implements OnInit {
       {
         icon: "bx bx-group",
         title: "Familias Ajudadas",
-        value: '+'+this.familiasLength,
+        value: "+" + this.familiasLength,
       },
     ];
   }

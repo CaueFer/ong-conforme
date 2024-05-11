@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { DoacaoModel } from "../gerenciador/doacao.model";
+import { DoacaoModel } from "../../../core/models/doacao.model";
 import { HistoricoModel } from "./historico.model";
 import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
 import { Observable, filter } from "rxjs";

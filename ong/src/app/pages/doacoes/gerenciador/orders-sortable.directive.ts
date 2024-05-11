@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
-import {DoacaoModel} from './doacao.model';
+import {DoacaoModel} from '../../../core/models/doacao.model';
 
 export type SortColumn = keyof DoacaoModel | '';
 export type SortDirection = 'asc' | 'desc' | '';

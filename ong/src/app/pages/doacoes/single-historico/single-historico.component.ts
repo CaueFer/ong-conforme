@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from "@angular/core";
-import { DoacaoModel } from "../gerenciador/doacao.model";
+import { DoacaoModel } from "../../../core/models/doacao.model";
 import { BehaviorSubject, Observable, filter } from "rxjs";
 import {
   UntypedFormBuilder,
