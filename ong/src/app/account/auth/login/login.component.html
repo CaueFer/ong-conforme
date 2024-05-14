@@ -2,37 +2,26 @@
   <div class="row g-0">
     <div class="col-xl-9">
       <div dir="ltr w-100 h-100">
-        <owl-carousel-o
-          class="owl-theme auth-review-carousel"
-          [options]="carouselOption"
-        >
+        <owl-carousel-o class="owl-theme auth-review-carousel" [options]="carouselOption">
           <ng-template carouselSlide>
             <div class="item auth-full-bg">
               <img
                 src="https://static.wixstatic.com/media/0d86a8_538124310971425eb7422cee63ab5ce4~mv2.jpg/v1/fit/w_822,h_801,q_90/0d86a8_538124310971425eb7422cee63ab5ce4~mv2.jpg"
-                alt=""
-                class="object-fit-cover"
-              />
+                alt="" class="object-fit-cover" />
             </div>
           </ng-template>
           <ng-template carouselSlide>
             <div class="item auth-full-bg">
               <img
                 src="https://static.wixstatic.com/media/0d86a8_182488ff0d7a4dc9aae1780197f442b6~mv2.jpg/v1/fit/w_936,h_801,q_90/0d86a8_182488ff0d7a4dc9aae1780197f442b6~mv2.jpg"
-                alt=""
-                class="object-fit-cover"
-              />
+                alt="" class="object-fit-cover" />
             </div>
           </ng-template>
           <ng-template carouselSlide>
             <div class="item auth-full-bg">
               <img
                 src="https://static.wixstatic.com/media/0d86a8_492c601b75f64c5b8d56042fc9555c8c~mv2.jpg/v1/fit/w_936,h_801,q_90/0d86a8_492c601b75f64c5b8d56042fc9555c8c~mv2.jpg"
-                alt=""
-                class="object-fit-cover"
-
-
-              />
+                alt="" class="object-fit-cover" />
             </div>
           </ng-template>
         </owl-carousel-o>
@@ -41,57 +30,50 @@
     <!-- end col -->
 
     <div class="col-xl-3">
-      <div class="auth-full-page-content p-md-5 p-4">
+      <div [ngClass]="{'darkbg': darkmode}" class="auth-full-page-content p-md-5 p-4">
         <div class="w-100">
           <div class="d-flex flex-column h-100">
-            <div class="mb-4 mb-md-5">
-              <a class="d-block card-logo" href="https://www.conforme.org.br">
-                <img
-                  src="assets/images/logo-ong-dark-lg.png"
-                  alt=""
-                  height="45"
-                  class="card-logo-dark"
-                />
+            <div class="mb-5 mb-md-5 d-flex flex-row justify-content-between">
+              <a class="d-block card-logo" href="https://www.conforme.org.br" *ngIf="!darkmode">
+                <img src="assets/images/logo-ong-dark-lg.png" alt="" height="50" class="card-logo-dark" />
               </a>
+              <a class="d-block card-logo" href="https://www.conforme.org.br" *ngIf="darkmode">
+                <img src="assets/images/logo-ong-white-lg.png" alt="" height="50" class="card-logo-dark" />
+
+              </a>
+              <div class="mt-2">
+                <label class="theme-switch" for="checkbox" id="themeswitch">
+                  <input type="checkbox" id="checkbox">
+                  <div class="slider round"></div>
+                  <span class="name"></span>
+                  <div class="back">
+                    <svg class="icon icon-sun" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><circle cx="12" cy="12" r="5"></circle><line x1="12" x2="12" y1="1" y2="3"></line><line x1="12" x2="12" y1="21" y2="23"></line><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line><line x1="1" x2="3" y1="12" y2="12"></line><line x1="21" x2="23" y1="12" y2="12"></line><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line></svg>
+                  </div>
+                </label>
+            
+              </div>
             </div>
             <div class="my-auto">
               <div>
-                <h5 class="text-primary">Bem vindo!</h5>
-                <p class="text-muted">Faça login para entrar.</p>
+                <h5 class="text-primary fs-4">Bem vindo!</h5>
+                <p [ngClass]="{'text-white': darkmode}" class="">Faça login para entrar.</p>
               </div>
 
               <div class="mt-4">
                 <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-                  <div
-                    *ngIf="this.successmsg != ''"
-                    class="alert alert-success mb-3"
-                    role="alert"
-                  >
+                  <div *ngIf="this.successmsg != ''" class="alert alert-success mb-3" role="alert">
                     {{ successmsg }}
                   </div>
-                  <div
-                    *ngIf="this.errormsg != ''"
-                    class="alert alert-danger mb-3"
-                    role="alert"
-                  >
+                  <div *ngIf="this.errormsg != ''" class="alert alert-danger mb-3" role="alert">
                     {{ errormsg }}
                   </div>
                   <div class="mb-3">
                     <div class="form-floating">
-                      <input
-                        type="email"
-                        class="form-control"
-                        id="floatingInputemail"
-                        placeholder="exemplo@email.com"
-                        formControlName="email"
-                        [ngClass]="{
+                      <input type="email" class="form-control" id="floatingInputemail" placeholder="exemplo@email.com"
+                        formControlName="email" [ngClass]="{
                           'is-invalid': submitted && f.email.errors
-                        }"
-                      />
-                      <div
-                        *ngIf="submitted && f.email.errors"
-                        class="invalid-feedback"
-                      >
+                        }" />
+                      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                         <div *ngIf="f.email.errors.required">
                           Email inválido.
                         </div>
@@ -105,72 +87,38 @@
 
                   <div class="mb-3">
                     <div class="form-floating position-relative">
-                      <input
-                        [type]="showPassword ? 'text' : 'password'"
-                        class="form-control fs-6"
-                        formControlName="password"
-                        [ngClass]="{
+                      <input [type]="showPassword ? 'text' : 'password'" class="form-control fs-6"
+                        formControlName="password" [ngClass]="{
                           'is-invalid': submitted && f.password.errors
-                        }"
-                        placeholder="Digite senha"
-                        aria-label="Password"
-                        aria-describedby="password-addon"
-                      />
+                        }" placeholder="Digite senha" aria-label="Password" aria-describedby="password-addon" />
                       <button
                         class="btn btn-light position-absolute rounded-circle d-flex justify-content-center align-items-center"
-                        type="button"
-                        id="password-addon"
-                        style="
+                        type="button" id="password-addon" style="
                           top: 14px;
                           left: calc(87%);
                           height: 30px;
                           width: 30px;
-                        "
-                        (click)="togglePass()"
-                      >
-                        <i
-                          *ngIf="showPassword"
-                          class="mdi mdi-eye-outline fs-6"
-                        ></i>
-                        <span
-                          *ngIf="!showPassword"
-                          class="mdi mdi-eye-closed fs-6"
-                        ></span>
+                        " (click)="togglePass()">
+                        <i *ngIf="showPassword" class="mdi mdi-eye-outline fs-6"></i>
+                        <span *ngIf="!showPassword" class="mdi mdi-eye-closed fs-6"></span>
                       </button>
-                      <div
-                        *ngIf="submitted && f.password.errors"
-                        class="invalid-feedback"
-                      >
-                        <span *ngIf="f.password.errors.required"
-                          >Senha precisa ser válida</span
-                        >
+                      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                        <span *ngIf="f.password.errors.required">Senha precisa ser válida</span>
                       </div>
 
                       <label for="userpassword fs-3">Senha</label>
                     </div>
                   </div>
                   <label class="form-check" for="remember-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="remember-check"
-                      (click)="toggleLoged()"
-                    />
-                    <span class="form-check-label"> Manter conectado </span>
+                    <input class="form-check-input" type="checkbox" id="remember-check" (click)="toggleLoged()" />
+                    <span class="form-check-label" [ngClass]="{'text-white': darkmode}"> Manter conectado </span>
                   </label>
 
                   <div class="mt-3 d-grid">
-                    <div
-                      *ngIf="this.submitted && this.loginForm.valid"
-                      class="d-flex justify-content-center"
-                    >
+                    <div *ngIf="this.submitted && this.loginForm.valid" class="d-flex justify-content-center">
                       <div class="loader w-100"></div>
                     </div>
-                    <button
-                      class="btn btn-primary btn-block"
-                      type="submit"
-                      [disabled]="submitted && this.loginForm.valid"
-                    >
+                    <button class="btn btn-primary btn-lg" type="submit" [disabled]="submitted && this.loginForm.valid">
                       <span>Entrar</span>
                     </button>
                   </div>
@@ -179,7 +127,7 @@
             </div>
 
             <div class="mt-4 mt-md-5 text-center">
-              <p class="mb-0">© {{ year }} Ong Conforme</p>
+              <p [ngClass]="{'text-white': darkmode}" class="mb-0">© {{ year }} Ong Conforme</p>
             </div>
           </div>
         </div>

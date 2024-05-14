@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   showPassword: boolean = false;
   continueLogged: boolean = false;
+  darkmode: boolean = true;
 
   year: number = new Date().getFullYear();
 
@@ -77,8 +78,9 @@ export class LoginComponent implements OnInit {
       },
     },
     autoplay: true,
-    autoplayTimeout: 2500,
+    autoplayTimeout: 6000,
     fluidSpeed: true,
+    smartSpeed: 1000
   };
 
   submitLogin() {
