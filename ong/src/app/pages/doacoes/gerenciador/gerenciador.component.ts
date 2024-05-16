@@ -46,7 +46,7 @@ export class GerenciadorComponent implements OnInit {
   content?: any;
   doacoes?: DoacaoModel[] = [];
   ordersList!: Observable<DoacaoModel[]>;
-  total: Observable<number>;
+  totalMoney: Number;
 
   isInput: boolean = true;
   addInitialMov: boolean = false;
@@ -67,13 +67,14 @@ export class GerenciadorComponent implements OnInit {
 
   txtSearch: string;
   filteredCategoria: string = "";
+  filterSelectedRangeDate: Date[];
   bsRangeFilterValue: string = "";
 
   selectedDoacao: Number;
   deletId: any;
   editedId: any;
   editedCategoria: string = "";
-  filterSelectedRangeDate: Date[];
+
 
   currentPage = 1;
   itemsPerPage = 10;

@@ -101,7 +101,7 @@
                             <h3>
                               {{
                                 this.doacao && this.doacao[0]?.qntd >= 0
-                                  ? this.doacao[0]?.qntd + ' / ' + this.metaQntd
+                                  ? this.doacao[0]?.qntd + ' / ' + (this.metaQntd ? this.metaQntd : 0)
                                   : "carregando..."
                               }}
                             </h3>

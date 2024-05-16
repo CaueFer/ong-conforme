@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   historico: HistoricoModel[] = [];
   todayItem: HistoricoModel[] = [];
   doacoes: DoacaoModel[] = [];
-  metasFixas: DoacaoModel[] = [];
+  doacoesMoney: DoacaoModel[] = [];
 
   historicoLength: Number;
   doacoesLength: Number;
@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit {
       next: (value) => {
         this.doacoes = value;
 
-        console.log(this.doacoes);
+        this.doacoesMoney = value.filter(item => item.categoria === 'monetario');
       },
     });
 
