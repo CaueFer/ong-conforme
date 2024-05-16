@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "skote": {
+    "ong": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -22,7 +22,7 @@
               "ev-emitter/ev-emitter","can-use-dom","lodash.debounce","lodash.memoize","lodash.throttle","metismenujs/dist/metismenujs","sweetalert2",
               "@ckeditor/ckeditor5-build-classic"
             ],
-            "outputPath": "dist/skote",
+            "outputPath": "dist/ong",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -88,14 +88,16 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "skote:build"
+            "buildTarget": "ong:build",
+            "host": "0.0.0.0",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {
-              "buildTarget": "skote:build:production"
+              "buildTarget": "ong:build:production"
             },
             "development": {
-              "buildTarget": "skote:build:development"
+              "buildTarget": "ong:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,7 +105,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "skote:build"
+            "buildTarget": "ong:build"
           }
         },
         "test": {
