@@ -7,6 +7,7 @@ let doacaoTable = config.doacoesTable;
 let historicoTable = config.historicosTable;
 let userTable = config.userTable;
 let familyTable = config.familyTable;
+let metaFixaTable = config.metaFixaTable;
 
 const secretKey = "STRINGMTFODA";
 
@@ -110,6 +111,23 @@ exports.getTableLength = (req, res) => {
         totalHistoricos: results[0].total_historicos,
       };
       res.json(tableLengths);
+    }
+  );
+};
+
+exports.getMetaFixa = (req, res) => {
+  const id = req.query.id;
+
+  db.query(
+    "SELECT * FROM " + metaFixaTable + " WHERE id = ?",
+    id,
+    (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao obter dados:", error);
+        res.status(500).json("Erro ao obter os dados");
+        return;
+      }
+      res.status(200).json(results);
     }
   );
 };

@@ -26,30 +26,41 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-6">
-                    <h4 class="card-title mb-4">Arrecadação Mensal</h4>
+                    <h4 class="card-title mb-4">Arrecadação Total</h4>
                     <p class="text-muted">
-                      {{ actualMonth }}
+                      Ultima atualização: {{ actualMonth }}
                     </p>
-                    <h3>$34,252</h3>
-                    <p class="text-muted">
+                    <h3>{{ "R$" + this.moneyQntd }}</h3>
+                    <p *ngIf="moneyMetaPorcent > 100" class="text-muted">
                       <span class="text-success me-2">
-                        12%
+                        {{ moneyMetaPorcent - 100 }}%
                         <i class="mdi mdi-arrow-up"></i
                       ></span>
-                      do mês anterior
+                      acima da meta
+                    </p>
+                    <p *ngIf="moneyMetaPorcent == 100" class="text-muted">
+                      <span class="text-success me-2">100%</span>
+                      da meta
+                    </p>
+                    <p *ngIf="moneyMetaPorcent < 100" class="text-muted">
+                      <span class=" me-2">
+                        {{ 100 - moneyMetaPorcent}}%
+                        <i class="mdi mdi-arrow-up"></i
+                      ></span>
+                      para a meta
                     </p>
                   </div>
                   <div class="col-sm-6">
                     <apx-chart
                       dir="ltr"
                       class="apex-charts"
-                      [series]="monthlyEarningChart.series"
-                      [chart]="monthlyEarningChart.chart"
-                      [legend]="monthlyEarningChart.legend"
-                      [colors]="monthlyEarningChart.colors"
-                      [labels]="monthlyEarningChart.labels"
-                      [stroke]="monthlyEarningChart.stroke"
-                      [plotOptions]="monthlyEarningChart.plotOptions"
+                      [series]="metaMoney.series"
+                      [chart]="metaMoney.chart"
+                      [legend]="metaMoney.legend"
+                      [colors]="metaMoney.colors"
+                      [labels]="metaMoney.labels"
+                      [stroke]="metaMoney.stroke"
+                      [plotOptions]="metaMoney.plotOptions"
                     >
                     </apx-chart>
                   </div>
@@ -127,7 +138,8 @@
                             {{ this.todayItem[0]?.doadorName }} fez uma doação
                           </div>
                           <div *ngIf="this.todayItem[0]?.tipoMov === 'saida'">
-                            {{ this.todayItem[0]?.doadorName }} recebeu uma doação
+                            {{ this.todayItem[0]?.doadorName }} recebeu uma
+                            doação
                           </div>
                           <div *ngIf="this.todayItem[0]?.tipoMov === null">
                             Nada foi cadastrado hoje :)
@@ -222,30 +234,30 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-6">
-                  <h4 class="card-title mb-4">Arrecadação Mensal</h4>
+                  <h4 class="card-title mb-4">Arrecadação Total</h4>
                   <p class="text-muted">
-                    {{ actualMonth }}
+                    Ultima atualização: {{ actualMonth }}
                   </p>
-                  <h3>$34,252</h3>
+                  <h3>{{ "R$" + this.moneyQntd }}</h3>
                   <p class="text-muted">
                     <span class="text-success me-2">
                       12%
                       <i class="mdi mdi-arrow-up"></i
                     ></span>
-                    do mês anterior
+                    acima da meta
                   </p>
                 </div>
                 <div class="col-sm-6">
                   <apx-chart
                     dir="ltr"
                     class="apex-charts"
-                    [series]="monthlyEarningChart.series"
-                    [chart]="monthlyEarningChart.chart"
-                    [legend]="monthlyEarningChart.legend"
-                    [colors]="monthlyEarningChart.colors"
-                    [labels]="monthlyEarningChart.labels"
-                    [stroke]="monthlyEarningChart.stroke"
-                    [plotOptions]="monthlyEarningChart.plotOptions"
+                    [series]="metaMoney.series"
+                    [chart]="metaMoney.chart"
+                    [legend]="metaMoney.legend"
+                    [colors]="metaMoney.colors"
+                    [labels]="metaMoney.labels"
+                    [stroke]="metaMoney.stroke"
+                    [plotOptions]="metaMoney.plotOptions"
                   >
                   </apx-chart>
                 </div>

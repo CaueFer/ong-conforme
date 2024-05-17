@@ -56,6 +56,15 @@ export class DatabaseService {
     );
   }
 
+  getMetaFixa(id: any): Observable<any> {
+    return this.http.get<any>(`${this.url}/getMetaFixa`, { params: { id: id } }).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   async addDoacao(newValue: any): Promise<Number> {
     const itemToAdd = {
       categoria: newValue.categoria,

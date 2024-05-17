@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   actualDay: number;
 
   sentBarChart: ChartType;
-  monthlyEarningChart: ChartType;
+  metaMoney: ChartType;
   statData: any;
 
   isActive: string;
@@ -27,6 +27,9 @@ export class DashboardComponent implements OnInit {
   todayItem: HistoricoModel[] = [];
   doacoes: DoacaoModel[] = [];
   doacoesMoney: DoacaoModel[] = [];
+  moneyQntd: number = 0;
+  moneyMetaAll: number = 0;
+  moneyMetaPorcent: any;
 
   historicoLength: Number;
   doacoesLength: Number;
@@ -49,6 +52,10 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit() {}
 
   private fetchData() {
+    this.metaMoney = radialBarChart;
+    this.sentBarChart = columnChart;
+    this.isActive = "year";
+
     this._databaseService.getHistorico().subscribe({
       next: (value) => {
         const dateFormat = "dd  MMM";
@@ -88,7 +95,6 @@ export class DashboardComponent implements OnInit {
           this.doacoesLength = value.totalDoacoes;
           this.historicoLength = value.totalHistoricos;
         }
-        this.statsReport();
       },
     });
 
@@ -96,33 +102,59 @@ export class DashboardComponent implements OnInit {
       next: (value) => {
         this.doacoes = value;
 
-        this.doacoesMoney = value.filter(item => item.categoria === 'monetario');
+        this.doacoesMoney = value.filter(
+          (item) => item.categoria === "monetario"
+        );
+
+        if (this.doacoesMoney) {
+          this.doacoesMoney.forEach((doacao) => {
+            this.moneyQntd += Number(doacao.qntd);
+          });
+        }
+
+        this._databaseService.getMetaFixa(1).subscribe({
+          next: (value) => {
+            this.moneyMetaAll = value[0].qntdMetaAll;
+
+            if (this.moneyMetaAll > 0) {
+              const temp = ((this.moneyQntd / this.moneyMetaAll) * 100).toFixed(
+                1
+              );
+              this.metaMoney.series = [temp];
+              this.moneyMetaPorcent = Number(this.metaMoney.series).toFixed(0);
+            }
+
+            this.statsReport();
+          },
+          error: (err) => {},
+        });
       },
     });
-
-    this.sentBarChart = columnChart;
-    this.monthlyEarningChart = radialBarChart;
-    this.isActive = "year";
   }
 
   statsReport() {
-    this.statData = [
-      {
-        icon: "bx bx-copy-alt",
-        title: "Doações Total",
-        value: this.doacoesLength,
-      },
-      {
-        icon: "bx bx-archive-in",
-        title: "Arrecadação Total",
-        value: "R$5, 723",
-      },
-      {
-        icon: "bx bx-group",
-        title: "Familias Ajudadas",
-        value: "+" + this.familiasLength,
-      },
-    ];
+    const temp = this.historico.filter((item) => item.tipoMov === "saida");
+
+    if (temp) {
+      const doados = temp.length;
+      this.statData = [
+        {
+          icon: "bx bx-copy-alt",
+          title: "Doações Estoque",
+          value: this.doacoesLength,
+        },
+        {
+          icon: "bx bx-archive-in",
+          title: "Itens doados",
+          value: `+${doados}`,
+        },
+        {
+          icon: "bx bx-group",
+          title: "Familias Ajudadas",
+          value: "+" + this.familiasLength,
+        },
+      ];
+    }
   }
 
   weeklyreport() {
