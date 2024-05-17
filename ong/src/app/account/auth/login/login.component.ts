@@ -12,9 +12,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
   loginForm: UntypedFormGroup;
@@ -49,14 +49,15 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
 
-    this.authenticatedSub = this._authService
-      .getAuthentication()
-      .subscribe((data) => {
+    this.authenticatedSub = this._authService.getAuthentication().subscribe({
+      next: (data) => {
         if (data) {
           this.isAuthenticated = data;
           this.router.navigate(["ong-conforme"]);
         }
-      });
+      },
+      error: (err) => {}
+    });
 
     this._authService.authFromLocalStorage();
   }
@@ -89,7 +90,7 @@ export class LoginComponent implements OnInit {
 
       setTimeout(() => {
         this.submitted = false;
-      }, 2000)
+      }, 2000);
       return;
     }
 
@@ -110,8 +111,8 @@ export class LoginComponent implements OnInit {
           this.submitted = false;
 
           setTimeout(() => {
-            this.errormsg = '';
-          }, 4000)
+            this.errormsg = "";
+          }, 4000);
         });
     }
   }
@@ -122,5 +123,9 @@ export class LoginComponent implements OnInit {
 
   toggleLoged() {
     this.continueLogged = !this.continueLogged;
+  }
+
+  clearPassword(){
+    this.loginForm.reset();
   }
 }

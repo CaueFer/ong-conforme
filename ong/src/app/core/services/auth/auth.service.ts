@@ -66,6 +66,7 @@ export class AuthenticationService {
           if(err === 'Not Found') msg = 'Conta não cadastrada!';
           if(err === 'Not Acceptable') msg = 'Senha incorreta!';
           if(err === 'Internal Server Error') msg = 'Ocorreu um problema, tente novamente mais tarde.';
+          if(err === 'Unknown Error') msg = 'Servidor em manutenção, tente novamente mais tarde.';
           reject(msg);
         },
       });

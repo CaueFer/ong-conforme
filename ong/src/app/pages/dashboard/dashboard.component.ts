@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   actualMonth: string;
   actualDay: number;
 
-  sentBarChart: ChartType;
+  collumnBarChart: ChartType;
   metaMoney: ChartType;
   statData: any;
 
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
 
   private fetchData() {
     this.metaMoney = radialBarChart;
-    this.sentBarChart = columnChart;
+    this.collumnBarChart = columnChart;
     this.isActive = "year";
 
     this._databaseService.getHistorico().subscribe({
@@ -125,6 +125,7 @@ export class DashboardComponent implements OnInit {
             }
 
             this.statsReport();
+            this.yearlyreport();
           },
           error: (err) => {},
         });
@@ -159,7 +160,7 @@ export class DashboardComponent implements OnInit {
 
   weeklyreport() {
     this.isActive = "week";
-    this.sentBarChart.series = [
+    this.collumnBarChart.series = [
       {
         data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
       },
@@ -174,7 +175,7 @@ export class DashboardComponent implements OnInit {
 
   monthlyreport() {
     this.isActive = "month";
-    this.sentBarChart.series = [
+    this.collumnBarChart.series = [
       {
         data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
       },
@@ -189,7 +190,7 @@ export class DashboardComponent implements OnInit {
 
   yearlyreport() {
     this.isActive = "year";
-    this.sentBarChart.series = [
+    this.collumnBarChart.series = [
       {
         data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
       },
@@ -198,6 +199,12 @@ export class DashboardComponent implements OnInit {
       },
       {
         data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
+      },
+      {
+        data: [70, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
+      },
+      {
+        data: [100, 55, 41, 67, 22, 43, 36, 52, 24, 18],
       },
     ];
   }

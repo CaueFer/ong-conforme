@@ -86,6 +86,22 @@
                           'is-invalid': submitted && f.email.errors
                         }"
                       />
+                      <button
+                        class="btn btn-light position-absolute rounded-circle d-flex justify-content-center align-items-center"
+                        type="button"
+                        id="email-addon"
+                        style="
+                          top: 14px;
+                          left: calc(87%);
+                          height: 30px;
+                          width: 30px;
+                        "
+                        (click)="clearPassword()"
+                      >
+                        <i
+                          class="mdi mdi-close fs-6"
+                        ></i>
+                      </button>
                       <div
                         *ngIf="submitted && f.email.errors"
                         class="invalid-feedback"
