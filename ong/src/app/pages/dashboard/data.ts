@@ -86,8 +86,8 @@ const radialBarChart: ChartType = {
     stroke: {
         dashArray: 4,
     },
-    series: [67],
-    labels: ['Meta mensal'],
+    series: [0],
+    labels: ['Meta'],
 };
 
 export { columnChart, radialBarChart };

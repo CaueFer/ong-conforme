@@ -16,6 +16,8 @@ router.get('/getFamilias', mysqlController.getFamilias);
 
 router.get('/getTableLength', mysqlController.getTableLength);
 
+router.get('/getMetaFixa', mysqlController.getMetaFixa);
+
 router.post('/loginUser', mysqlController.loginUser);
 
 router.post('/addDoacao', mysqlController.addDoacao);

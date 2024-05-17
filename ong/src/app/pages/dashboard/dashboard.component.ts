@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   actualDay: number;
 
   sentBarChart: ChartType;
-  monthlyEarningChart: ChartType;
+  metaMoney: ChartType;
   statData: any;
 
   isActive: string;
@@ -27,6 +27,9 @@ export class DashboardComponent implements OnInit {
   todayItem: HistoricoModel[] = [];
   doacoes: DoacaoModel[] = [];
   doacoesMoney: DoacaoModel[] = [];
+  moneyQntd: number = 0;
+  moneyMetaAll: number = 0;
+  moneyMetaPorcent: any;
 
   historicoLength: Number;
   doacoesLength: Number;
@@ -88,7 +91,6 @@ export class DashboardComponent implements OnInit {
           this.doacoesLength = value.totalDoacoes;
           this.historicoLength = value.totalHistoricos;
         }
-        this.statsReport();
       },
     });
 
@@ -96,13 +98,38 @@ export class DashboardComponent implements OnInit {
       next: (value) => {
         this.doacoes = value;
 
-        this.doacoesMoney = value.filter(item => item.categoria === 'monetario');
+        this.doacoesMoney = value.filter(
+          (item) => item.categoria === "monetario"
+        );
+
+        if (this.doacoesMoney) {
+          this.doacoesMoney.forEach((doacao) => {
+            this.moneyQntd += Number(doacao.qntd);
+          });
+        }
+
+        this._databaseService.getMetaFixa(1).subscribe({
+          next: (value) => {
+            this.moneyMetaAll = value[0].qntdMetaAll;
+
+            this.metaMoney = radialBarChart;
+            if (this.moneyMetaAll > 0) {
+              const temp = ((this.moneyQntd / this.moneyMetaAll) * 100).toFixed(
+                1
+              );
+              this.metaMoney.series = [temp];
+              this.moneyMetaPorcent = Number(this.metaMoney.series).toFixed(0);
+            }
+            console.log(this.moneyMetaPorcent);
+
+            this.statsReport();
+            this.sentBarChart = columnChart;
+            this.isActive = "year";
+          },
+          error: (err) => {},
+        });
       },
     });
-
-    this.sentBarChart = columnChart;
-    this.monthlyEarningChart = radialBarChart;
-    this.isActive = "year";
   }
 
   statsReport() {
@@ -115,7 +142,7 @@ export class DashboardComponent implements OnInit {
       {
         icon: "bx bx-archive-in",
         title: "Arrecadação Total",
-        value: "R$5, 723",
+        value: `R$${this.moneyQntd}`,
       },
       {
         icon: "bx bx-group",
