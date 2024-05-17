@@ -52,6 +52,10 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit() {}
 
   private fetchData() {
+    this.metaMoney = radialBarChart;
+    this.sentBarChart = columnChart;
+    this.isActive = "year";
+
     this._databaseService.getHistorico().subscribe({
       next: (value) => {
         const dateFormat = "dd  MMM";
@@ -112,7 +116,6 @@ export class DashboardComponent implements OnInit {
           next: (value) => {
             this.moneyMetaAll = value[0].qntdMetaAll;
 
-            this.metaMoney = radialBarChart;
             if (this.moneyMetaAll > 0) {
               const temp = ((this.moneyQntd / this.moneyMetaAll) * 100).toFixed(
                 1
@@ -120,11 +123,8 @@ export class DashboardComponent implements OnInit {
               this.metaMoney.series = [temp];
               this.moneyMetaPorcent = Number(this.metaMoney.series).toFixed(0);
             }
-            console.log(this.moneyMetaPorcent);
 
             this.statsReport();
-            this.sentBarChart = columnChart;
-            this.isActive = "year";
           },
           error: (err) => {},
         });
@@ -133,23 +133,28 @@ export class DashboardComponent implements OnInit {
   }
 
   statsReport() {
-    this.statData = [
-      {
-        icon: "bx bx-copy-alt",
-        title: "Doações Total",
-        value: this.doacoesLength,
-      },
-      {
-        icon: "bx bx-archive-in",
-        title: "Arrecadação Total",
-        value: `R$${this.moneyQntd}`,
-      },
-      {
-        icon: "bx bx-group",
-        title: "Familias Ajudadas",
-        value: "+" + this.familiasLength,
-      },
-    ];
+    const temp = this.historico.filter((item) => item.tipoMov === "saida");
+
+    if (temp) {
+      const doados = temp.length;
+      this.statData = [
+        {
+          icon: "bx bx-copy-alt",
+          title: "Doações Estoque",
+          value: this.doacoesLength,
+        },
+        {
+          icon: "bx bx-archive-in",
+          title: "Itens doados",
+          value: `+${doados}`,
+        },
+        {
+          icon: "bx bx-group",
+          title: "Familias Ajudadas",
+          value: "+" + this.familiasLength,
+        },
+      ];
+    }
   }
 
   weeklyreport() {
