@@ -5,7 +5,15 @@ import { DatabaseService } from "src/app/core/services/database/database.service
 import { DoacaoModel } from "../../core/models/doacao.model";
 import { HistoricoModel } from "../doacoes/historico/historico.model";
 import { pt } from "date-fns/locale";
-import { format, parseISO } from "date-fns";
+import {
+  format,
+  isSameDay,
+  isSameMonth,
+  isSameYear,
+  parseISO,
+  startOfDay,
+} from "date-fns";
+import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
 
 @Component({
   selector: "app-dashboard",
@@ -23,8 +31,9 @@ export class DashboardComponent implements OnInit {
 
   isActive: string;
 
-  historico: HistoricoModel[] = [];
   todayItem: HistoricoModel[] = [];
+  historico: HistoricoModel[] = [];
+  historicoByCategoria: any = {};
   doacoes: DoacaoModel[] = [];
   doacoesMonetaria: DoacaoModel[] = [];
   moneyQntd: number = 0;
@@ -125,7 +134,6 @@ export class DashboardComponent implements OnInit {
             }
 
             this.statsReport();
-            this.yearlyreport();
           },
           error: (err) => {},
         });
@@ -135,13 +143,6 @@ export class DashboardComponent implements OnInit {
 
   statsReport() {
     const temp = this.historico.filter((item) => item.tipoMov === "saida");
-
-    this._databaseService.getHistoricoByCategoria('monetario').subscribe({
-      next:(value) =>{
-        console.log(value)
-      }
-    })
-
     if (temp) {
       const doados = temp.length;
       this.statData = [
@@ -162,58 +163,181 @@ export class DashboardComponent implements OnInit {
         },
       ];
     }
+
+    const categorias = ["monetario", "alimento", "roupa", "mobilia", "outro"];
+    let allRequestsCompleted = 0;
+
+    categorias.forEach((categoria) => {
+      this._databaseService.getHistoricoByCategoria(categoria).subscribe({
+        next: (value) => {
+          this.historicoByCategoria[categoria] = value.map((item) => ({
+            ...item,
+            dataParsed: parseISO(item.data),
+          }));
+        },
+        error: (err) => {},
+        complete: () => {
+          allRequestsCompleted++;
+          if (allRequestsCompleted === categorias.length) {
+            this.yearlyreport();
+          }
+        },
+      });
+    });
   }
 
   weeklyreport() {
     this.isActive = "week";
 
-
-    this.collumnBarChart.series = [
-      {
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
-      },
-      {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
-      },
-      {
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
-      },
+    const daysWeek = [
+      "Domingo",
+      "Segunda-feira",
+      "Terca-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sabado",
     ];
+
+    this.collumnBarChart.xaxis = {
+      categories: daysWeek,
+    };
+
+    const filtros = ["mobilia", "roupa", "alimento", "monetario", "outro"];
+
+    const lengthCategoriaPorMes = {};
+
+    filtros.forEach((categoria) => {
+      lengthCategoriaPorMes[categoria] = {};
+
+      this.historicoByCategoria[categoria].forEach((item) => {
+        const itemDate = new Date(item.dataParsed);
+
+        const currentWeek = this.getWeekNumber(new Date());
+        const itemWeek = this.getWeekNumber(itemDate);
+
+        if (currentWeek === itemWeek) {
+          const dayOfWeek = itemDate.getDay();
+          if (dayOfWeek >= 0 && dayOfWeek <= 6) {
+            const dia = daysWeek[dayOfWeek];
+            lengthCategoriaPorMes[categoria][dia] =
+              (lengthCategoriaPorMes[categoria][dia] || 0) + 1;
+          }
+        }
+      });
+    });
+
+    this.collumnBarChart.series = filtros.map((categoria) => ({
+      name: categoria.charAt(0).toUpperCase() + categoria.slice(1),
+      data: daysWeek.map(
+        (weekD) => lengthCategoriaPorMes[categoria][weekD] || 0
+      ),
+    }));
   }
 
   monthlyreport() {
     this.isActive = "month";
-    this.collumnBarChart.series = [
-      {
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
-      },
-      {
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
-      },
-      {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
-      },
-    ];
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dias = Array.from({ length: daysInMonth }, (_, i) =>
+      (i + 1).toString().padStart(2, "0")
+    );
+
+    this.collumnBarChart.xaxis = {
+      categories: dias,
+    };
+
+    const filtros = ["mobilia", "roupa", "alimento", "monetario", "outro"];
+
+    const lengthCategoriaPorMes = {};
+
+    filtros.forEach((categoria) => {
+      lengthCategoriaPorMes[categoria] = {};
+
+      this.historicoByCategoria[categoria].forEach((item) => {
+        const itemDate = new Date(item.dataParsed);
+
+        const actualMonth = new Date().getMonth();
+        const itemMonth = itemDate.getMonth();
+
+        if (actualMonth === itemMonth) {
+          const day = itemDate.getDate();
+
+          if (day >= 1 && day <= daysInMonth) {
+            const dia = dias[day - 1];
+            lengthCategoriaPorMes[categoria][dia] =
+              (lengthCategoriaPorMes[categoria][dia] || 0) + 1;
+          }
+        }
+      });
+    });
+
+    this.collumnBarChart.series = filtros.map((categoria) => ({
+      name: categoria.charAt(0).toUpperCase() + categoria.slice(1),
+      data: dias.map((dia) => lengthCategoriaPorMes[categoria][dia] || 0),
+    }));
   }
 
   yearlyreport() {
     this.isActive = "year";
-    this.collumnBarChart.series = [
-      {
-        data: [13, 23, 20, 8, 13, 27, 18, 22, 10, 16, 24, 22],
-      },
-      {
-        data: [11, 17, 15, 15, 21, 14, 11, 18, 17, 12, 20, 18],
-      },
-      {
-        data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
-      },
-      {
-        data: [70, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],
-      },
-      {
-        data: [100, 55, 41, 67, 22, 43, 36, 52, 24, 18],
-      },
+
+    const meses = [
+      "Jan",
+      "Fev",
+      "Mar",
+      "Abr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Set",
+      "Out",
+      "Nov",
+      "Dez",
     ];
+
+    this.collumnBarChart.xaxis = {
+      categories: meses,
+    };
+
+    const filtros = ["mobilia", "roupa", "alimento", "monetario", "outro"];
+
+    const lengthCategoriaPorMes = {};
+
+    filtros.forEach((categoria) => {
+      lengthCategoriaPorMes[categoria] = {};
+
+      this.historicoByCategoria[categoria].forEach((item) => {
+        const itemDate = new Date(item.dataParsed);
+
+        const currentYear = new Date().getFullYear();
+        const itemYear = itemDate.getFullYear();
+
+        if (currentYear === itemYear) {
+          const month = itemDate.getMonth();
+
+          if (month >= 0 && month <= 11) {
+            const monthName = meses[month];
+            lengthCategoriaPorMes[categoria][monthName] =
+              (lengthCategoriaPorMes[categoria][monthName] || 0) + 1;
+          }
+        }
+      });
+    });
+
+    this.collumnBarChart.series = filtros.map((categoria) => ({
+      name: categoria.charAt(0).toUpperCase() + categoria.slice(1),
+      data: meses.map((mes) => lengthCategoriaPorMes[categoria][mes] || 0),
+    }));
+  }
+
+  getWeekNumber(date: Date): number {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear =
+      (date.getTime() - firstDayOfYear.getTime()) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
 }

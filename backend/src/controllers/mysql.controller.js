@@ -104,7 +104,7 @@ exports.getHistoricoByCategoria = (req, res) => {
   const categoria = req.query.categoria;
 
   const query = `
-    SELECT *
+    SELECT ${historicoTable}.*
     FROM ${historicoTable}
     JOIN ${doacaoTable} ON ${historicoTable}.doacao_id = ${doacaoTable}.id
     WHERE ${doacaoTable}.categoria = ?;
