@@ -75,7 +75,7 @@ exports.loginUser = async (req, res) => {
         );
         res.status(200).json({
           token: token,
-          expiresIn: 86.4,
+          expiresIn: 86400,
           message: "Login efetuado com sucesso.",
         });
       }

@@ -1,7 +1,5 @@
 const db = require("../db");
 const config = require("../../../config");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 let doacaoTable = config.doacoesTable;
 let historicoTable = config.historicosTable;
@@ -102,21 +100,24 @@ exports.getMetaFixa = (req, res) => {
   );
 };
 
-exports.getDoacoesByCategoria = (req, res) => {
+exports.getHistoricoByCategoria = (req, res) => {
   const categoria = req.query.categoria;
 
-  db.query(
-    "SELECT * FROM " + doacaoTable + " WHERE categoria = ?",
-    id,
-    (error, results, fields) => {
-      if (error) {
-        console.error("Erro ao obter dados:", error);
-        res.status(500).json("Erro ao obter os dados");
-        return;
-      }
-      res.status(200).json(results);
+  const query = `
+    SELECT *
+    FROM ${historicoTable}
+    JOIN ${doacaoTable} ON ${historicoTable}.doacao_id = ${doacaoTable}.id
+    WHERE ${doacaoTable}.categoria = ?;
+  `;
+
+  db.query(query, [categoria], (error, results) => {
+    if (error) {
+      console.error("Erro ao obter histórico por categoria:", error);
+      res.status(500).json("Erro ao obter histórico por categoria");
+      return;
     }
-  );
+    res.json(results);
+  });
 };
 
 exports.addDoacao = (req, res) => {
@@ -217,11 +218,12 @@ exports.updateQntdInDoacao = (req, res) => {
 exports.updateMetaInDoacao = (req, res) => {
   const { metaQntd, metaDate, doacao_id } = req.body;
 
-  const quantidadeNova = parseInt(metaQntd, 10);
+  let qntdNova = null;
+  if (metaQntd) qntdNova = parseInt(metaQntd, 10);
 
   db.query(
     "UPDATE " + doacaoTable + " SET metaQntd = ?, metaDate = ? WHERE id = ?",
-    [quantidadeNova, metaDate, doacao_id],
+    [qntdNova, metaDate, doacao_id],
     (error, results) => {
       if (error) {
         console.error("Erro ao atualizar meta do item:", error);

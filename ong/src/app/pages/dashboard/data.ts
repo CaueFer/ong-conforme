@@ -60,7 +60,7 @@ const columnChart: ChartType = {
       "Dez",
     ],
   },
-  colors: ["#556ee6", "#f1b44c", "#34c38f", "#FB5353", "#34C3C3"],
+  colors: ["#556ee6", "#FEBB3B", "#34c38f", "#FF6077", "#34C3C3"],
   legend: {
     position: "bottom",
   },

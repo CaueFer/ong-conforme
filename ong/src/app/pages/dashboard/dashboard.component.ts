@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   historico: HistoricoModel[] = [];
   todayItem: HistoricoModel[] = [];
   doacoes: DoacaoModel[] = [];
-  doacoesMoney: DoacaoModel[] = [];
+  doacoesMonetaria: DoacaoModel[] = [];
   moneyQntd: number = 0;
   moneyMetaAll: number = 0;
   moneyMetaPorcent: any;
@@ -102,12 +102,12 @@ export class DashboardComponent implements OnInit {
       next: (value) => {
         this.doacoes = value;
 
-        this.doacoesMoney = value.filter(
+        this.doacoesMonetaria = value.filter(
           (item) => item.categoria === "monetario"
         );
 
-        if (this.doacoesMoney) {
-          this.doacoesMoney.forEach((doacao) => {
+        if (this.doacoesMonetaria) {
+          this.doacoesMonetaria.forEach((doacao) => {
             this.moneyQntd += Number(doacao.qntd);
           });
         }
@@ -136,6 +136,12 @@ export class DashboardComponent implements OnInit {
   statsReport() {
     const temp = this.historico.filter((item) => item.tipoMov === "saida");
 
+    this._databaseService.getHistoricoByCategoria('monetario').subscribe({
+      next:(value) =>{
+        console.log(value)
+      }
+    })
+
     if (temp) {
       const doados = temp.length;
       this.statData = [
@@ -160,6 +166,8 @@ export class DashboardComponent implements OnInit {
 
   weeklyreport() {
     this.isActive = "week";
+
+
     this.collumnBarChart.series = [
       {
         data: [44, 55, 41, 67, 22, 43, 36, 52, 24, 18, 36, 48],

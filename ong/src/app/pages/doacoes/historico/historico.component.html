@@ -234,7 +234,6 @@
                       <th class="align-middle">Tipo</th>
                       <th class="align-middle">Data</th>
                       <th class="align-middle">Doador</th>
-                      <th class="align-middle">Ações</th>
                     </tr>
                   </thead>
                   <tbody class="position-relative">
@@ -287,26 +286,6 @@
                       </td>
                       <td>{{ data.data }}</td>
                       <td class="text-truncate">{{ data.doadorName }}</td>
-                      <td>
-                        <div class="d-flex gap-3">
-                          <a
-                            href="javascript:void(0);"
-                            class="text-black align-middle"
-                            ngbTooltip="Ver detalhes"
-                            [routerLink]="['/ong-conforme/historico-single']"
-                            [queryParams]="{ id: data.doacao_id }"
-                          >
-                          <span class="mdi mdi-text-search font-size-18"></span>
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            class="text-danger align-middle"
-                            ngbTooltip="Deletar"
-                            (click)="confirmDelete(data.id)"
-                            ><i class="mdi mdi-delete font-size-18"></i
-                          ></a>
-                        </div>
-                      </td>
                     </tr>
                   </tbody>
                   <tbody *ngIf="isLoadingList">
@@ -353,6 +332,7 @@
                     responsive="true"
                     previousLabel="Anterior"
                     nextLabel="Prox"
+                    autoHide="true"
                   >
                   </pagination-controls>
                 </div>

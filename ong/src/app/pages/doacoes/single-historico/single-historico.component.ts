@@ -165,9 +165,14 @@ export class SingleHistoricoComponent {
     }
 
     if (this.metaForm.valid) {
-      const qntd = this.metaForm.controls["metaQntd"].value;
-      const data = this.metaForm.controls["metaDate"].value;
+      let qntd = this.metaForm.controls["metaQntd"].value;
+      let data = this.metaForm.controls["metaDate"].value;
       const doacao_id = this.targetId;
+
+      if(qntd === 0){
+        qntd = null;
+        data = null;
+      }
 
       const metaValues = {
         qntd,
@@ -219,6 +224,7 @@ export class SingleHistoricoComponent {
     }
 
     this.metaIsEditing = false;
+    this.metaCalc();
   }
 
   metaCalc() {
@@ -229,7 +235,7 @@ export class SingleHistoricoComponent {
       return;
     }
     
-    if (Number(this.metaQntd) <= 0 || Number(this.doacao[0].qntd) <= 0) {
+    if (Number(this.metaQntd) <= 0) {
       this.metaResult = "Nenhuma meta definida.";
 
       this.metaChart.series = [0];
@@ -330,7 +336,6 @@ export class SingleHistoricoComponent {
           this.isLoadingList = false;
 
           this.updateMetaValues();
-          this.metaCalc();
         }
       },
       error: (err) => {

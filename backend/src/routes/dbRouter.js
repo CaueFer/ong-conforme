@@ -14,7 +14,7 @@ dbRouter.get('/getTableLength', mysqlController.getTableLength);
 
 dbRouter.get('/getMetaFixa', mysqlController.getMetaFixa);
 
-dbRouter.get('/getDoacoesByCategoria', mysqlController.getDoacoesByCategoria);
+dbRouter.get('/getHistoricoByCategoria', mysqlController.getHistoricoByCategoria);
 
 dbRouter.post('/addDoacao', mysqlController.addDoacao);
 

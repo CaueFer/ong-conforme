@@ -94,7 +94,7 @@
                   <div class="text-black">
                     <h5 class="text-primary">Meta da Doação</h5>
                     <div class="row d-flex flex-row">
-                      <div class="col">
+                      <div class="col-7">
                         <div class="row">
                           <div class="col-sm-6">
                             <h4 class="card-title mt-3">Arrecadação Atual</h4>
@@ -219,7 +219,7 @@
                             ></i>
                             <i
                               *ngIf="form['metaQntd'].dirty && !submitted"
-                              class="bx bx-save align-middle position-absolute fs-4 text-black"
+                              class="bx bx-save align-middle position-absolute fs-5 text-black"
                               style="left: 89%; top: 7px"
                             ></i>
                             <div
@@ -251,8 +251,7 @@
                             <input
                               *ngIf="!metaIsEditing"
                               class="form-control"
-                              placeholder="Data final"
-                              [value]="customDateString"
+                              [placeholder]="customDateString"
                               [readonly]="true"
                               ngbTooltip="Data final"
                               placement="bottom"
@@ -274,7 +273,7 @@
                             ></i>
                             <i
                               *ngIf="form['metaDate'].dirty && !submitted"
-                              class="bx bx-save align-middle position-absolute fs-4 text-black"
+                              class="bx bx-save align-middle position-absolute fs-5 text-black"
                               style="left: 89%; top: 7px"
                             ></i>
                             <div class="invalid-feedback">

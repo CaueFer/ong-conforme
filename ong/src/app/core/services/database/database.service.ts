@@ -65,6 +65,15 @@ export class DatabaseService {
     );
   }
 
+  getHistoricoByCategoria(categoria: string): Observable<any> {
+    return this.http.get<any>(`${this.url}/getHistoricoByCategoria`, { params: { categoria: categoria } }).pipe(
+      catchError((error) => {
+        console.error("Erro ao obter os dados:", error);
+        return of(null);
+      })
+    );
+  }
+
   async addDoacao(newValue: any): Promise<Number> {
     const itemToAdd = {
       categoria: newValue.categoria,
