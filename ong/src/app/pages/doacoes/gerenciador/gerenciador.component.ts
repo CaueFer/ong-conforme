@@ -77,7 +77,7 @@ export class GerenciadorComponent implements OnInit {
 
 
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 9;
 
   constructor(
     private modalService: BsModalService,

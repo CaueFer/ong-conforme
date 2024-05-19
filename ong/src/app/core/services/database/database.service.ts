@@ -21,12 +21,14 @@ export class DatabaseService {
   }
 
   getSingleDoacao(id: any): Observable<any> {
-    return this.http.get<any>(`${this.url}/getSingleDoacao`, { params: { id: id } }).pipe(
-      catchError((error) => {
-        console.error("Erro ao obter os dados:", error);
-        return of(null);
-      })
-    );
+    return this.http
+      .get<any>(`${this.url}/getSingleDoacao`, { params: { id: id } })
+      .pipe(
+        catchError((error) => {
+          console.error("Erro ao obter os dados:", error);
+          return of(null);
+        })
+      );
   }
 
   getHistorico(): Observable<any> {
@@ -57,21 +59,27 @@ export class DatabaseService {
   }
 
   getMetaFixa(id: any): Observable<any> {
-    return this.http.get<any>(`${this.url}/getMetaFixa`, { params: { id: id } }).pipe(
-      catchError((error) => {
-        console.error("Erro ao obter os dados:", error);
-        return of(null);
-      })
-    );
+    return this.http
+      .get<any>(`${this.url}/getMetaFixa`, { params: { id: id } })
+      .pipe(
+        catchError((error) => {
+          console.error("Erro ao obter os dados:", error);
+          return of(null);
+        })
+      );
   }
 
   getHistoricoByCategoria(categoria: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/getHistoricoByCategoria`, { params: { categoria: categoria } }).pipe(
-      catchError((error) => {
-        console.error("Erro ao obter os dados:", error);
-        return of(null);
+    return this.http
+      .get<any>(`${this.url}/getHistoricoByCategoria`, {
+        params: { categoria: categoria },
       })
-    );
+      .pipe(
+        catchError((error) => {
+          console.error("Erro ao obter os dados:", error);
+          return of(null);
+        })
+      );
   }
 
   async addDoacao(newValue: any): Promise<Number> {
@@ -130,18 +138,16 @@ export class DatabaseService {
         itemName: newValue.itemName,
       };
 
-      this.http
-        .post<any>(`${this.url}/updateDoacao`, itemToAtt)
-        .subscribe({
-          next: (data) => {
-            //console.log(data);
-            resolve();
-          },
-          error: (err) => {
-            console.error(err);
-            reject();
-          },
-        });
+      this.http.post<any>(`${this.url}/updateDoacao`, itemToAtt).subscribe({
+        next: (data) => {
+          //console.log(data);
+          resolve();
+        },
+        error: (err) => {
+          console.error(err);
+          reject();
+        },
+      });
     });
   }
 
@@ -167,7 +173,7 @@ export class DatabaseService {
         });
     });
   }
-  
+
   async updateMetaInDoacao(newValue: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const itemToAtt = {
@@ -191,6 +197,27 @@ export class DatabaseService {
     });
   }
 
+  async updateMetaFixa(newValue: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const itemToAtt = {
+        qntdMetaAll: newValue.qntd,
+        nome: newValue.nome,
+        id: newValue.id,
+      };
+
+      this.http.post<any>(`${this.url}/updateMetaFixa`, itemToAtt).subscribe({
+        next: (data) => {
+          //console.log(data);
+          resolve();
+        },
+        error: (err) => {
+          console.error(err);
+          reject();
+        },
+      });
+    });
+  }
+
   async deleteDoacao(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (id) {
@@ -211,16 +238,18 @@ export class DatabaseService {
   async deleteMultiHistorico(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (id) {
-        this.http.post<any>(`${this.url}/deleteMultiHistorico`, { id }).subscribe({
-          next: (data) => {
-            //console.log(data);
-            resolve();
-          },
-          error: (err) => {
-            console.log(err);
-            reject();
-          },
-        });
+        this.http
+          .post<any>(`${this.url}/deleteMultiHistorico`, { id })
+          .subscribe({
+            next: (data) => {
+              //console.log(data);
+              resolve();
+            },
+            error: (err) => {
+              console.log(err);
+              reject();
+            },
+          });
       }
     });
   }
@@ -228,16 +257,18 @@ export class DatabaseService {
   async deleteSingleHistorico(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (id) {
-        this.http.post<any>(`${this.url}/deleteSingleHistorico`, { id }).subscribe({
-          next: (data) => {
-            //console.log(data);
-            resolve();
-          },
-          error: (err) => {
-            console.log(err);
-            reject();
-          },
-        });
+        this.http
+          .post<any>(`${this.url}/deleteSingleHistorico`, { id })
+          .subscribe({
+            next: (data) => {
+              //console.log(data);
+              resolve();
+            },
+            error: (err) => {
+              console.log(err);
+              reject();
+            },
+          });
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { columnChart, radialBarChart } from "./data";
 import { ChartType } from "../../core/models/charts.model";
 import { DatabaseService } from "src/app/core/services/database/database.service";
@@ -14,6 +14,16 @@ import {
   startOfDay,
 } from "date-fns";
 import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
+import { ModalDirective } from "ngx-bootstrap/modal";
+import {
+  FormBuilder,
+  FormGroup,
+  UntypedFormBuilder,
+  Validators,
+} from "@angular/forms";
+import Swal from "sweetalert2";
+import { BsDropdownDirective } from "ngx-bootstrap/dropdown";
+import { NgbDropdown } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-dashboard",
@@ -21,6 +31,9 @@ import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild("editMetaDropdown") editMetaDropdown: NgbDropdown;
+  editMetaForm: FormGroup;
+
   date: Date;
   actualMonth: string;
   actualDay: number;
@@ -33,6 +46,7 @@ export class DashboardComponent implements OnInit {
 
   todayItem: HistoricoModel[] = [];
   historico: HistoricoModel[] = [];
+  historicoNotToday: HistoricoModel[] = [];
   historicoByCategoria: any = {};
   doacoes: DoacaoModel[] = [];
   doacoesMonetaria: DoacaoModel[] = [];
@@ -43,8 +57,25 @@ export class DashboardComponent implements OnInit {
   historicoLength: Number;
   doacoesLength: Number;
   familiasLength: Number;
+  disableSubmitBtn: boolean = false;
+  submitted: boolean = false;
+  metaSaved: boolean = true;
 
-  constructor(private _databaseService: DatabaseService) {}
+  actualMetaValue: any;
+
+  constructor(
+    private _databaseService: DatabaseService,
+    private formBuilder: FormBuilder
+  ) {
+    this.editMetaForm = this.formBuilder.group({
+      metaQntd: ["", [Validators.required]],
+      metaName: ["", [Validators.required]],
+      id: [""],
+    });
+  }
+  get form() {
+    return this.editMetaForm.controls;
+  }
 
   ngOnInit() {
     this.date = new Date();
@@ -83,16 +114,26 @@ export class DashboardComponent implements OnInit {
             doadorName: nameFormated,
           };
         });
+        this.historico.reverse();
 
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
-
-        const findedItem = this.historico.find((item) => {
-          const dataItem = parseISO(item.data);
-          dataItem.setHours(0, 0, 0, 0);
-          return dataItem.getTime() === hoje.getTime();
+        const findedItemIndex = this.historico.findIndex((item) => {
+          const dataItem = new Date(item.data);
+          const hoje = new Date();
+          return dataItem.setHours(0, 0, 0, 0) === hoje.setHours(0, 0, 0, 0);
         });
-        this.todayItem.push(findedItem);
+
+        if (findedItemIndex !== -1) {
+          const findedItem = this.historico[findedItemIndex];
+          this.todayItem.push(findedItem);
+        }
+
+        this.historico.forEach((item) => {
+          const dataItem = new Date(item.data);
+          const hoje = new Date();
+
+          if (dataItem.setHours(0, 0, 0, 0) !== hoje.setHours(0, 0, 0, 0))
+            this.historicoNotToday.push(item);
+        });
       },
       error: () => {},
     });
@@ -121,23 +162,29 @@ export class DashboardComponent implements OnInit {
           });
         }
 
-        this._databaseService.getMetaFixa(1).subscribe({
-          next: (value) => {
-            this.moneyMetaAll = value[0].qntdMetaAll;
-
-            if (this.moneyMetaAll > 0) {
-              const temp = ((this.moneyQntd / this.moneyMetaAll) * 100).toFixed(
-                1
-              );
-              this.metaMoney.series = [temp];
-              this.moneyMetaPorcent = Number(this.metaMoney.series).toFixed(0);
-            }
-
-            this.statsReport();
-          },
-          error: (err) => {},
-        });
+        this.getMetaFixa();
       },
+    });
+  }
+
+  getMetaFixa() {
+    this._databaseService.getMetaFixa(1).subscribe({
+      next: (value) => {
+        this.editMetaForm.get("metaQntd").setValue(value[0].qntdMetaAll);
+        this.editMetaForm.get("metaName").setValue(value[0].nome);
+        this.editMetaForm.get("id").setValue(value[0].id);
+
+        this.moneyMetaAll = this.editMetaForm.get("metaQntd").value;
+
+        if (this.moneyMetaAll > 0) {
+          const temp = ((this.moneyQntd / this.moneyMetaAll) * 100).toFixed(1);
+          this.metaMoney.series = [temp];
+          this.moneyMetaPorcent = Number(this.metaMoney.series).toFixed(0);
+        }
+
+        this.statsReport();
+      },
+      error: (err) => {},
     });
   }
 
@@ -339,5 +386,63 @@ export class DashboardComponent implements OnInit {
     const pastDaysOfYear =
       (date.getTime() - firstDayOfYear.getTime()) / 86400000;
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  }
+
+  editDropdown(isOpen: boolean) {
+    this.submitted = false;
+    if (isOpen) {
+      this.actualMetaValue = this.form["metaQntd"].value;
+    }
+    else{
+      this.cancelEdit();
+    }
+  }
+
+  submitEdit() {
+    this.submitted = true;
+    this.metaSaved = false;
+
+    if (this.editMetaForm.valid) {
+      const itemToAtt = {
+        nome: this.form["metaName"].value,
+        qntd: this.form["metaQntd"].value,
+        id: this.form["id"].value,
+      };
+
+      itemToAtt.qntd <= 0 ? null : itemToAtt.qntd;
+
+      this.actualMetaValue = itemToAtt.qntd;
+
+      this._databaseService
+        .updateMetaFixa(itemToAtt)
+        .then((resolve) => {
+          this.getMetaFixa();
+
+          setTimeout(() => {
+            this.metaSaved = true;
+
+            setTimeout(() => {
+              this.submitted = false;
+
+              this.editMetaDropdown?.close();
+            }, 500);
+          }, 1000);
+        })
+        .catch((err) => {});
+    }
+
+    setTimeout(() => {
+      this.submitted = false;
+    }, 2500);
+  }
+
+  cancelEdit() {
+    this.form["metaQntd"].setValue(this.actualMetaValue);
+
+    this.editMetaDropdown.close();
+  }
+
+  alertSucess(msg1, msg2: string) {
+    Swal.fire(msg1, msg2, "success");
   }
 }

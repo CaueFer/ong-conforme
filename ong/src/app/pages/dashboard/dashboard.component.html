@@ -26,7 +26,10 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-6">
-                    <h4 class="card-title mb-4">Arrecadação Total</h4>
+                    <h4 class="card-title mb-4">
+                      <span class="mdi mdi-cash-multiple font-size-17"></span>
+                      Financeiro
+                    </h4>
                     <p class="text-muted">
                       Ultima atualização: {{ actualMonth }}
                     </p>
@@ -43,14 +46,17 @@
                       da meta
                     </p>
                     <p *ngIf="moneyMetaPorcent < 100" class="text-muted">
-                      <span class=" me-2">
-                        {{ 100 - moneyMetaPorcent}}%
+                      <span class="me-2">
+                        {{ 100 - moneyMetaPorcent }}%
                         <i class="mdi mdi-arrow-up"></i
                       ></span>
                       para a meta
                     </p>
+                    <p *ngIf="!moneyMetaPorcent" class="text-muted">
+                      nenhuma meta definida.
+                    </p>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-6 position-relative" id="metaMoneyHovered">
                     <apx-chart
                       dir="ltr"
                       class="apex-charts"
@@ -63,11 +69,123 @@
                       [plotOptions]="metaMoney.plotOptions"
                     >
                     </apx-chart>
+                    <div
+                      class=""
+                      ngbDropdown
+                      (openChange)="editDropdown($event)"
+                      #editMetaDropdown="ngbDropdown"
+                      autoClose="false"
+                      placement="right"
+                    >
+                      <button
+                        class="slideInOut In btn btn-sm btn-dark rounded-circle position-absolute d-none"
+                        style="top: -150px; left: 60%"
+                        ngbDropdownToggle
+                      >
+                        <i class="mdi mdi-pencil font-size-14 align-middle"></i>
+                      </button>
+                      <div
+                        class="dropdown-menu ms-3"
+                        style="width: 350px"
+                        ngbDropdownMenu
+                      >
+                        <div class="card-body">
+                          <h5 class="card-title">Arrecadação Monetária</h5>
+                          <div class="">
+                            <form
+                              (ngSubmit)="submitEdit()"
+                              [formGroup]="editMetaForm"
+                              class="needs-validation createorder-form"
+                              id="createorder-form"
+                              novalidate
+                            >
+                              <div class="row">
+                                <div class="col">
+                                  <div class="row">
+                                    <div class="col-8">
+                                      <label
+                                        for="customername-field"
+                                        class="form-label"
+                                        >Meta</label
+                                      >
+                                      <input
+                                        type="text"
+                                        id="customername-field"
+                                        class="form-control"
+                                        placeholder="Quantidade..."
+                                        formControlName="metaQntd"
+                                        prefix="R$"
+                                        mask="0*"
+                                        [ngClass]="{
+                                          'is-invalid':
+                                            submitted && form['metaQntd'].errors
+                                        }"
+                                      />
+                                      <div
+                                        *ngIf="
+                                          submitted && form['metaQntd'].errors
+                                        "
+                                        class="invalid-feedback"
+                                      >
+                                        <div
+                                          *ngIf="
+                                            form['metaQntd'].errors['required']
+                                          "
+                                        >
+                                          Digite uma quantidade válida.
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="d-flex flex-row gap-2 col-4 align-items-end mb-1"
+                                      *ngIf="!submitted"
+                                    >
+                                      <button
+                                        class="btn text-white bg-success rounded-circle align-middle p-0"
+                                        style="width: 30px; height: 30px"
+                                        (click)="submitEdit()"
+                                      >
+                                        <i
+                                          class="mdi mdi-check align-middle text-center font-size-18"
+                                        ></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        class="btn text-white bg-danger rounded-circle align-middle p-0"
+                                        style="width: 30px; height: 30px"
+                                        (click)="cancelEdit()"
+                                      >
+                                        <i
+                                          class="mdi mdi-close align-middle text-center font-size-18"
+                                        ></i>
+                                      </button>
+                                    </div>
+                                    <div
+                                      class="d-flex flex-row gap-2 col-4 justify-content-center align-items-end"
+                                    >
+                                      <div
+                                        *ngIf="submitted && !metaSaved"
+                                        class="spinner-border spinner-border-sm text-primary mb-2"
+                                        role="status"
+                                      ></div>
+                                      <i
+                                        *ngIf="submitted && metaSaved"
+                                        class="bx bx-check align-middle fs-2 text-success mb-1"
+                                      ></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card">
+            <div class="card" style="height: 348px !important">
               <div class="card-body">
                 <h4 class="card-title mb-5">Recentes</h4>
                 <ul class="verti-timeline list-unstyled">
@@ -78,18 +196,26 @@
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <h5 class="font-size-14">
-                          {{ this.historico[2]?.dataFormated }}
+                          {{ this.historicoNotToday[1]?.dataFormated }}
                           <i
                             class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
                           ></i>
                         </h5>
                       </div>
                       <div class="flex-grow-1">
-                        <div *ngIf="this.historico[2]?.tipoMov === 'entrada'">
-                          {{ this.historico[2]?.doadorName }} fez uma doação
+                        <div
+                          *ngIf="
+                            this.historicoNotToday[1]?.tipoMov === 'entrada'
+                          "
+                        >
+                          {{ this.historicoNotToday[1]?.doadorName }} fez uma
+                          doação
                         </div>
-                        <div *ngIf="this.historico[2]?.tipoMov === 'saida'">
-                          {{ this.historico[2]?.doadorName }} recebeu uma doação
+                        <div
+                          *ngIf="this.historicoNotToday[1]?.tipoMov === 'saida'"
+                        >
+                          {{ this.historicoNotToday[1]?.doadorName }} recebeu
+                          uma doação
                         </div>
                       </div>
                     </div>
@@ -101,18 +227,26 @@
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <h5 class="font-size-14">
-                          {{ this.historico[1]?.dataFormated }}
+                          {{ this.historicoNotToday[0]?.dataFormated }}
                           <i
                             class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"
                           ></i>
                         </h5>
                       </div>
                       <div class="flex-grow-1">
-                        <div *ngIf="this.historico[1]?.tipoMov === 'entrada'">
-                          {{ this.historico[1]?.doadorName }} fez uma doação
+                        <div
+                          *ngIf="
+                            this.historicoNotToday[0]?.tipoMov === 'entrada'
+                          "
+                        >
+                          {{ this.historicoNotToday[0]?.doadorName }} fez uma
+                          doação
                         </div>
-                        <div *ngIf="this.historico[1]?.tipoMov === 'saida'">
-                          {{ this.historico[1]?.doadorName }} recebeu uma doação
+                        <div
+                          *ngIf="this.historicoNotToday[0]?.tipoMov === 'saida'"
+                        >
+                          {{ this.historicoNotToday[0]?.doadorName }} recebeu
+                          uma doação
                         </div>
                       </div>
                     </div>

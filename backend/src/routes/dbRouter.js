@@ -26,6 +26,8 @@ dbRouter.post('/updateMetaInDoacao', mysqlController.updateMetaInDoacao);
 
 dbRouter.post('/updateDoacao', mysqlController.updateDoacao);
 
+dbRouter.post('/updateMetaFixa', mysqlController.updateMetaFixa);
+
 dbRouter.post('/deleteDoacao', mysqlController.deleteDoacao);
 
 dbRouter.post('/deleteMultiHistorico', mysqlController.deleteMultiHistorico);

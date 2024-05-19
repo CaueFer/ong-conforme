@@ -253,6 +253,23 @@ exports.updateDoacao = (req, res) => {
   );
 };
 
+exports.updateMetaFixa = (req, res) => {
+  const { id, nome, qntdMetaAll } = req.body;
+
+  db.query(
+    "UPDATE " + metaFixaTable + " SET nome = ?, qntdMetaAll = ? WHERE id = ?",
+    [nome, qntdMetaAll, id],
+    (error, results) => {
+      if (error) {
+        console.error("Erro ao atualizar meta fixa:", error);
+        res.status(500).json("Erro ao atualizar meta fixa");
+        return;
+      }
+      res.status(200).json("Meta fixa atualizada com sucesso");
+    }
+  );
+};
+
 exports.deleteDoacao = (req, res) => {
   const { id } = req.body;
 
