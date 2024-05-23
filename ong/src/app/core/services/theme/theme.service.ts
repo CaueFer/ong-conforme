@@ -13,8 +13,10 @@ export class ThemeService {
   }
 
   setTheme(theme: string) {
-    this.activeTheme = theme;
-    localStorage.setItem(this.THEME_KEY, this.activeTheme);
+    if (theme === "light" || theme === "dark") {
+      this.activeTheme = theme;
+      localStorage.setItem(this.THEME_KEY, this.activeTheme);
+    } else console.error("set undefined theme");
   }
 
   getTheme(): string {

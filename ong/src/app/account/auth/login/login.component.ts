@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
   showPassword: boolean = false;
   continueLogged: boolean = false;
   isDark: boolean;
-  
 
   year: number = new Date().getFullYear();
 
@@ -39,7 +38,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _authService: AuthenticationService,
-    private _themeService: ThemeService,
+    private _themeService: ThemeService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
@@ -60,15 +59,12 @@ export class LoginComponent implements OnInit {
           this.router.navigate(["ong-conforme"]);
         }
       },
-      error: (err) => {}
+      error: (err) => {},
     });
 
     this._authService.authFromLocalStorage();
 
-    const theme = this._themeService.getTheme();
-
-    if(theme === "dark") this.isDark = true;
-    else this.isDark = false;
+    this.getTheme();
   }
 
   ngOnDestroy(): void {
@@ -134,18 +130,24 @@ export class LoginComponent implements OnInit {
     this.continueLogged = !this.continueLogged;
   }
 
-  clearPassword(){
+  clearPassword() {
     this.loginForm.reset();
   }
 
-  toggletheme($event:any){
+  toggleTheme($event: any) {
     const btnvalue = $event.target.checked;
     this.isDark = btnvalue;
 
-    if(btnvalue){
+    if (this.isDark) {
       this._themeService.setTheme("dark");
-    }else{
+    } else {
       this._themeService.setTheme("light");
     }
+  }
+
+  getTheme() {
+    const theme = this._themeService.getTheme();
+    if (theme === "dark") this.isDark = true;
+    else this.isDark = false;
   }
 }
