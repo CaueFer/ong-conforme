@@ -39,10 +39,10 @@
     <!-- end col -->
 
     <div class="col-xl-3">
-      <div class="auth-full-page-content p-md-5 p-4">
+      <div class="auth-full-page-content p-md-5 p-4 darkbg" >
         <div class="w-100">
           <div class="d-flex flex-column h-100">
-            <div class="mb-4 mb-md-5">
+            <div class="mb-4 mb-md-5 d-flex flex-row justify-content-between">
               <a class="d-block card-logo" href="https://www.conforme.org.br">
                 <img
                   src="assets/images/logo-ong-dark-lg.png"
@@ -51,6 +51,36 @@
                   class="card-logo-dark"
                 />
               </a>
+              <div class="mt-2">
+                <label class="theme-switch" for="checkbox" id="themeswitch">
+                  <input type="checkbox" id="checkbox" />
+                  <div class="slider round"></div>
+                  <span class="name"></span>
+                  <div class="back">
+                    <svg
+                      class="icon icon-sun"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                    >
+                      <circle cx="12" cy="12" r="5"></circle>
+                      <line x1="12" x2="12" y1="1" y2="3"></line>
+                      <line x1="12" x2="12" y1="21" y2="23"></line>
+                      <line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+                      <line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+                      <line x1="1" x2="3" y1="12" y2="12"></line>
+                      <line x1="21" x2="23" y1="12" y2="12"></line>
+                      <line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+                      <line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+                    </svg>
+                  </div>
+                </label>
+              </div>
             </div>
             <div class="my-auto">
               <div>
@@ -98,9 +128,7 @@
                         "
                         (click)="clearPassword()"
                       >
-                        <i
-                          class="mdi mdi-close fs-6"
-                        ></i>
+                        <i class="mdi mdi-close fs-6"></i>
                       </button>
                       <div
                         *ngIf="submitted && f.email.errors"
