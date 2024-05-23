@@ -89,7 +89,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.5",
-    "@angular/cli": "^17.3.5",
+    "@angular/cli": "^17.3.8",
     "@angular/compiler-cli": "^17.3.5",
     "@angular/language-service": "^17.3.5",
     "@juggle/resize-observer": "^3.4.0",

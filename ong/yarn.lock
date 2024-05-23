@@ -18,6 +18,14 @@
     "@angular-devkit/core" "17.3.5"
     rxjs "7.8.1"
 
+"@angular-devkit/architect@0.1703.8":
+  version "0.1703.8"
+  resolved "https://registry.npmjs.org/@angular-devkit/architect/-/architect-0.1703.8.tgz"
+  integrity sha512-lKxwG4/QABXZvJpqeSIn/kAwnY6MM9HdHZUV+o5o3UiTi+vO8rZApG4CCaITH3Bxebm7Nam7Xbk8RuukC5rq6g==
+  dependencies:
+    "@angular-devkit/core" "17.3.8"
+    rxjs "7.8.1"
+
 "@angular-devkit/build-angular@^17.3.5":
   version "17.3.5"
   resolved "https://registry.npmjs.org/@angular-devkit/build-angular/-/build-angular-17.3.5.tgz"
@@ -109,12 +117,24 @@
     rxjs "7.8.1"
     source-map "0.7.4"
 
-"@angular-devkit/schematics@17.3.5":
-  version "17.3.5"
-  resolved "https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-17.3.5.tgz"
-  integrity sha512-oh/mvpMKxGfk5v9QIB7LfGsDC/iVpmsIAvbb4+1ddCx86EJXdz3xWnVDbUehOd6n7HJXnQrNirWjWvWquM2GhQ==
+"@angular-devkit/core@17.3.8":
+  version "17.3.8"
+  resolved "https://registry.npmjs.org/@angular-devkit/core/-/core-17.3.8.tgz"
+  integrity sha512-Q8q0voCGudbdCgJ7lXdnyaxKHbNQBARH68zPQV72WT8NWy+Gw/tys870i6L58NWbBaCJEUcIj/kb6KoakSRu+Q==
   dependencies:
-    "@angular-devkit/core" "17.3.5"
+    ajv "8.12.0"
+    ajv-formats "2.1.1"
+    jsonc-parser "3.2.1"
+    picomatch "4.0.1"
+    rxjs "7.8.1"
+    source-map "0.7.4"
+
+"@angular-devkit/schematics@17.3.8":
+  version "17.3.8"
+  resolved "https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-17.3.8.tgz"
+  integrity sha512-QRVEYpIfgkprNHc916JlPuNbLzOgrm9DZalHasnLUz4P6g7pR21olb8YCyM2OTJjombNhya9ZpckcADU5Qyvlg==
+  dependencies:
+    "@angular-devkit/core" "17.3.8"
     jsonc-parser "3.2.1"
     magic-string "0.30.8"
     ora "5.4.1"
@@ -136,15 +156,15 @@
   optionalDependencies:
     parse5 "^7.1.2"
 
-"@angular/cli@^17.3.5":
-  version "17.3.5"
-  resolved "https://registry.npmjs.org/@angular/cli/-/cli-17.3.5.tgz"
-  integrity sha512-6MHJzPKy4uB9qlJO1eKs4rtDlRuCe0lOiz1f3kHFZ/GQQm5xA1xsmZJMN4ASsnu4yU3oZs6vJ/vt8i2/jvdPbA==
+"@angular/cli@^17.3.8":
+  version "17.3.8"
+  resolved "https://registry.npmjs.org/@angular/cli/-/cli-17.3.8.tgz"
+  integrity sha512-X5ZOQ6ZTKVHjhIsfl32ZRqbs+FUoeHLbT7x4fh2Os/8ObDDwrUcCJPqxe2b2RB5E2d0vepYigknHeLE7gwzlNQ==
   dependencies:
-    "@angular-devkit/architect" "0.1703.5"
-    "@angular-devkit/core" "17.3.5"
-    "@angular-devkit/schematics" "17.3.5"
-    "@schematics/angular" "17.3.5"
+    "@angular-devkit/architect" "0.1703.8"
+    "@angular-devkit/core" "17.3.8"
+    "@angular-devkit/schematics" "17.3.8"
+    "@schematics/angular" "17.3.8"
     "@yarnpkg/lockfile" "1.1.0"
     ansi-colors "4.1.3"
     ini "4.1.2"
@@ -3076,13 +3096,13 @@
   resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.16.1.tgz"
   integrity sha512-x0fvpHMuF7fK5r8oZxSi8VYXkrVmRgubXpO/wcf15Lk3xZ4Jvvh5oG+u7Su1776A7XzVKZhD2eRc4t7H50gL3w==
 
-"@schematics/angular@17.3.5":
-  version "17.3.5"
-  resolved "https://registry.npmjs.org/@schematics/angular/-/angular-17.3.5.tgz"
-  integrity sha512-SWCK16Eob0K86hpZ3NHmrTS6LSzTlhvnIdf3BXC6nzoiyDhcAS0oJ2Tjdq1opW/PaL1hB7MulcbIhxYln5du0w==
+"@schematics/angular@17.3.8":
+  version "17.3.8"
+  resolved "https://registry.npmjs.org/@schematics/angular/-/angular-17.3.8.tgz"
+  integrity sha512-2g4OmSyE9YGq50Uj7fNI26P/TSAFJ7ZuirwTF2O7Xc4XRQ29/tYIIqhezpNlTb6rlYblcQuMcUZBrMfWJHcqJw==
   dependencies:
-    "@angular-devkit/core" "17.3.5"
-    "@angular-devkit/schematics" "17.3.5"
+    "@angular-devkit/core" "17.3.8"
+    "@angular-devkit/schematics" "17.3.8"
     jsonc-parser "3.2.1"
 
 "@sigstore/bundle@^2.3.0", "@sigstore/bundle@^2.3.1":

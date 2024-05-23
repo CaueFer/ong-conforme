@@ -10,6 +10,7 @@ import { AuthenticationService } from "../../../core/services/auth/auth.service"
 import { OwlOptions } from "ngx-owl-carousel-o";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-login",
@@ -22,6 +23,8 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   showPassword: boolean = false;
   continueLogged: boolean = false;
+  isDark: boolean;
+  
 
   year: number = new Date().getFullYear();
 
@@ -35,7 +38,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private _authService: AuthenticationService
+    private _authService: AuthenticationService,
+    private _themeService: ThemeService,
   ) {
     this.loginForm = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
@@ -60,6 +64,11 @@ export class LoginComponent implements OnInit {
     });
 
     this._authService.authFromLocalStorage();
+
+    const theme = this._themeService.getTheme();
+
+    if(theme === "dark") this.isDark = true;
+    else this.isDark = false;
   }
 
   ngOnDestroy(): void {
@@ -127,5 +136,16 @@ export class LoginComponent implements OnInit {
 
   clearPassword(){
     this.loginForm.reset();
+  }
+
+  toggletheme($event:any){
+    const btnvalue = $event.target.checked;
+    this.isDark = btnvalue;
+
+    if(btnvalue){
+      this._themeService.setTheme("dark");
+    }else{
+      this._themeService.setTheme("light");
+    }
   }
 }
