@@ -29,15 +29,8 @@ export const MENU: MenuItem[] = [
     {
         id: 3,
         label: 'MENUITEMS.FAMILIAS.TEXT',
+        link: '/ong-conforme/familia-dashboard',
         icon: 'bx bxs-group',
-        subItems: [
-            {
-                id: 3.1,
-                label: 'MENUITEMS.FAMILIAS.LIST.GERENCIAR',
-                link: '/ong-conforme/familia-dashboard',
-                parentId: 3
-            }
-        ]
     }
 ];
 

@@ -1,42 +1,44 @@
-import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from "@angular/core";
+import { CommonModule, DatePipe } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { TooltipModule } from "ngx-bootstrap/tooltip";
+import { CollapseModule } from "ngx-bootstrap/collapse";
 
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { SimplebarAngularModule } from 'simplebar-angular';
-import { LightboxModule } from 'ngx-lightbox';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { FullCalendarModule } from "@fullcalendar/angular";
+import { SimplebarAngularModule } from "simplebar-angular";
+import { LightboxModule } from "ngx-lightbox";
 
-import { WidgetModule } from '../shared/widget/widget.module';
-import { UIModule } from '../shared/ui/ui.module';
-import { UiSwitchModule } from 'ngx-ui-switch';
+import { WidgetModule } from "../shared/widget/widget.module";
+import { UIModule } from "../shared/ui/ui.module";
+import { UiSwitchModule } from "ngx-ui-switch";
 
 // Emoji Picker
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { PickerModule } from "@ctrl/ngx-emoji-mart";
 
-import { PagesRoutingModule } from './pages-routing.module';
+import { PagesRoutingModule } from "./pages-routing.module";
 
-import { HttpClientModule } from '@angular/common/http';
-import { GerenciadorComponent } from './doacoes/gerenciador/gerenciador.component';
-import { HistoricoComponent } from './doacoes/historico/historico.component';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { HttpClientModule } from "@angular/common/http";
+import { GerenciadorComponent } from "./doacoes/gerenciador/gerenciador.component";
+import { HistoricoComponent } from "./doacoes/historico/historico.component";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
 
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { ToastrModule } from 'ngx-toastr';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { RouterModule } from '@angular/router';
-import { SingleHistoricoComponent } from './doacoes/single-historico/single-historico.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { FamilyDashboardComponent } from './familias/family-dashboard/family-dashboard.component';
-import { SingleFamilyComponent } from './familias/single-family/single-family.component';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
+import { ToastrModule } from "ngx-toastr";
+import { NgxPaginationModule } from "ngx-pagination";
+import { RouterModule } from "@angular/router";
+import { SingleHistoricoComponent } from "./doacoes/single-historico/single-historico.component";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { FamilyDashboardComponent } from "./familias/family-dashboard/family-dashboard.component";
+import { SingleFamilyComponent } from "./familias/single-family/single-family.component";
+import { CdkStepperModule } from "@angular/cdk/stepper";
+import { NgStepperModule } from "angular-ng-stepper";
 
 @NgModule({
   declarations: [
@@ -74,10 +76,9 @@ import { SingleFamilyComponent } from './familias/single-family/single-family.co
     NgxPaginationModule,
     RouterModule,
     NgbModule,
+    CdkStepperModule,
+    NgStepperModule,
   ],
-  providers: [
-    DatePipe,
-    provideNgxMask(),
-  ]
+  providers: [DatePipe, provideNgxMask()],
 })
-export class PagesModule { }
+export class PagesModule {}
