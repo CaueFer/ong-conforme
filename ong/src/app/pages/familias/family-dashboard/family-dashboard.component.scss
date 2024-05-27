@@ -1,0 +1,95 @@
+$primary: #556ee6;
+
+::ng-deep {
+    .custom-slider .ngx-slider .ngx-slider-bar {
+      background-color: rgba(0, 0, 0, 0.178);
+      height: 2px;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-selection {
+      background: $primary !important;
+      height: 4px!important;
+      transform: translateY(-50%) !important;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-pointer {
+      width: 12px;
+      height: 12px;
+      top: 0px;
+      transform: translateY(-50%) rotate(45deg) !important;
+      background-color: white !important;
+      border: 2px solid $primary;
+      border-radius: 0;
+      cursor: pointer;
+
+      &:active {
+        cursor: pointer;
+      }
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-pointer:after {
+      display: block;
+      width: 6px;
+      height: 6px;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-bubble {
+      bottom: 14px;
+      background: transparent !important;
+      font-size: 14px;
+      color: var(--secondary-bg) !important;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-limit {
+      color: var(--secondary-color);
+      background: var(--tertiary-bg);
+      font-size: 12px;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-tick {
+      width: 1px;
+      height: 10px;
+      margin-left: 4px;
+      border-radius: 0;
+      background: var(--tertiary-bg);
+      top: -1px;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+      background: $primary !important;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-handle {
+      border: 2px solid $primary;
+      width: 12px;
+      height: 12px;
+      top: 26px;
+      background-color: var(--secondary-bg) !important;
+      cursor: pointer;
+  
+      &:active {
+        cursor: pointer;
+      }
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-line {
+      background: var(--tertiary-bg);
+      border-color: var(--tertiary-bg);
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-grid-text {
+      font-size: 11px;
+      color: var(--secondary-color);
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-min,
+    .custom-slider .ngx-slider .ngx-slider-max {
+      color: var(--secondary-color);
+      background: var(--tertiary-bg);
+      font-size: 11px;
+    }
+  
+    .custom-slider .ngx-slider .ngx-slider-grid-pol {
+      background-color: var(--secondary-color);
+    }
+  }

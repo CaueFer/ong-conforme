@@ -20,7 +20,7 @@
     </div>
     <div class="col-12">
       <div class="row">
-        <div class="col-4">
+        <div class="d-none d-lg-block col-lg-4">
           <div class="row">
             <div class="col">
               <div class="card">
@@ -64,12 +64,101 @@
                     </div>
                   </div>
                   <hr class="my-4 border-secondary opacity-25" />
+
+                  <a
+                    href="javascript:void(0);"
+                    class="btn btn-soft-secondary h-100 w-100"
+                    (click)="showFiltros = !showFiltros"
+                    [attr.aria-expanded]="showFiltros"
+                    aria-controls="collapseExample"
+                  >
+                    <div class="d-flex flex-row justify-content-between">
+                      <span
+                        ><i class="bx bx-filter-alt align-middle"></i>
+                        Filtros</span
+                      >
+                      <i
+                        *ngIf="!showFiltros"
+                        class="bx bx-chevron-right fs-4"
+                      ></i>
+                      <i
+                        *ngIf="showFiltros"
+                        class="bx bx-chevron-down fs-4"
+                      ></i>
+                    </div>
+                  </a>
+                  <div class="collapse" [collapse]="!showFiltros">
+                    <div class="pt-4">
+                      <div class="row g-3">
+                        <div class="col-6">
+                          <form [formGroup]="parentescoForm">
+                            <div>
+                              <label class="form-label">Parentesco</label>
+                            </div>
+                            <div class="d-flex flex-column gap-1">
+                              <div
+                                class="form-check form-check-inline"
+                                *ngFor="
+                                  let parentesco of parentescoForm.controls
+                                    | keyvalue;
+                                  let i = index
+                                "
+                              >
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  [formControlName]="getParentescoLabel(i)"
+                                  [id]="'inlineCheckbox' + (i + 1)"
+                                  (change)="filterParentescoChange(i)"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  [for]="'inlineCheckbox' + (i + 1)"
+                                >
+                                  {{ getParentescoLabel(i) }}
+                                </label>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="col-6">
+                          <form [formGroup]="generoForm">
+                            <div>
+                              <label class="form-label">Gênero</label>
+                            </div>
+                            <div class="d-flex flex-column gap-1 position-relative">
+                              <select name="genero" class="form-control z-2 bg-transparent">
+                                <option value="X">Todos</option>
+                                <option value="F">Feminino</option>
+                                <option value="M">Masculino</option>
+                              </select>
+                              <i class="bx bx-chevron-down fs-4 position-absolute" style="top: 50%; transform: translateY(-50%); left: 80%;"></i>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="col-12">
+                          <form [formGroup]="idadeForm">
+                            <div>
+                              <label class="form-label">Idade</label>
+                            </div>
+                            <div class="custom-slider px-2 py-1" id="ageRanger">
+                              <ngx-slider
+                                [(value)]="minAgeRange"
+                                [(highValue)]="maxAgeRange"
+                                [options]="option1"
+                              ></ngx-slider>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col">
           <div class="row">
             <div class="card">
               <div class="card-body">
@@ -79,14 +168,14 @@
                   <div class="col-lg-3 position-relative">
                     <label
                       class="bx bx-search-alt position-absolute d-flex align-items-center"
-                      style="top: 50%; transform: translateY(-50%); left: 5%"
+                      style="top: 50%; transform: translateY(-50%); left: 3%"
                       for="searchDoacaoList"
                     ></label>
                     <input
                       type="search"
                       class="form-control ps-4 text-truncate"
                       id="searchDoacaoList"
-                      placeholder="Pesquisar..."
+                      placeholder="Pesquisar responsável..."
                       [(ngModel)]="this.txtSearch"
                     />
                   </div>
@@ -465,6 +554,7 @@
                             class="form-control"
                             id="basicpill-street-input"
                             formControlName="street"
+                            placeholder="Avenida Nereu Ramos"
                             [ngClass]="{
                               'is-invalid':
                                 submitted && addressForm.controls.street.errors
@@ -490,6 +580,7 @@
                             class="form-control"
                             id="basicpill-house-number-input"
                             formControlName="number"
+                            placeholder="000"
                             mask="0*"
                             [ngClass]="{
                               'is-invalid':
@@ -516,6 +607,7 @@
                             class="form-control"
                             id="basicpill-neighborhood-input"
                             formControlName="neighborhood"
+                            placeholder="Agua Branca"
                             [ngClass]="{
                               'is-invalid':
                                 submitted &&
@@ -541,6 +633,7 @@
                             class="form-control"
                             id="basicpill-state-input"
                             formControlName="state"
+                            placeholder="SC"
                             [ngClass]="{
                               'is-invalid':
                                 submitted && addressForm.controls.state.errors
@@ -564,6 +657,7 @@
                             class="form-control"
                             id="basicpill-city-input"
                             formControlName="city"
+                            placeholder="Joinville"
                             [ngClass]="{
                               'is-invalid':
                                 submitted && addressForm.controls.city.errors
@@ -588,6 +682,7 @@
                             id="basicpill-zipcode-input"
                             formControlName="zipcode"
                             mask="00000-000"
+                            placeholder="00000-000"
                             [ngClass]="{
                               'is-invalid':
                                 submitted && addressForm.controls.zipcode.errors
@@ -613,6 +708,7 @@
                             class="form-control"
                             id="basicpill-complement-input"
                             formControlName="complement"
+                            placeholder="Exemplo: Casa, Apartamento 200..."
                             [ngClass]="{
                               'is-invalid':
                                 submitted &&
@@ -664,49 +760,102 @@
                 </ng-template>
                 <section *ngIf="cdkStepper.selectedIndex === 2">
                   <form
-                    [formGroup]="outroForm"
-                    (ngSubmit)="alertConfirmOrCancel()"
+                    class="repeater"
+                    [formGroup]="membrosForm"
+                    (ngSubmit)="submitAddFamilia()"
                   >
-                    <div class="row">
-                      <div class="mb-3 col-12">
-                        <label for="basicpill-mebros-input">Membros</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="basicpill-membros-input"
-                          formControlName="qntd_membros"
-                          mask="0*"
-                          placeholder="Quantidade de membros no total"
-                          [ngClass]="{
-                            'is-invalid':
-                              submitted &&
-                              outroForm.controls.qntd_membros.errors
-                          }"
-                        />
-                        <div
-                          *ngIf="
-                            submitted && outroForm.controls.qntd_membros.errors
-                          "
-                          class="invalid-feedback"
-                        >
-                          Digite um quantidade válida.
+                    <div formArrayName="formlist">
+                      <div
+                        *ngFor="let data1 of formData().controls; let i = index"
+                      >
+                        <div [formGroupName]="i" class="row col-12">
+                          <div class="col-4">
+                            <label for="name" *ngIf="i === 0">Parentesco</label>
+                            <select
+                              type="text"
+                              formControlName="membro"
+                              class="form-control text-muted"
+                              [ngClass]="{
+                                'is-invalid':
+                                  data1.get('membro').invalid && submitted
+                              }"
+                            >
+                              <option value="Responsavel">Responsável</option>
+                              <option value="Filho">Filho</option>
+                              <option value="Outro">Outro</option>
+                            </select>
+                          </div>
+                          <div class="col-4">
+                            <label for="name" *ngIf="i === 0">Gênero</label>
+                            <select
+                              id=""
+                              formControlName="genero"
+                              class="form-control"
+                              [ngClass]="{
+                                'is-invalid':
+                                  data1.get('genero').invalid && submitted
+                              }"
+                            >
+                              <option value="F">Feminino</option>
+                              <option value="M">Masculino</option>
+                            </select>
+                          </div>
+                          <div class="col-2">
+                            <label for="age" *ngIf="i === 0">Idade</label>
+                            <input
+                              type="text"
+                              formControlName="idade"
+                              class="form-control"
+                              [ngClass]="{
+                                'is-invalid':
+                                  data1.get('idade').invalid && submitted
+                              }"
+                            />
+                            <div
+                              *ngIf="data1.get('idade').invalid && submitted"
+                              class="invalid-feedback"
+                            ></div>
+                          </div>
+                          <div class="col-2 align-self-end">
+                            <div class="d-grid">
+                              <label *ngIf="i === 0"> </label>
+                              <button
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="removeField(i)"
+                              >
+                                <span class="mdi mdi-delete"></span>
+                              </button>
+                            </div>
+                          </div>
                         </div>
+                        <hr
+                          *ngIf="i !== formData().controls.length - 1"
+                          class="my-3 border-secondary opacity-25"
+                        />
                       </div>
-                      <div class="mb-3 col-12">
-                        <label for="basicpill-mebros-input">Descrição</label>
-                        <textarea
-                          type="text"
-                          class="form-control"
-                          id="basicpill-membros-input"
-                          formControlName="descb"
-                          placeholder="Exemplo: Possuem 3 filhos, sendo de 7,9 e 10 anos."
-                        >
-                        </textarea>
-                      </div>
+                      <button
+                        type="button"
+                        class="btn btn-success btn-sm mt-3"
+                        (click)="addField()"
+                      >
+                        <span class="mdi mdi-plus-thick me-1"></span> Membro
+                      </button>
                     </div>
-
+                    <hr class="my-4 border-secondary opacity-25" />
+                    <div class="">
+                      <label for="describ">Descrição</label>
+                      <textarea
+                        type="text"
+                        name="describ"
+                        formControlName="describ"
+                        class="form-control"
+                        placeholder="Possuem 3 filhos, sendo de 7,9 e 10 anos."
+                        style="resize: vertical; max-height: 100px"
+                      ></textarea>
+                    </div>
                     <ul
-                      class="list-inline wizard d-flex justify-content-end mb-0"
+                      class="list-inline wizard d-flex justify-content-end mb-0 mt-2"
                     >
                       <li
                         class="previous list-inline-item"
@@ -722,7 +871,7 @@
                           class="btn btn-primary"
                           [disabled]="this.disableSubmitBtn"
                         >
-                          Avançar
+                          Enviar
                         </button>
                       </li>
                     </ul>

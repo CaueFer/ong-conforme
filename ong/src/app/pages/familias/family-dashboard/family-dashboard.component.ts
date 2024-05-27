@@ -3,9 +3,18 @@ import { nextDay } from "date-fns";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { FamiliaModel } from "./familia.model";
 import { ModalDirective } from "ngx-bootstrap/modal";
-import { FormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
 import Swal from "sweetalert2";
 import { CdkStepper } from "@angular/cdk/stepper";
+import { Options } from 'ngx-slider-v2';
 
 @Component({
   selector: "app-family-dashboard",
@@ -17,8 +26,13 @@ export class FamilyDashboardComponent {
   familias: FamiliaModel[] = [];
   familia: FamiliaModel[] = [];
   respForm: FormGroup;
-  outroForm: FormGroup;
+  membrosForm: FormGroup;
   addressForm: FormGroup;
+
+  // FORMS FILTROS
+  parentescoForm: FormGroup;
+  idadeForm: FormGroup;
+  generoForm: FormGroup;
 
   @ViewChild("addFamilyModal", { static: false })
   addFamilyModal?: ModalDirective;
@@ -28,34 +42,43 @@ export class FamilyDashboardComponent {
   disableSubmitBtn: boolean = false;
 
   currentPage = 1;
-  itemsPerPage = 8;
+  itemsPerPage = 9;
 
   isLoadingList: boolean = false;
   addDescrib: boolean = false;
   bsRangeFilterValue: any;
   txtSearch: string;
+  showFiltros: boolean = true;
+  ageRange: number;
+  maxAgeRange: number = 95;
+  minAgeRange: number = 5;
+  option1: Options = {
+    floor: 0,
+    ceil: 100,
+    translate: (value: number): string => {
+      return value.toString();
+    }
+  };
 
   constructor(
     private _databaseService: DatabaseService,
-    private formBuilder: UntypedFormBuilder
+    private fb: UntypedFormBuilder
   ) {
-    this.respForm = this.formBuilder.group({
+    this.respForm = this.fb.group({
       id: [""],
       resp_nome: ["", [Validators.required]],
       resp_sobrenome: ["", [Validators.required]],
       resp_cpf: ["", [Validators.required]],
-      qntd_membros: [""],
-      descb: [""],
       email: ["", [Validators.required]],
       telefone: ["", [Validators.required]],
     });
 
-    this.outroForm = this.formBuilder.group({
-      qntd_membros: ["", [Validators.required]],
-      descb: [""],
+    this.membrosForm = this.fb.group({
+      formlist: this.fb.array([]),
+      describ: [""],
     });
 
-    this.addressForm = this.formBuilder.group({
+    this.addressForm = this.fb.group({
       street: ["", Validators.required],
       number: ["", Validators.required],
       neighborhood: ["", Validators.required],
@@ -63,6 +86,22 @@ export class FamilyDashboardComponent {
       state: ["", Validators.required],
       zipcode: ["", [Validators.required]],
       complement: [""],
+    });
+
+    this.parentescoForm = this.fb.group({
+      Todos: [true],
+      Responsavel: [false],
+      Filho: [false],
+      Outro: [false],
+    });
+
+    this.idadeForm = this.fb.group({
+      min: [""],
+      max: [""],
+    });
+
+    this.generoForm = this.fb.group({
+      genero: [""],
     });
   }
 
@@ -73,6 +112,9 @@ export class FamilyDashboardComponent {
       },
       error: (error) => {},
     });
+
+    this.formData().push(this.field());
+    this.filterParentescoChange(0)
   }
 
   toggleCheckbox($event: any) {
@@ -114,24 +156,28 @@ export class FamilyDashboardComponent {
       return;
     }
 
-    if (this.outroForm.invalid) {
+    if (this.membrosForm.invalid) {
       this.stepper.selectedIndex = 2;
 
       this.resetSubmit(3500);
       return;
     }
 
-    if ((this.outroForm.valid, this.respForm.valid, this.addressForm.valid)) {
+    if ((this.membrosForm.valid, this.respForm.valid, this.addressForm.valid)) {
       this.submitted = false;
       this.disableSubmitBtn = false;
 
+      console.log(
+        this.respForm.value,
+        this.membrosForm.value,
+        this.addressForm.value
+      );
       this.respForm.reset();
-      this.outroForm.reset();
+      this.membrosForm.reset();
       this.addressForm.reset();
 
       this.addFamilyModal.hide();
       this.stepper.selectedIndex = 0;
-
       this.alertSucess("Adicionada", "Familia adiciona com sucesso!");
     }
 
@@ -145,8 +191,61 @@ export class FamilyDashboardComponent {
     }, timer);
   }
 
+  formData(): UntypedFormArray {
+    return this.membrosForm.get("formlist") as UntypedFormArray;
+  }
+
+  field(): UntypedFormGroup {
+    return this.fb.group({
+      membro: ["", [Validators.required]],
+      genero: ["", [Validators.required]],
+      idade: ["", [Validators.required]],
+    });
+  }
+
+  addField() {
+    this.formData().push(this.field());
+  }
+
+  removeField(i: number) {
+    if (this.formData().value.length > 1) this.formData().removeAt(i);
+  }
+
   pageChanged($event: any) {
     this.currentPage = $event;
+  }
+
+  // FORMS FILTER
+  getParentescoLabel(index: number): string {
+    const labels = ["Todos", "Responsavel", "Filho", "Outro"];
+    return labels[index];
+  }
+
+  getSelectedOptions() {
+    const selectedOptions = Object.keys(this.parentescoForm.controls)
+      .filter((key) => this.parentescoForm.controls[key].value)
+      .map((key) => key);
+  }
+
+  filterParentescoChange(i: number) {
+    const parentescoControls = Object.keys(this.parentescoForm.controls);
+    const checkboxChanged = parentescoControls[i];
+
+    if (checkboxChanged === "Todos") {
+      const checkboxValue = this.parentescoForm.get("Todos").value;
+      this.parentescoForm.patchValue({
+        Responsavel: checkboxValue,
+        Filho: checkboxValue,
+        Outro: checkboxValue
+      });
+    } else {
+      const todosChecked = [
+        "Responsavel",
+        "Filho",
+        "Outro"
+      ].every((control) => this.parentescoForm.get(control)?.value);
+      this.parentescoForm.get("Todos").setValue(todosChecked);
+    }
   }
 
   // ALERTS

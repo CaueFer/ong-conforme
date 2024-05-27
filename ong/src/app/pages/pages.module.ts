@@ -39,6 +39,8 @@ import { FamilyDashboardComponent } from "./familias/family-dashboard/family-das
 import { SingleFamilyComponent } from "./familias/single-family/single-family.component";
 import { CdkStepperModule } from "@angular/cdk/stepper";
 import { NgStepperModule } from "angular-ng-stepper";
+import { SliderElementDirective } from "ngx-slider-v2/slider-element.directive";
+import { NgxSliderModule } from "ngx-slider-v2";
 
 @NgModule({
   declarations: [
@@ -78,6 +80,7 @@ import { NgStepperModule } from "angular-ng-stepper";
     NgbModule,
     CdkStepperModule,
     NgStepperModule,
+    NgxSliderModule,
   ],
   providers: [DatePipe, provideNgxMask()],
 })
