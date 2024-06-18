@@ -7,7 +7,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { UIModule } from '../shared/ui/ui.module';
 import { LayoutComponent } from './layout.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { HorizontalComponent } from './horizontal/horizontal.component';
 import { HorizontaltopbarComponent } from './horizontaltopbar/horizontaltopbar.component';
@@ -16,7 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [LayoutComponent, SidebarComponent, FooterComponent, HorizontalComponent, HorizontaltopbarComponent],
+  declarations: [LayoutComponent, FooterComponent, HorizontalComponent, HorizontaltopbarComponent],
   imports: [
     CommonModule,
     TranslateModule,

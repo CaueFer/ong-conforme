@@ -103,6 +103,7 @@
                                     | keyvalue;
                                   let i = index
                                 "
+                                [ngClass]="{'mb-1 me-5 pb-2 border-bottom border-secondary-subtle': i === 0}"
                               >
                                 <input
                                   class="form-check-input"
@@ -112,7 +113,7 @@
                                   (change)="filterParentescoChange(i)"
                                 />
                                 <label
-                                  class="form-check-label"
+                                  class="form-check-label w-100"
                                   [for]="'inlineCheckbox' + (i + 1)"
                                 >
                                   {{ getParentescoLabel(i) }}

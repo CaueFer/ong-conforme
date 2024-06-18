@@ -78,6 +78,7 @@
                 <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
                   <div
                     *ngIf="this.successmsg != ''"
+                    [ngClass]="{'text-white':isDark}" 
                     class="alert alert-success mb-3"
                     role="alert"
                   >
@@ -85,6 +86,7 @@
                   </div>
                   <div
                     *ngIf="this.errormsg != ''"
+                    [ngClass]="{'text-white':isDark}" 
                     class="alert alert-danger mb-3"
                     role="alert"
                   >

@@ -3,8 +3,8 @@ logs
 *.log
 npm-debug.log*
 
-# Diretório de dependências
-/node_modules
+# Ignorar todos os diretórios node_modules em qualquer nível
+**/node_modules/
 
 # Diretório de build
 dist/
