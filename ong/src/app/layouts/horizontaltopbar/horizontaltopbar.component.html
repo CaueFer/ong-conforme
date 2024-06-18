@@ -77,21 +77,21 @@
         </div>
       </div>
 
-      <div class="dropdown d-none d-lg-inline-block me-1">
-        <button
-          type="button"
-          class="btn header-item noti-icon"
-          data-toggle="fullscreen"
-          (click)="fullscreen()"
-        >
-          <i class="bx bx-fullscreen"></i>
-        </button>
+      <div class="dropdown d-none me-1 d-md-flex flex-row align-items-center justify-content-center gap-2">
         <div class="mt-2">
           <label class="switch-container">
             <input type="checkbox" (click)="toggleTheme($event)" [(ngModel)]="this.isDark">
             <span class="slider"></span>
           </label>
         </div>
+        <button
+          type="button"
+          class="btn header-item noti-icon"
+          data-toggle="fullscreen"
+          (click)="fullscreen()"
+        >
+          <i class="bx bx-fullscreen align-middle"></i>
+        </button>
       </div>
       
       <div class="dropdown d-inline-block" dropdown>
