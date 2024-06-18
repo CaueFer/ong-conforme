@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { TOPBAR } from "../layouts.model";
 import { EventService } from '../../core/services/event.service';
+import { ThemeService } from 'src/app/core/services/theme/theme.service';
 
 @Component({
   selector: 'app-horizontal',
@@ -15,7 +16,7 @@ export class HorizontalComponent implements OnInit, AfterViewInit {
 
   topbar: string;
 
-  constructor(private eventService: EventService) { }
+  constructor(private eventService: EventService, private _themeService: ThemeService) { }
 
   ngOnInit() {
 

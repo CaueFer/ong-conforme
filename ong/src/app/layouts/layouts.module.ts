@@ -12,6 +12,8 @@ import { HorizontalComponent } from './horizontal/horizontal.component';
 import { HorizontaltopbarComponent } from './horizontaltopbar/horizontaltopbar.component';
 import { LanguageService } from '../core/services/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
@@ -22,7 +24,8 @@ import { TranslateModule } from '@ngx-translate/core';
     RouterModule,
     BsDropdownModule.forRoot(),
     UIModule,
-    SimplebarAngularModule
+    SimplebarAngularModule,
+    FormsModule
   ],
   providers: [LanguageService]
 })

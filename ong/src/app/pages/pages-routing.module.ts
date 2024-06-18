@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: 'gerenciador', component: GerenciadorComponent },
   { path: 'historico', component: HistoricoComponent },
   { path: 'historico-single', component: SingleHistoricoComponent },
-  { path: 'familia-dashboard', component: FamilyDashboardComponent },
-  { path: 'familia-unic-dashboard', component: SingleFamilyComponent },
+  { path: 'familia', component: FamilyDashboardComponent },
+  { path: 'familia-unic', component: SingleFamilyComponent },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ]
 

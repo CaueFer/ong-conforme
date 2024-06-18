@@ -138,16 +138,14 @@ export class LoginComponent implements OnInit {
     const btnvalue = $event.target.checked;
     this.isDark = btnvalue;
 
-    if (this.isDark) {
-      this._themeService.setTheme("dark");
-    } else {
-      this._themeService.setTheme("light");
-    }
+    if (this.isDark) this._themeService.setTheme("dark");
+    else this._themeService.setTheme("light");
   }
 
   getTheme() {
-    const theme = this._themeService.getTheme();
-    if (theme === "dark") this.isDark = true;
-    else this.isDark = false;
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
   }
 }

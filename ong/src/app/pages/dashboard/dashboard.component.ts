@@ -24,6 +24,7 @@ import {
 import Swal from "sweetalert2";
 import { BsDropdownDirective } from "ngx-bootstrap/dropdown";
 import { NgbDropdown } from "@ng-bootstrap/ng-bootstrap";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-dashboard",
@@ -63,9 +64,12 @@ export class DashboardComponent implements OnInit {
 
   actualMetaValue: any;
 
+  isDark: boolean = false;
+
   constructor(
     private _databaseService: DatabaseService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private _themeService: ThemeService
   ) {
     this.editMetaForm = this.formBuilder.group({
       metaQntd: ["", [Validators.required]],
@@ -87,6 +91,8 @@ export class DashboardComponent implements OnInit {
     this.actualDay = this.date.getDate();
 
     this.fetchData();
+
+    this.getTheme();
   }
 
   ngAfterViewInit() {}
@@ -444,5 +450,12 @@ export class DashboardComponent implements OnInit {
 
   alertSucess(msg1, msg2: string) {
     Swal.fire(msg1, msg2, "success");
+  }
+
+  getTheme() {
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
   }
 }

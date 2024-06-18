@@ -3,8 +3,16 @@ import { DoacaoModel } from "../../../core/models/doacao.model";
 import { HistoricoModel } from "./historico.model";
 import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
 import { Observable, filter } from "rxjs";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { BsModalRef, BsModalService, ModalDirective } from "ngx-bootstrap/modal";
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
+import {
+  BsModalRef,
+  BsModalService,
+  ModalDirective,
+} from "ngx-bootstrap/modal";
 import { DatePipe } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
@@ -12,6 +20,7 @@ import { DateService } from "src/app/core/services/date/date-service.service";
 import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
 import { defineLocale, ptBrLocale } from "ngx-bootstrap/chronos";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-historico",
@@ -19,7 +28,6 @@ import { defineLocale, ptBrLocale } from "ngx-bootstrap/chronos";
   styleUrls: ["./historico.component.scss"],
 })
 export class HistoricoComponent {
-
   modalRef?: BsModalRef;
   masterSelected!: boolean;
 
@@ -43,8 +51,10 @@ export class HistoricoComponent {
 
   @ViewChild("showModal", { static: false }) showModal?: ModalDirective;
   @ViewChild("editItemModal", { static: false }) editItemModal?: ModalDirective;
-  @ViewChild("removeItemModal", { static: false }) removeItemModal?: ModalDirective;
-  @ViewChild("movimentacaoModal", { static: false })   movimentacaoModal?: ModalDirective;
+  @ViewChild("removeItemModal", { static: false })
+  removeItemModal?: ModalDirective;
+  @ViewChild("movimentacaoModal", { static: false })
+  movimentacaoModal?: ModalDirective;
 
   disableSubmitBtn: boolean = false;
 
@@ -61,6 +71,9 @@ export class HistoricoComponent {
   currentPage = 1;
   itemsPerPage = 10;
   doacoes: any[];
+  
+  isDark: boolean = false;
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -68,7 +81,8 @@ export class HistoricoComponent {
     private _databaseService: DatabaseService,
     private localeService: BsLocaleService,
     private _dateService: DateService,
-    private _toastService: ToastrService
+    private _toastService: ToastrService,
+    private _themeService: ThemeService
   ) {
     this.historicoForm = this.formBuilder.group({
       id: [""],
@@ -84,6 +98,8 @@ export class HistoricoComponent {
 
   ngOnInit() {
     this.updateListHistorico();
+
+    this.getTheme();
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -105,7 +121,6 @@ export class HistoricoComponent {
       const endYear = endDate.getFullYear();
       const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
 
-
       this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
     } else {
       console.error("O intervalo de datas não contém duas datas.");
@@ -118,7 +133,7 @@ export class HistoricoComponent {
 
   updateListHistorico() {
     this.isLoadingList = true;
-    
+
     this.doacoes = [];
     this._databaseService.getDoacao().subscribe({
       next: (values) => {
@@ -143,7 +158,9 @@ export class HistoricoComponent {
 
             value.data = `${day}/${month}/${year}`;
 
-            value.itemName = this.doacoes.find(e => e.id === value.doacao_id)?.itemName;
+            value.itemName = this.doacoes.find(
+              (e) => e.id === value.doacao_id
+            )?.itemName;
           });
 
           this.historicos = values.reverse();
@@ -163,7 +180,6 @@ export class HistoricoComponent {
       });
   }
   checkedValGet: any[] = [];
-
 
   confirmDelete(id: any) {
     this.deletId = id;
@@ -199,8 +215,6 @@ export class HistoricoComponent {
     this.submitted = false;
     this.modalRef = this.modalService.show(content, { class: "modal-md" });
   }
-
-
 
   toggleInput(value: string) {
     if (value === "entrada") this.isInput = true;
@@ -287,5 +301,11 @@ export class HistoricoComponent {
         }
       });
   }
-  
+
+  getTheme() {
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
+  }
 }

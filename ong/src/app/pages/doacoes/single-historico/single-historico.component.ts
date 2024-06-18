@@ -24,6 +24,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChartType } from "../../../core/models/charts.model";
 import { metaChart } from "./data";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-single-historico",
@@ -99,6 +100,8 @@ export class SingleHistoricoComponent {
   metaSaved: boolean = false;
   customDateString: string;
 
+  isDark: boolean = false;
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -108,7 +111,8 @@ export class SingleHistoricoComponent {
     private _dateService: DateService,
     private _toastService: ToastrService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private _themeService: ThemeService
   ) {
     this.historicoForm = this.formBuilder.group({
       id: [""],
@@ -144,6 +148,8 @@ export class SingleHistoricoComponent {
     });
 
     this.metaChart = metaChart;
+
+    this.getTheme();
   }
 
   /**
@@ -169,7 +175,7 @@ export class SingleHistoricoComponent {
       let data = this.metaForm.controls["metaDate"].value;
       const doacao_id = this.targetId;
 
-      if(qntd === 0){
+      if (qntd === 0) {
         qntd = null;
         data = null;
       }
@@ -234,7 +240,7 @@ export class SingleHistoricoComponent {
       this.metaResult = "Dados de doação inválidos";
       return;
     }
-    
+
     if (Number(this.metaQntd) <= 0) {
       this.metaResult = "Nenhuma meta definida.";
 
@@ -401,5 +407,12 @@ export class SingleHistoricoComponent {
 
   alertSucess(msg1, msg2: string) {
     Swal.fire(msg1, msg2, "success");
+  }
+
+  getTheme() {
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
   }
 }

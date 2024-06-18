@@ -15,6 +15,7 @@ import {
 import Swal from "sweetalert2";
 import { CdkStepper } from "@angular/cdk/stepper";
 import { Options } from "ngx-slider-v2";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-family-dashboard",
@@ -60,9 +61,12 @@ export class FamilyDashboardComponent {
     },
   };
 
+  isDark: boolean = false;
+
   constructor(
     private _databaseService: DatabaseService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private _themeService: ThemeService
   ) {
     this.respForm = this.fb.group({
       resp_nome: ["", [Validators.required]],
@@ -108,12 +112,15 @@ export class FamilyDashboardComponent {
     this._databaseService.getFamilias().subscribe({
       next: (values) => {
         this.familias = values;
+        console.log(this.familias)
       },
       error: (error) => {},
     });
 
     this.formData().push(this.field());
     this.filterParentescoChange(0);
+
+    this.getTheme();
   }
 
   pageChanged($event: any) {
@@ -311,5 +318,12 @@ export class FamilyDashboardComponent {
 
   alertSucess(msg1, msg2: string) {
     Swal.fire(msg1, msg2, "success");
+  }
+
+  getTheme() {
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
   }
 }

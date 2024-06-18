@@ -250,13 +250,13 @@
                             >#FML{{ data.id }}</a
                           >
                         </td>
-                        <td>{{ data.nome_responsavel }}</td>
+                        <td>{{ data.resp_nome }}</td>
                         <td>
                           <input
                             type="text"
                             class="form-control p-0"
                             [mask]="'000.000.000-00'"
-                            [(ngModel)]="data.cpf_responsavel"
+                            [(ngModel)]="data.resp_cpf"
                             maskSpecialCharacters="true"
                             style="
                               border: none;
@@ -271,8 +271,8 @@
                               href="javascript:void(0);"
                               class="text-black align-middle"
                               ngbTooltip="Ver detalhes"
-                              [routerLink]="['/ong-conforme/historico-single']"
-                              [queryParams]="{ id: data.doacao_id }"
+                              [routerLink]="['/ong-conforme/familia-unic']"
+                              [queryParams]="{ id: data.id }"
                             >
                               <span
                                 class="mdi mdi-text-search font-size-18"

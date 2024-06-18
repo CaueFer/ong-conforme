@@ -25,6 +25,7 @@ import { ptBrLocale } from "ngx-bootstrap/locale";
 import { DateService } from "src/app/core/services/date/date-service.service";
 import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
+import { ThemeService } from "src/app/core/services/theme/theme.service";
 
 @Component({
   selector: "app-gerenciador",
@@ -32,7 +33,6 @@ import Swal from "sweetalert2";
   styleUrls: ["./gerenciador.component.scss"],
 })
 export class GerenciadorComponent implements OnInit {
-
   modalRef?: BsModalRef;
   masterSelected!: boolean;
 
@@ -75,9 +75,10 @@ export class GerenciadorComponent implements OnInit {
   editedId: any;
   editedCategoria: string = "";
 
-
   currentPage = 1;
   itemsPerPage = 9;
+
+  isDark: boolean = false;
 
   constructor(
     private modalService: BsModalService,
@@ -86,7 +87,8 @@ export class GerenciadorComponent implements OnInit {
     private _databaseService: DatabaseService,
     private localeService: BsLocaleService,
     private _dateService: DateService,
-    private _toastService: ToastrService
+    private _toastService: ToastrService,
+    private _themeService: ThemeService
   ) {
     this.doacaoForm = this.formBuilder.group({
       id: [""],
@@ -126,6 +128,8 @@ export class GerenciadorComponent implements OnInit {
 
   ngOnInit() {
     this.updateListDoacao();
+
+    this.getTheme();
   }
 
   onFilterDateChange(dates: Date[]) {
@@ -546,5 +550,11 @@ export class GerenciadorComponent implements OnInit {
         }
       });
   }
-  
+
+  getTheme() {
+    const theme = this._themeService.getTheme().subscribe((theme) => {
+      if (theme === "dark") this.isDark = true;
+      else this.isDark = false;
+    });
+  }
 }
