@@ -1,9 +1,21 @@
-# Ignorar a pasta de dependências do Node.js
-node_modules/
-
-# Ignorar arquivos de compilação
-dist/
+# Logs
+logs
 *.log
+npm-debug.log*
 
-# Ignorar arquivos específicos
-config.json
+# Diretório de dependências
+/node_modules
+
+# Diretório de build
+dist/
+
+# Arquivos de configuração de IDEs
+.idea/
+.vscode/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente
+.env
