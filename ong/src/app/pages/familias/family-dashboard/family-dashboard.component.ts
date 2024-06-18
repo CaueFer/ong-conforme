@@ -14,7 +14,7 @@ import {
 } from "@angular/forms";
 import Swal from "sweetalert2";
 import { CdkStepper } from "@angular/cdk/stepper";
-import { Options } from 'ngx-slider-v2';
+import { Options } from "ngx-slider-v2";
 
 @Component({
   selector: "app-family-dashboard",
@@ -57,7 +57,7 @@ export class FamilyDashboardComponent {
     ceil: 100,
     translate: (value: number): string => {
       return value.toString();
-    }
+    },
   };
 
   constructor(
@@ -65,7 +65,6 @@ export class FamilyDashboardComponent {
     private fb: UntypedFormBuilder
   ) {
     this.respForm = this.fb.group({
-      id: [""],
       resp_nome: ["", [Validators.required]],
       resp_sobrenome: ["", [Validators.required]],
       resp_cpf: ["", [Validators.required]],
@@ -114,11 +113,11 @@ export class FamilyDashboardComponent {
     });
 
     this.formData().push(this.field());
-    this.filterParentescoChange(0)
+    this.filterParentescoChange(0);
   }
 
-  toggleCheckbox($event: any) {
-    this.addDescrib = $event;
+  pageChanged($event: any) {
+    this.currentPage = $event;
   }
 
   /**
@@ -176,12 +175,52 @@ export class FamilyDashboardComponent {
       this.membrosForm.reset();
       this.addressForm.reset();
 
+      this.addFamiliaToDB();
+
       this.addFamilyModal.hide();
       this.stepper.selectedIndex = 0;
       this.alertSucess("Adicionada", "Familia adiciona com sucesso!");
     }
 
     this.resetSubmit(3500);
+  }
+
+  addFamiliaToDB() {
+    // FAMILY VALUES
+    const newFamily = {
+      respName: this.respForm.get("resp_nome").value,
+      respSobrenome: this.respForm.get("resp_sobrenome").value,
+      respCpf: this.respForm.get("resp_cpf").value,
+      respEmail: this.respForm.get("email").value,
+      respTelefone: this.respForm.get("telefone").value,
+      familyDesc: this.membrosForm.get("describ").value,
+    };
+
+    // ADDRESS VALUES
+    const newAddress = {
+      street: this.addressForm.get("street").value,
+      number: this.addressForm.get("number").value,
+      neighborhood: this.addressForm.get("neighborhood").value,
+      city: this.addressForm.get("city").value,
+      state: this.addressForm.get("state").value,
+      zipcode: this.addressForm.get("zipcode").value,
+      complement: this.addressForm.get("complement").value,
+    };
+
+    //MEMBROS VALUES
+    const formArray = this.membrosForm.get("formlist") as FormArray;
+    const newMembers = formArray.controls.map((control) => ({
+      membro: control.get("membro").value,
+      genero: control.get("genero").value,
+      idade: control.get("idade").value,
+    }));
+
+    console.log(newAddress); // RECEBENDO NULL
+    this._databaseService.addAddress(newAddress)
+    .then((value) =>{
+      console.log(value);
+    })
+    .catch();
   }
 
   resetSubmit(timer: number) {
@@ -211,10 +250,6 @@ export class FamilyDashboardComponent {
     if (this.formData().value.length > 1) this.formData().removeAt(i);
   }
 
-  pageChanged($event: any) {
-    this.currentPage = $event;
-  }
-
   // FORMS FILTER
   getParentescoLabel(index: number): string {
     const labels = ["Todos", "Responsavel", "Filho", "Outro"];
@@ -236,14 +271,12 @@ export class FamilyDashboardComponent {
       this.parentescoForm.patchValue({
         Responsavel: checkboxValue,
         Filho: checkboxValue,
-        Outro: checkboxValue
+        Outro: checkboxValue,
       });
     } else {
-      const todosChecked = [
-        "Responsavel",
-        "Filho",
-        "Outro"
-      ].every((control) => this.parentescoForm.get(control)?.value);
+      const todosChecked = ["Responsavel", "Filho", "Outro"].every(
+        (control) => this.parentescoForm.get(control)?.value
+      );
       this.parentescoForm.get("Todos").setValue(todosChecked);
     }
   }

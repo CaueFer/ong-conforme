@@ -6,10 +6,10 @@ const config = {
     doacoesTable: "doacoes",
     historicosTable: "historicos",
     familiaTable: "familias",
-    enderecoTable: "enderecos",
     userTable: "users",
-    familyTable: "familias",
     metaFixaTable: "metasfixas",
+    memberTable: "membrosfml",
+    enderecoTable: "enderecos",
 };
 
 module.exports = config;

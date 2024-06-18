@@ -130,6 +130,49 @@ export class DatabaseService {
     });
   }
 
+  async addAddress(newValue: any): Promise<number> {
+    const addressToAdd = { ...newValue };
+    console.log(addressToAdd);
+    
+    return new Promise<number>((resolve, reject) => {
+      this.http.post<any>(`${this.url}/addAddress`, addressToAdd).subscribe({
+        next: (data) => {
+          if (data && data.id) {
+            resolve(data.id);
+          } else {
+            throw new Error("ID do endereço não encontrado");
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        },
+      });
+    });
+  }
+
+  addFamilia(newFamily: any): Promise<number> {
+    const familyToAdd = { ...newFamily }; 
+
+    return new Promise<number>((resolve, reject) => {
+      this.http.post<any>(`${this.url}/addFamilia`, familyToAdd).subscribe({
+        next: (data) => {
+          const familyId = data?.id; 
+
+          if (familyId) {
+            resolve(familyId);
+          } else {
+            reject(new Error("ID da família não encontrado"));
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        },
+      });
+    });
+  }
+
   async updateDoacao(newValue: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const itemToAtt = {
@@ -138,7 +181,7 @@ export class DatabaseService {
         itemName: newValue.itemName,
       };
 
-      this.http.post<any>(`${this.url}/updateDoacao`, itemToAtt).subscribe({
+      this.http.put<any>(`${this.url}/updateDoacao`, itemToAtt).subscribe({
         next: (data) => {
           //console.log(data);
           resolve();
@@ -160,7 +203,7 @@ export class DatabaseService {
       };
 
       this.http
-        .post<any>(`${this.url}/updateQntdInDoacao`, itemToAtt)
+        .put<any>(`${this.url}/updateQntdInDoacao`, itemToAtt)
         .subscribe({
           next: (data) => {
             //console.log(data);
@@ -183,7 +226,7 @@ export class DatabaseService {
       };
 
       this.http
-        .post<any>(`${this.url}/updateMetaInDoacao`, itemToAtt)
+        .put<any>(`${this.url}/updateMetaInDoacao`, itemToAtt)
         .subscribe({
           next: (data) => {
             //console.log(data);
@@ -205,7 +248,7 @@ export class DatabaseService {
         id: newValue.id,
       };
 
-      this.http.post<any>(`${this.url}/updateMetaFixa`, itemToAtt).subscribe({
+      this.http.put<any>(`${this.url}/updateMetaFixa`, itemToAtt).subscribe({
         next: (data) => {
           //console.log(data);
           resolve();

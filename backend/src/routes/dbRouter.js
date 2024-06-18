@@ -20,13 +20,19 @@ dbRouter.post('/addDoacao', mysqlController.addDoacao);
 
 dbRouter.post('/addHistorico', mysqlController.addHistorico);
 
-dbRouter.post('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
+dbRouter.post('/addFamilia', mysqlController.addFamilia);
 
-dbRouter.post('/updateMetaInDoacao', mysqlController.updateMetaInDoacao);
+dbRouter.post('/addAddress', mysqlController.addAddress);
 
-dbRouter.post('/updateDoacao', mysqlController.updateDoacao);
+dbRouter.post('/addMemberFromFamilia', mysqlController.addMemberFromFamilia);
 
-dbRouter.post('/updateMetaFixa', mysqlController.updateMetaFixa);
+dbRouter.put('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
+
+dbRouter.put('/updateMetaInDoacao', mysqlController.updateMetaInDoacao);
+
+dbRouter.put('/updateDoacao', mysqlController.updateDoacao);
+
+dbRouter.put('/updateMetaFixa', mysqlController.updateMetaFixa);
 
 dbRouter.post('/deleteDoacao', mysqlController.deleteDoacao);
 

@@ -3,8 +3,10 @@ const config = require("../../../config");
 
 let doacaoTable = config.doacoesTable;
 let historicoTable = config.historicosTable;
-let familyTable = config.familyTable;
+let familyTable = config.familiaTable;
 let metaFixaTable = config.metaFixaTable;
+let addressTable = config.enderecoTable;
+let memberTable = config.memberTable;
 
 exports.getDoacao = (req, res) => {
   db.query("SELECT * FROM " + doacaoTable, (error, results, fields) => {
@@ -153,6 +155,86 @@ exports.addHistorico = (req, res) => {
       res.status(201).json("Historico adicionado com sucesso ao MySQL");
     }
   );
+};
+
+exports.addAddress = (req, res) => {
+  const { street, number, neighborhood, city, state, zipcode, complement } =
+    req.body;
+
+  const checkQuery = `SELECT * FROM ${addressTable} WHERE street = ? AND number = ? AND neighborhood = ? AND city = ? AND state = ? AND zipcode = ?`;
+  db.query(
+    checkQuery,
+    [street, number, neighborhood, city, state, zipcode],
+    (err, results) => {
+      if (results.length > 0) {
+        return res.status(200).send({ id: results[0].endereco_id });
+      } else {
+        const insertQuery = `INSERT INTO ${addressTable} (street, number, neighborhood, city, state, zipcode, complemento) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        db.query(
+          insertQuery,
+          [street, number, neighborhood, city, state, zipcode, complement],
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).send(err);
+            }
+            res.status(201).send({ id: result.insertId });
+          }
+        );
+      }
+    }
+  );
+};
+
+exports.addFamilia = (req, res) => {
+  const {
+    respName,
+    respSobrenome,
+    respCpf,
+    respEmail,
+    respTelefone,
+    familyDesc,
+    endereco_id,
+  } = req.body;
+
+  const query = `INSERT INTO ${familyTable} (resp_name, resp_sobrenome, resp_cpf, resp_email, resp_telefone, descricao, endereco_id) VALUES (?, ?, ?, ?, ?, ?)`;
+  db.query(
+    query,
+    [
+      respName,
+      respSobrenome,
+      respCpf,
+      respEmail,
+      respTelefone,
+      familyDesc,
+      endereco_id,
+    ],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send(err);
+      }
+      res.status(201).send({ id: result.insertId });
+    }
+  );
+};
+
+exports.addMemberFromFamilia = (req, res) => {
+  const { familyId, newMembers } = req.body;
+  const query = `INSERT INTO ${memberTable} (family_id, membro, genero, idade) VALUES ?`;
+  const values = newMembers.map((member) => [
+    familyId,
+    member.membro,
+    member.genero,
+    member.idade,
+  ]);
+  db.query(query, [values], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+    res.status(201).send({ affectedRows: result.affectedRows });
+  });
 };
 
 exports.updateQntdInDoacao = (req, res) => {
