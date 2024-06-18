@@ -1,3 +1,5 @@
+// ALTERAR AS CONFIGS CONFORME NECESSITAR
+
 const config = {
     db_user: "root",
     db_password: "",
