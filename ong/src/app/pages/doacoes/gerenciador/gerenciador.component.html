@@ -42,7 +42,8 @@
                         class="form-control ps-4 text-truncate"
                         id="searchDoacaoList"
                         placeholder="Pesquisar Item..."
-                        [(ngModel)]="this.txtSearch"
+                        (input)="searchFilter($event)"
+                        [(ngModel)]="txtSearch"
                       />
                     </div>
                     <div
@@ -66,6 +67,7 @@
                             class="form-select"
                             id="idStatus"
                             [(ngModel)]="filteredCategoria"
+                            (change)="categoriaFilter()"
                           >
                             <option value="" disabled selected hidden>
                               Categorias
@@ -106,7 +108,7 @@
                       <button
                         *ngIf="filteredCategoria !== ''"
                         class="slideInOut In btn btn-sm btn-soft-secondary"
-                        (click)="filteredCategoria = ''"
+                        (click)="filteredCategoria = ''; categoriaFilter()"
                       >
                         {{ filteredCategoria }}
                         <i class="bx bx-x align-middle"></i>
@@ -219,7 +221,7 @@
                 >
                   <thead
                     *ngIf="
-                      this.doacoes.length > 0 && this.isLoadingList === false
+                      this.doacoesFiltered.length > 0 && this.isLoadingList === false
                     "
                     class="table-light"
                   >
@@ -251,7 +253,7 @@
                   <tbody class="position-relative">
                     <tr
                       *ngFor="
-                        let data of doacoes
+                        let data of doacoesFiltered
                           | paginate
                             : {
                                 itemsPerPage: itemsPerPage,
@@ -358,7 +360,7 @@
                 </table>
                 <div
                   *ngIf="
-                    this.doacoes.length > 0 && this.isLoadingList === false
+                    this.doacoesFiltered.length > 0 && this.isLoadingList === false
                   "
                   class="pagination-container d-flex justify-content-end"
                 >
@@ -376,7 +378,7 @@
                 </div>
               </div>
               <div
-                *ngIf="this.doacoes.length <= 0 && this.isLoadingList === false"
+                *ngIf="this.doacoesFiltered.length <= 0 && this.isLoadingList === false"
                 class="d-flex flex-row justify-content-center align-items-center gap-5 py-3"
               >
                 <h2
