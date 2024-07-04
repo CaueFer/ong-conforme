@@ -603,7 +603,7 @@ export class GerenciadorComponent implements OnInit {
     this.txtSearch = "";
     this.filteredCategoria = "";
 
-    if (!this.bsRangeFilterValue) {
+    if (this.bsRangeFilterValue === '' || !this.bsRangeFilterValue) {
       this.doacoesFiltered = [...this.doacoes];
       return;
     }

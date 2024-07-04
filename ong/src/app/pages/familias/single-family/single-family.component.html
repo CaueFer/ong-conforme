@@ -1,1 +1,692 @@
-<p>single-family works!</p>
+<div class="container-fluid">
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div
+        class="page-title-box d-flex align-items-center justify-content-between"
+      >
+        <h4 class="mb-0 font-size-18">Histórico de Doação</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <ng-container>
+              <li class="breadcrumb-item">
+                <a href="javascript: void(0);">Doações</a>
+              </li>
+              <li class="breadcrumb-item active">Histórico de Doação</li>
+            </ng-container>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mb-2">
+      <button (click)="voltar()" class="btn btn-primary btn-sm">
+        <i class="mdi mdi-arrow-left ms-1"></i>
+        Voltar
+      </button>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-5">
+              <div class="card">
+                <div class="card-body" style="height: 256px">
+                  <div class="text-black">
+                    <h5 class="text-primary">Dados da Familia</h5>
+
+                    <div class="d-flex flex-row gap-4 mt-4">
+                      <div
+                        class="mb-0 d-flex flex-row flex-wrap justify-content-center align-items-start col-12"
+                      >
+                        <div class="mb-3 d-flex flex-row gap-2 col-12">
+                          <div
+                            class="btn btn-sm btn-soft-info p-0 d-flex align-items-center justify-content-center"
+                            style="
+                              width: 47px !important;
+                              height: 47px !important;
+                            "
+                          >
+                            <i
+                              class="mdi mdi-card-account-details font-size-22 align-middle"
+                            ></i>
+                          </div>
+                          <div class="d-flex flex-column gap-1">
+                            <span class="fs-6">Responsável</span>
+                            <span class="fw-bold fs-5">
+                              {{
+                                this.familia[0]?.resp_name &&
+                                this.familia[0]?.resp_sobrenome
+                                  ? (this.familia[0]?.resp_name | titlecase) +
+                                    " " +
+                                    (this.familia[0]?.resp_sobrenome
+                                      | titlecase)
+                                  : "carregando..."
+                              }}
+                            </span>
+                          </div>
+                        </div>
+                        <div class="mb-3 d-flex flex-row gap-2 col-12">
+                          <div class="d-flex flex-row gap-2 col-6">
+                            <div
+                              class="btn btn-sm btn-soft-info p-0 d-flex align-items-center justify-content-center"
+                              style="
+                                width: 47px !important;
+                                height: 47px !important;
+                              "
+                            >
+                              <i
+                                class="mdi mdi-card-account-details font-size-22 align-middle"
+                              ></i>
+                            </div>
+                            <div class="d-flex flex-column gap-1">
+                              <span class="fs-6">CPF</span>
+                              <span class="fw-bold fs-5">
+                                <input
+                                  type="text"
+                                  [ngModel]="familia[0]?.resp_cpf"
+                                  mask="000.000.000-00"
+                                  readonly
+                                  class="border-0 bg-transparent fw-bold text-black"
+                                  style="outline: none; border: none"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                          <div class="d-flex flex-row gap-2 col-6">
+                            <div
+                              class="btn btn-sm btn-soft-info p-0 d-flex align-items-center justify-content-center"
+                              style="
+                                width: 47px !important;
+                                height: 47px !important;
+                              "
+                            >
+                              <i
+                                class="mdi mdi-card-account-phone font-size-22 align-middle"
+                              ></i>
+                            </div>
+                            <div
+                              class="d-flex flex-column gap-1 d-inline-block"
+                            >
+                              <span class="fs-6">Telefone</span>
+                              <span class="fw-bold fs-5">
+                                <input
+                                  type="text"
+                                  [ngModel]="familia[0]?.resp_telefone"
+                                  mask="(00) 0000-0000 ||(00) 00000-0000"
+                                  readonly
+                                  class="border-0 bg-transparent fw-bold text-black"
+                                  style="outline: none; border: none"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-3 d-flex flex-row gap-2 col-12">
+                          <div
+                            class="btn btn-sm btn-soft-info p-0 d-flex align-items-center justify-content-center"
+                            style="
+                              width: 47px !important;
+                              height: 47px !important;
+                            "
+                          >
+                            <i
+                              class="mdi mdi-card-account-mail font-size-22 align-middle"
+                            ></i>
+                          </div>
+                          <div class="d-flex flex-column gap-1">
+                            <span class="fs-6">Email</span>
+                            <span class="fw-bold fs-5">
+                              {{
+                                this.familia[0]?.resp_email
+                                  ? (this.familia[0]?.resp_email | titlecase)
+                                  : "carregando..."
+                              }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-7">
+              <div class="card">
+                <div class="card-body h-100">
+                  <div class="text-black">
+                    <h5 class="text-primary">Meta da Doação</h5>
+                    <div class="row d-flex flex-row">
+                      <div class="col-7">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h4 class="card-title mt-3">Arrecadação Atual</h4>
+                            <h3 *ngIf="this.metaQntd">
+                              {{
+                                this.doacao && this.doacao[0]?.qntd >= 0
+                                  ? this.doacao[0]?.qntd + " / " + this.metaQntd
+                                  : "carregando..."
+                              }}
+                            </h3>
+                            <h3 *ngIf="!this.metaQntd">
+                              {{
+                                this.doacao
+                                  ? this.doacao[0]?.qntd + " / "
+                                  : "carregando..."
+                              }}<span class="mdi mdi-infinity"></span>
+                            </h3>
+                            <p class="text-muted">
+                              {{ metaResult }}
+                            </p>
+                            <p class="text-muted mb-2">
+                              {{ formattedDate }}
+                            </p>
+                          </div>
+                          <div class="col-sm-6">
+                            <apx-chart
+                              dir="ltr"
+                              class="apex-charts"
+                              [series]="metaChart.series"
+                              [chart]="metaChart.chart"
+                              [legend]="metaChart.legend"
+                              [colors]="metaChart.colors"
+                              [labels]="metaChart.labels"
+                              [stroke]="metaChart.stroke"
+                              [plotOptions]="metaChart.plotOptions"
+                            >
+                            </apx-chart>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex" style="height: auto; width: auto">
+                        <div class="vr bg-secondary opacity-25"></div>
+                      </div>
+                      <div class="col">
+                        <div
+                          class="d-flex flex-row justify-content-between align-items-center mb-2"
+                        >
+                          <h4 class="card-title mt-3">Configurar Meta</h4>
+                          <div class="" *ngIf="!metaIsEditing">
+                            <button
+                              class="btn text-white bg-primary rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Editar"
+                              placement="top"
+                              (click)="metaIsEditing = true"
+                            >
+                              <i
+                                class="mdi mdi-pencil align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                          </div>
+                          <div
+                            class="d-flex flex-row gap-2"
+                            *ngIf="metaIsEditing"
+                          >
+                            <button
+                              class="btn text-white bg-success rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Salvar"
+                              placement="top"
+                              (click)="submitMeta()"
+                            >
+                              <i
+                                class="mdi mdi-check align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                            <button
+                              class="btn text-white bg-danger rounded-circle align-middle p-0"
+                              style="width: 30px; height: 30px"
+                              ngbTooltip="Cancelar"
+                              placement="top"
+                              (click)="updateMetaValues()"
+                            >
+                              <i
+                                class="mdi mdi-close align-middle text-center font-size-18"
+                              ></i>
+                            </button>
+                          </div>
+                        </div>
+                        <form
+                          [formGroup]="metaForm"
+                          class="needs-validation createorder-form"
+                          id="createorder-form"
+                        >
+                          <div class="mb-3 position-relative">
+                            <input
+                              type="text"
+                              id="metaqntd-field"
+                              class="form-control"
+                              placeholder="Meta de quantidade"
+                              formControlName="metaQntd"
+                              [disableTooltip]="metaIsEditing"
+                              mask="9*"
+                              ngbTooltip="Quantidade esperada"
+                              placement="bottom"
+                              [readonly]="!metaIsEditing"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaQntd'].errors
+                              }"
+                            />
+                            <div
+                              *ngIf="submitted && form['metaQntd'].valid"
+                              class="spinner-border spinner-border-sm text-primary position-absolute"
+                              style="left: 90%; top: 10px"
+                              role="status"
+                            ></div>
+                            <i
+                              *ngIf="metaSaved"
+                              class="bx bx-check align-middle position-absolute fs-3 text-success"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <i
+                              *ngIf="form['metaQntd'].dirty && !submitted"
+                              class="bx bx-save align-middle position-absolute fs-5 text-black"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <div
+                              *ngIf="submitted && form['metaQntd'].errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="form['metaQntd'].errors['required']">
+                                Digite uma quantidade válido.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 position-relative">
+                            <input
+                              *ngIf="metaIsEditing"
+                              bsDatepicker
+                              [bsConfig]="{
+                                  isAnimated: true,
+                                  dateInputFormat: 'DD/MM/YYYY',
+                                  showWeekNumbers: false,
+                                }"
+                              class="form-control"
+                              placeholder="Data final"
+                              formControlName="metaDate"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaDate'].errors
+                              }"
+                            />
+                            <input
+                              *ngIf="!metaIsEditing"
+                              class="form-control"
+                              [placeholder]="customDateString"
+                              [readonly]="true"
+                              ngbTooltip="Data final"
+                              placement="bottom"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && form['metaDate'].errors
+                              }"
+                            />
+                            <div
+                              *ngIf="submitted && form['metaDate'].valid"
+                              class="spinner-border spinner-border-sm text-primary position-absolute"
+                              style="left: 90%; top: 10px"
+                              role="status"
+                            ></div>
+                            <i
+                              *ngIf="metaSaved"
+                              class="bx bx-check align-middle position-absolute fs-3 text-success"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <i
+                              *ngIf="form['metaDate'].dirty && !submitted"
+                              class="bx bx-save align-middle position-absolute fs-5 text-black"
+                              style="left: 89%; top: 7px"
+                            ></i>
+                            <div class="invalid-feedback">
+                              Por favor selecione uma data.
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div
+                  class="col-8 position-relative d-flex flex-column gap-2 justify-content-center align-items-start"
+                >
+                  <div
+                    class="d-flex flex-row gap-2 col align-items-center w-100"
+                  >
+                    <div class="col-lg-3 position-relative">
+                      <label
+                        class="bx bx-search-alt position-absolute d-flex align-items-center"
+                        style="top: 50%; transform: translateY(-50%); left: 5%"
+                        for="searchDoacaoList"
+                      ></label>
+                      <input
+                        type="search"
+                        class="form-control ps-4 text-truncate"
+                        id="searchDoacaoList"
+                        placeholder="Pesquisar Item..."
+                        [(ngModel)]="this.txtSearch"
+                      />
+                    </div>
+                    <div
+                      class="col-lg-2 col-sm-4 dropdown"
+                      dropdown
+                      [insideClick]="true"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-soft-secondary w-100 dropdown-toggle position-relative"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="mdi mdi-filter-outline align-middle"></i>
+                        Filtro
+                      </button>
+                      <div class="row g-3 dropdown-menu" *dropdownMenu>
+                        <div class="col">
+                          <select
+                            class="form-select"
+                            id="idStatus"
+                            [(ngModel)]="filteredCategoria"
+                          >
+                            <option value="" disabled selected hidden>
+                              Tipos
+                            </option>
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saida</option>
+                          </select>
+                        </div>
+                        <div class="col">
+                          <div id="datepicker1">
+                            <input
+                              type="text"
+                              placeholder="Selecionar data"
+                              class="form-control"
+                              bsDaterangepicker
+                              [bsConfig]="{
+                                isAnimated: true,
+                                dateInputFormat: 'DD/MM/YYYY',
+                                showWeekNumbers: false
+                              }"
+                              (bsValueChange)="onFilterDateChange($event)"
+                              [bsValue]="
+                                bsRangeFilterValue
+                                  ? filterSelectedRangeDate
+                                  : null
+                              "
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex flex-row align-items-center justify-content-center gap-2"
+                    >
+                      <button
+                        *ngIf="filteredCategoria !== ''"
+                        class="slideInOut In btn btn-sm btn-soft-secondary"
+                        (click)="filteredCategoria = ''"
+                      >
+                        {{ filteredCategoria }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+
+                      <button
+                        *ngIf="bsRangeFilterValue !== ''"
+                        class="slideInOut In btn btn-sm btn-soft-secondary slideInOut In"
+                        (click)="bsRangeFilterValue = ''"
+                      >
+                        {{ bsRangeFilterValue }}
+                        <i class="bx bx-x align-middle"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-4 d-flex flex-column justify-content-center align-items-end gap-2"
+                >
+                  <div class="d-flex flex-row gap-1 col">
+                    <a
+                      href="javascript:void(0);"
+                      class="btn btn-light"
+                      ngbTooltip="Recarregar"
+                      (click)="updateListFamilia(this.targetId)"
+                      ><i class="mdi mdi-refresh"></i
+                    ></a>
+                    <div class="dropdown d-inline-block" dropdown>
+                      <button
+                        type="menu"
+                        class="btn btn-secondary"
+                        ngbTooltip="Exportar"
+                        id="*dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="bx bx-export"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu dropdown-menu-end show"
+                        aria-labelledby="*dropdownMenuButton1"
+                        *dropdownMenu
+                      >
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >EXCEL</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >PDF</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >WORD</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="dropdown d-inline-block" dropdown>
+                      <button
+                        type="menu"
+                        class="btn btn-primary"
+                        id="*dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        dropdownToggle
+                      >
+                        <i class="mdi mdi-dots-vertical"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu dropdown-menu-end show"
+                        aria-labelledby="*dropdownMenuButton1"
+                        *dropdownMenu
+                      >
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 1</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 2</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="javascript:void(0);"
+                            >Opcao 3</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Table data -->
+              <div class="d-flex flex-row">
+                <!-- start table -->
+                <div class="table-responsive mb-0 mt-3 col">
+                  <h5 class="fw-bold">Membros</h5>
+                  <table
+                    class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check position-relative"
+                    id="order-list"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th style="width: 20px">
+                          <div class="form-check font-size-16 align-middle">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="transactionCheck01"
+                              (change)="checkUncheckAll($event)"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="transactionCheck01"
+                            ></label>
+                          </div>
+                        </th>
+                        <th class="align-middle">Parentesco</th>
+                        <th class="align-middle">Genero</th>
+                        <th class="align-middle">Idade</th>
+                      </tr>
+                    </thead>
+                    <tbody class="position-relative">
+                      <tr
+                        *ngFor="
+                          let data of membrosFiltered
+                            | paginate
+                              : {
+                                  itemsPerPage: itemsPerPage,
+                                  currentPage: currentPage
+                                };
+                          let i = index
+                        "
+                        id="o_{{ data.id }}"
+                      >
+                        <td>
+                          <div class="form-check font-size-16">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="transactionCheck{{ data.index }}"
+                              value="{{ data.id }}"
+                              [(ngModel)]="data.marked"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="transactionCheck{{ data.index }}"
+                            ></label>
+                          </div>
+                        </td>
+                        <td>{{ data.itemName }}</td>
+                        <td *ngIf="data.tipoMov === 'entrada'">
+                          +{{ data.qntd }}
+                        </td>
+                        <td *ngIf="data.tipoMov === 'saida'">
+                          -{{ data.qntd }}
+                        </td>
+                        <td *ngIf="data.tipoMov === 'entrada'">
+                          <span class="badge badge-soft-success">{{
+                            data.tipoMov
+                          }}</span>
+                        </td>
+                        <td *ngIf="data.tipoMov === 'saida'">
+                          <span class="badge badge-soft-danger">{{
+                            data.tipoMov
+                          }}</span>
+                        </td>
+                        <td>{{ data.data }}</td>
+                        <td class="text-truncate">{{ data.doadorName }}</td>
+                      </tr>
+                    </tbody>
+                    <tbody *ngIf="isLoadingList">
+                      <tr *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
+                        <td>
+                          <ngx-skeleton-loader
+                            animation="pulse"
+                            [theme]="{ width: '16px', height: '16px' }"
+                          />
+                        </td>
+                        <td>
+                          <ngx-skeleton-loader animation="pulse" />
+                        </td>
+                        <td><ngx-skeleton-loader animation="pulse" /></td>
+                        <td><ngx-skeleton-loader animation="pulse" /></td>
+                        <td>
+                          <ngx-skeleton-loader
+                            animation="pulse"
+                            [theme]="{ width: '70px' }"
+                          />
+                        </td>
+                        <td>
+                          <ngx-skeleton-loader
+                            animation="pulse"
+                            [theme]="{ width: '50px' }"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div
+                    *ngIf="
+                      this.membrosFiltered.length <= 0 &&
+                      this.isLoadingList === false
+                    "
+                    class="d-flex flex-row justify-content-center align-items-center gap-5 py-3 position-relative col-12"
+                  >
+                    <div class="d-flex justify-content-end col">
+                      <img
+                        src="assets/images/add-task.svg"
+                        alt="add-item img"
+                        height="120px"
+                      />
+                    </div>
+                    <h2
+                      class="d-flex justify-content-start text-dark fw-semibold col text-start fs-4"
+                    >
+                      NENHUM MEMBRO <br />
+                      FOI ENCONTRADO!
+                    </h2>
+                  </div>
+                  <div
+                    *ngIf="
+                      this.membrosFiltered.length > 0 &&
+                      this.isLoadingList === false
+                    "
+                    class="pagination-container d-flex justify-content-end"
+                  >
+                    <pagination-controls
+                      (pageChange)="pageChanged($event)"
+                      (pageBoundsCorrection)="pageChanged($event)"
+                      maxSize="5"
+                      directionLinks="true"
+                      responsive="true"
+                      previousLabel="Anterior"
+                      nextLabel="Prox"
+                      autoHide="true"
+                    >
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end page title -->
+</div>
+<!-- container-fluid -->

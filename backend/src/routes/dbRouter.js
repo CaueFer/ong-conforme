@@ -24,7 +24,7 @@ dbRouter.post('/addFamilia', mysqlController.addFamilia);
 
 dbRouter.post('/addAddress', mysqlController.addAddress);
 
-dbRouter.post('/addMemberFromFamilia', mysqlController.addMemberFromFamilia);
+dbRouter.post('/addMemberToFamilia', mysqlController.addMemberToFamilia);
 
 dbRouter.put('/updateQntdInDoacao', mysqlController.updateQntdInDoacao);
 
@@ -34,10 +34,12 @@ dbRouter.put('/updateDoacao', mysqlController.updateDoacao);
 
 dbRouter.put('/updateMetaFixa', mysqlController.updateMetaFixa);
 
-dbRouter.post('/deleteDoacao', mysqlController.deleteDoacao);
+dbRouter.delete('/deleteDoacao', mysqlController.deleteDoacao);
 
-dbRouter.post('/deleteMultiHistorico', mysqlController.deleteMultiHistorico);
+dbRouter.delete('/deleteMultiHistorico', mysqlController.deleteMultiHistorico);
 
-dbRouter.post('/deleteSingleHistorico', mysqlController.deleteSingleHistorico);
+dbRouter.delete('/deleteSingleHistorico', mysqlController.deleteSingleHistorico);
+
+dbRouter.delete('/deleteFamilyById', mysqlController.deleteFamilyById);
 
 module.exports = dbRouter;

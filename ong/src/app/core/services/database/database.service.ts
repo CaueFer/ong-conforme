@@ -132,8 +132,8 @@ export class DatabaseService {
 
   async addAddress(newValue: any): Promise<number> {
     const addressToAdd = { ...newValue };
-    console.log(addressToAdd);
-    
+    //console.log(addressToAdd);
+
     return new Promise<number>((resolve, reject) => {
       this.http.post<any>(`${this.url}/addAddress`, addressToAdd).subscribe({
         next: (data) => {
@@ -151,18 +151,38 @@ export class DatabaseService {
     });
   }
 
-  addFamilia(newFamily: any): Promise<number> {
-    const familyToAdd = { ...newFamily }; 
+  async addFamilia(newFamily: any): Promise<number> {
+    const familyToAdd = { ...newFamily };
 
     return new Promise<number>((resolve, reject) => {
       this.http.post<any>(`${this.url}/addFamilia`, familyToAdd).subscribe({
         next: (data) => {
-          const familyId = data?.id; 
+          const familyId = data?.id;
 
           if (familyId) {
             resolve(familyId);
           } else {
-            reject(new Error("ID da família não encontrado"));
+            reject(new Error("Erro ao adicionar familia!"));
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        },
+      });
+    });
+  }
+
+  async addMembroToFamily(familyId: any, newMembers: any): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      this.http.post<any>(`${this.url}/addMemberToFamilia`, {familyId, newMembers}).subscribe({
+        next: (data) => {
+          const membroId = data?.id;
+
+          if (membroId) {
+            resolve(membroId);
+          } else {
+            reject(new Error("Erro ao adicionar membro na familia!"));
           }
         },
         error: (err) => {
@@ -264,16 +284,18 @@ export class DatabaseService {
   async deleteDoacao(id: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (id) {
-        this.http.post<any>(`${this.url}/deleteDoacao`, { id }).subscribe({
-          next: (data) => {
-            //console.log(data);
-            resolve();
-          },
-          error: (err) => {
-            console.log(err);
-            reject();
-          },
-        });
+        this.http
+          .delete<any>(`${this.url}/deleteDoacao`, { params: { id } })
+          .subscribe({
+            next: (data) => {
+              //console.log(data);
+              resolve();
+            },
+            error: (err) => {
+              console.log(err);
+              reject();
+            },
+          });
       }
     });
   }
@@ -282,7 +304,7 @@ export class DatabaseService {
     return new Promise<void>((resolve, reject) => {
       if (id) {
         this.http
-          .post<any>(`${this.url}/deleteMultiHistorico`, { id })
+          .delete<any>(`${this.url}/deleteMultiHistorico`, { params: { id } })
           .subscribe({
             next: (data) => {
               //console.log(data);
@@ -301,7 +323,28 @@ export class DatabaseService {
     return new Promise<void>((resolve, reject) => {
       if (id) {
         this.http
-          .post<any>(`${this.url}/deleteSingleHistorico`, { id })
+          .delete<any>(`${this.url}/deleteSingleHistorico`, { params: { id } })
+          .subscribe({
+            next: (data) => {
+              //console.log(data);
+              resolve();
+            },
+            error: (err) => {
+              console.log(err);
+              reject();
+            },
+          });
+      }
+    });
+  }
+
+  async deleteFamilyById(id: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+
+      
+      if (id) {
+        this.http
+          .delete<any>(`${this.url}/deleteFamilyById`, { params: { id } })
           .subscribe({
             next: (data) => {
               //console.log(data);

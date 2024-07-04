@@ -117,7 +117,7 @@
                       <button
                         *ngIf="bsRangeFilterValue !== ''"
                         class="slideInOut In btn btn-sm btn-soft-secondary slideInOut In"
-                        (click)="bsRangeFilterValue = ''"
+                        (click)="bsRangeFilterValue = ''; dateFilter()"
                       >
                         {{ bsRangeFilterValue }}
                         <i class="bx bx-x align-middle"></i>
@@ -385,7 +385,7 @@
                   class="d-flex justify-content-end text-dark fw-semibold col-6 text-start"
                 >
                   NENHUMA DOAÇÃO <br />
-                  FOI ADICIONADA!
+                  FOI ENCONTRADA!
                 </h2>
 
                 <div class="d-flex justify-content-start col-6">

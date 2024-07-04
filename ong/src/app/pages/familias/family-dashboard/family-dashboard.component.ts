@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { CdkStepper } from "@angular/cdk/stepper";
 import { Options } from "ngx-slider-v2";
 import { ThemeService } from "src/app/core/services/theme/theme.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-family-dashboard",
@@ -55,18 +56,20 @@ export class FamilyDashboardComponent {
   minAgeRange: number = 5;
   option1: Options = {
     floor: 0,
-    ceil: 100,
+    ceil: 120,
     translate: (value: number): string => {
       return value.toString();
     },
   };
 
   isDark: boolean = false;
+  deletedId: number;
 
   constructor(
     private _databaseService: DatabaseService,
     private fb: UntypedFormBuilder,
-    private _themeService: ThemeService
+    private _themeService: ThemeService,
+    private _toastService: ToastrService
   ) {
     this.respForm = this.fb.group({
       resp_nome: ["", [Validators.required]],
@@ -109,13 +112,7 @@ export class FamilyDashboardComponent {
   }
 
   ngOnInit() {
-    this._databaseService.getFamilias().subscribe({
-      next: (values) => {
-        this.familias = values;
-        console.log(this.familias)
-      },
-      error: (error) => {},
-    });
+    this.updateFamilias();
 
     this.formData().push(this.field());
     this.filterParentescoChange(0);
@@ -128,8 +125,18 @@ export class FamilyDashboardComponent {
   }
 
   /**
-   * add Doacao
+   * get Familias
    */
+  updateFamilias() {
+    this._databaseService.getFamilias().subscribe({
+      next: (values) => {
+        this.familias = values;
+        console.log(this.familias);
+      },
+      error: (error) => {},
+    });
+  }
+
   nextStep(forms: FormGroup) {
     this.submitted = true;
     this.disableSubmitBtn = true;
@@ -178,11 +185,12 @@ export class FamilyDashboardComponent {
         this.membrosForm.value,
         this.addressForm.value
       );
+
+      this.addFamiliaToDB();
+
       this.respForm.reset();
       this.membrosForm.reset();
       this.addressForm.reset();
-
-      this.addFamiliaToDB();
 
       this.addFamilyModal.hide();
       this.stepper.selectedIndex = 0;
@@ -194,13 +202,17 @@ export class FamilyDashboardComponent {
 
   addFamiliaToDB() {
     // FAMILY VALUES
-    const newFamily = {
+    let newFamily = {
       respName: this.respForm.get("resp_nome").value,
       respSobrenome: this.respForm.get("resp_sobrenome").value,
       respCpf: this.respForm.get("resp_cpf").value,
       respEmail: this.respForm.get("email").value,
       respTelefone: this.respForm.get("telefone").value,
-      familyDesc: this.membrosForm.get("describ").value,
+      familyDesc:
+        this.membrosForm.get("describ").value !== " "
+          ? this.membrosForm.get("describ").value
+          : "n/a",
+      endereco_id: null,
     };
 
     // ADDRESS VALUES
@@ -211,7 +223,9 @@ export class FamilyDashboardComponent {
       city: this.addressForm.get("city").value,
       state: this.addressForm.get("state").value,
       zipcode: this.addressForm.get("zipcode").value,
-      complement: this.addressForm.get("complement").value,
+      complement: this.addressForm.get("complement").value
+        ? this.addressForm.get("complement").value
+        : "n/a",
     };
 
     //MEMBROS VALUES
@@ -222,12 +236,25 @@ export class FamilyDashboardComponent {
       idade: control.get("idade").value,
     }));
 
-    console.log(newAddress); // RECEBENDO NULL
-    this._databaseService.addAddress(newAddress)
-    .then((value) =>{
-      console.log(value);
-    })
-    .catch();
+    this._databaseService
+      .addAddress(newAddress)
+      .then((addressId) => {
+        newFamily.endereco_id = addressId;
+
+        this._databaseService
+          .addFamilia(newFamily)
+          .then((familyId) => {
+            this._databaseService.addMembroToFamily(familyId, newMembers);
+
+            this.updateFamilias();
+          })
+          .catch((err) => {
+            console.error("Erro ao adicionar família:", err);
+          });
+      })
+      .catch((err) => {
+        console.error("Erro ao adicionar endereço:", err);
+      });
   }
 
   resetSubmit(timer: number) {
@@ -257,7 +284,9 @@ export class FamilyDashboardComponent {
     if (this.formData().value.length > 1) this.formData().removeAt(i);
   }
 
-  // FORMS FILTER
+  /**
+   * FORMS FILTER START ==============================================
+   */
   getParentescoLabel(index: number): string {
     const labels = ["Todos", "Responsavel", "Filho", "Outro"];
     return labels[index];
@@ -287,8 +316,78 @@ export class FamilyDashboardComponent {
       this.parentescoForm.get("Todos").setValue(todosChecked);
     }
   }
+  /**
+   * FORMS FILTER END ==============================================
+   */
+
+  confirmDelete(id: any) {
+    this.deletedId = id;
+    this.alertConfirmOrCancel();
+  }
+  deleteFamilia() {
+    if (this.deletedId === null) {
+      this.showToast("Erro ao deletar item");
+
+      return;
+    }
+
+    this._databaseService
+      .deleteMultiHistorico(this.deletedId)
+      .then(() => {})
+      .catch(() => {
+        console.error("Erro ao deletar historico de id: " + this.deletedId);
+      });
+
+    this._databaseService
+      .deleteFamilyById(this.deletedId)
+      .then(() => {
+        this.deletedId = null;
+
+        this.alertConfirmDelete();
+
+        this.updateFamilias();
+      })
+      .catch(() => {
+        this.showToast("Erro ao deletar item id: " + this.deletedId);
+      });
+  }
 
   // ALERTS
+  showToast(text: string) {
+    var message = text;
+
+    this._toastService.show(message, "", {
+      timeOut: 5000, // ms
+      closeButton: false,
+      progressBar: true,
+      tapToDismiss: true,
+      positionClass: "toast-bottom-right",
+      toastClass: "opacity-100 bg-dark ngx-toastr",
+    });
+  }
+
+  closeToast() {
+    this._toastService.clear();
+  }
+
+  alertConfirmDelete() {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-danger ms-2",
+      },
+      buttonsStyling: false,
+      iconHtml:
+        '<i class="fas fa-trash-alt text-danger animate__animated animate__shakeX fs-1"></i>',
+    });
+
+    swalWithBootstrapButtons.fire(
+      "Deletada!",
+      "Familia foi deletada com sucesso.",
+      "error"
+    );
+  }
+
   alertConfirmOrCancel() {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -301,17 +400,21 @@ export class FamilyDashboardComponent {
     swalWithBootstrapButtons
       .fire({
         title: "Tem certeza?",
-        text: "Confirme os dados.",
+        text: "Essa ação é irreversível!",
         icon: "question",
-        cancelButtonText: "cancelar",
-        confirmButtonText: "adicionar",
+        cancelButtonText: "Cancelar!",
+        confirmButtonText: "Deletar!",
         showCancelButton: true,
       })
       .then((result) => {
         if (result.value) {
-          this.submitAddFamilia();
+          this.deleteFamilia();
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // cancelado
+          swalWithBootstrapButtons.fire(
+            "Cancelado",
+            "Familia não foi deletada!",
+            "error"
+          );
         }
       });
   }
