@@ -71,7 +71,7 @@ exports.loginUser = async (req, res) => {
             userRoles: user.roles,
           },
           secretKey,
-          { expiresIn: "24h" }
+          { expiresIn: "86400" }
         );
         res.status(200).json({
           token: token,

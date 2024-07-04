@@ -17,7 +17,7 @@ import {
 } from "ngx-bootstrap/modal";
 import { Observable } from "rxjs";
 import { DoacaoModel } from "../../../core/models/doacao.model";
-import { DatePipe } from "@angular/common";
+import { DatePipe, formatDate } from "@angular/common";
 import { DatabaseService } from "src/app/core/services/database/database.service";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { defineLocale } from "ngx-bootstrap/chronos";
@@ -44,7 +44,8 @@ export class GerenciadorComponent implements OnInit {
 
   transactions: DoacaoModel[] = [];
   content?: any;
-  doacoes?: DoacaoModel[] = [];
+  doacoes: DoacaoModel[] = [];
+  doacoesFiltered: DoacaoModel[] = [];
   ordersList!: Observable<DoacaoModel[]>;
   totalMoney: Number;
 
@@ -153,6 +154,8 @@ export class GerenciadorComponent implements OnInit {
       const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
 
       this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
+
+      this.dateFilter();
     } else {
       console.error("O intervalo de datas não contém duas datas.");
     }
@@ -178,6 +181,8 @@ export class GerenciadorComponent implements OnInit {
           });
 
           this.doacoes = values;
+          this.doacoesFiltered = this.doacoes;
+
           this.isLoadingList = false;
         }
       },
@@ -555,6 +560,69 @@ export class GerenciadorComponent implements OnInit {
     const theme = this._themeService.getTheme().subscribe((theme) => {
       if (theme === "dark") this.isDark = true;
       else this.isDark = false;
+    });
+  }
+
+  // FILTERS
+  searchFilter(event: any) {
+    this.filteredCategoria = "";
+    this.filterSelectedRangeDate = null;
+    this.bsRangeFilterValue = "";
+
+    const search = event.target.value;
+
+    if (!search) {
+      this.doacoesFiltered = [...this.doacoes];
+      return;
+    }
+
+    const lowerCaseSearch = search.toLowerCase();
+    this.doacoesFiltered = this.doacoes.filter((doacao) =>
+      Object.values(doacao).some((value) =>
+        String(value).toLowerCase().includes(lowerCaseSearch)
+      )
+    );
+  }
+
+  categoriaFilter() {
+    this.txtSearch = "";
+    this.filterSelectedRangeDate = null;
+    this.bsRangeFilterValue = "";
+
+    if (!this.filteredCategoria) {
+      this.doacoesFiltered = [...this.doacoes];
+      return;
+    }
+
+    this.doacoesFiltered = this.doacoes.filter((doacao) =>
+      this.filteredCategoria.includes(doacao.categoria)
+    );
+  }
+
+  dateFilter() {
+    this.txtSearch = "";
+    this.filteredCategoria = "";
+
+    if (this.bsRangeFilterValue === '' || !this.bsRangeFilterValue) {
+      this.doacoesFiltered = [...this.doacoes];
+      return;
+    }
+
+    //console.log(this.filterSelectedRangeDate);
+    this.doacoesFiltered = this.doacoes.filter((doacao) => {
+      if (typeof doacao.dataCreated === "string") {
+        const [day, month, year] = doacao.dataCreated.split("/");
+
+        const dateCreated = new Date(+year, +month - 1, +day);
+
+        //console.log(dateCreated);
+
+        return (
+          dateCreated >= this.filterSelectedRangeDate[0] &&
+          dateCreated <= this.filterSelectedRangeDate[1]
+        );
+      }
+      return false;
     });
   }
 }

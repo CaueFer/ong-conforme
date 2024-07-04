@@ -201,7 +201,7 @@ export class DashboardComponent implements OnInit {
       this.statData = [
         {
           icon: "bx bx-copy-alt",
-          title: "Doações Estoque",
+          title: "Doações em Estoque",
           value: this.doacoesLength,
         },
         {
@@ -398,8 +398,7 @@ export class DashboardComponent implements OnInit {
     this.submitted = false;
     if (isOpen) {
       this.actualMetaValue = this.form["metaQntd"].value;
-    }
-    else{
+    } else {
       this.cancelEdit();
     }
   }
@@ -408,6 +407,19 @@ export class DashboardComponent implements OnInit {
     this.submitted = true;
     this.metaSaved = false;
 
+    if (this.editMetaForm.pristine) {
+      setTimeout(() => {
+        this.metaSaved = true;
+
+        setTimeout(() => {
+          this.submitted = false;
+
+          this.editMetaDropdown?.close();
+        }, 700);
+      }, 500);
+
+      return;
+    }
     if (this.editMetaForm.valid) {
       const itemToAtt = {
         nome: this.form["metaName"].value,

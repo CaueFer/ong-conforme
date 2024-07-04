@@ -37,6 +37,7 @@ export class HistoricoComponent {
   // Table data
   content?: any;
   historicos?: HistoricoModel[] = [];
+  historicosFiltered?: HistoricoModel[] = [];
   ordersList!: Observable<DoacaoModel[]>;
   total: Observable<number>;
 
@@ -71,7 +72,7 @@ export class HistoricoComponent {
   currentPage = 1;
   itemsPerPage = 10;
   doacoes: any[];
-  
+
   isDark: boolean = false;
 
   constructor(
@@ -122,6 +123,8 @@ export class HistoricoComponent {
       const formattedEndDate = `${endDay}/${endMonth}/${endYear}`;
 
       this.bsRangeFilterValue = `${formattedStartDate} - ${formattedEndDate}`;
+
+      this.dateFilter();
     } else {
       console.error("O intervalo de datas não contém duas datas.");
     }
@@ -164,6 +167,7 @@ export class HistoricoComponent {
           });
 
           this.historicos = values.reverse();
+          this.historicosFiltered = this.historicos;
           this.isLoadingList = false;
         }
       },
@@ -306,6 +310,69 @@ export class HistoricoComponent {
     const theme = this._themeService.getTheme().subscribe((theme) => {
       if (theme === "dark") this.isDark = true;
       else this.isDark = false;
+    });
+  }
+
+  // FILTERS
+  searchFilter(event: any) {
+    this.filteredCategoria = "";
+    this.filterSelectedRangeDate = null;
+    this.bsRangeFilterValue = "";
+
+    const search = event.target.value;
+
+    if (!search) {
+      this.historicosFiltered = [...this.historicos];
+      return;
+    }
+
+    const lowerCaseSearch = search.toLowerCase();
+    this.historicosFiltered = this.historicos.filter((historico) =>
+      Object.values(historico).some((value) =>
+        String(value).toLowerCase().includes(lowerCaseSearch)
+      )
+    );
+  }
+
+  categoriaFilter() {
+    this.txtSearch = "";
+    this.filterSelectedRangeDate = null;
+    this.bsRangeFilterValue = "";
+
+    if (!this.filteredCategoria) {
+      this.historicosFiltered = [...this.historicos];
+      return;
+    }
+
+    this.historicosFiltered = this.historicos.filter((historico) =>
+      this.filteredCategoria.includes(historico.tipoMov)
+    );
+  }
+
+  dateFilter() {
+    this.txtSearch = "";
+    this.filteredCategoria = "";
+
+    if (this.bsRangeFilterValue === "" || !this.bsRangeFilterValue) {
+      this.historicosFiltered = [...this.historicos];
+      return;
+    }
+
+    console.log(this.filterSelectedRangeDate);
+    this.historicosFiltered = this.historicos.filter((historico) => {
+      if (typeof historico.data === "string") {
+        const [day, month, year] = historico.data.split("/");
+
+        const dateCreated = new Date(+year, +month - 1, +day);
+
+        console.log(dateCreated);
+
+        return (
+          dateCreated >= this.filterSelectedRangeDate[0] &&
+          dateCreated <= this.filterSelectedRangeDate[1]
+        );
+      }
+      return false;
     });
   }
 }

@@ -197,7 +197,7 @@ exports.addFamilia = (req, res) => {
     endereco_id,
   } = req.body;
 
-  const query = `INSERT INTO ${familyTable} (resp_name, resp_sobrenome, resp_cpf, resp_email, resp_telefone, descricao, endereco_id) VALUES (?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO ${familyTable} (resp_name, resp_sobrenome, resp_cpf, resp_email, resp_telefone, familyDesc, endereco_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
   db.query(
     query,
     [
@@ -219,22 +219,26 @@ exports.addFamilia = (req, res) => {
   );
 };
 
-exports.addMemberFromFamilia = (req, res) => {
-  const { familyId, newMembers } = req.body;
-  const query = `INSERT INTO ${memberTable} (family_id, membro, genero, idade) VALUES ?`;
-  const values = newMembers.map((member) => [
-    familyId,
-    member.membro,
-    member.genero,
-    member.idade,
-  ]);
-  db.query(query, [values], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send(err);
-    }
+exports.addMemberToFamilia = async (req, res) => {
+  try {
+    const { familyId, newMembers } = req.body;
+    const familia_id = familyId;
+
+    const values = newMembers.map((member) => [
+      familia_id,
+      member.membro,
+      member.genero,
+      member.idade,
+    ]);
+
+    const query = `INSERT INTO ${memberTable} (familia_id, membro, genero, idade) VALUES ?`;
+    const result = await db.query(query, [values]);
+
     res.status(201).send({ affectedRows: result.affectedRows });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 };
 
 exports.updateQntdInDoacao = (req, res) => {
@@ -353,7 +357,7 @@ exports.updateMetaFixa = (req, res) => {
 };
 
 exports.deleteDoacao = (req, res) => {
-  const { id } = req.body;
+  const id = req.query.id;
 
   db.query(
     "DELETE FROM " + doacaoTable + " WHERE id = ?",
@@ -370,7 +374,7 @@ exports.deleteDoacao = (req, res) => {
 };
 
 exports.deleteMultiHistorico = (req, res) => {
-  const { id } = req.body;
+  const id = req.query.id;
 
   db.query(
     "DELETE FROM " + historicoTable + " WHERE doacao_id = ?",
@@ -387,7 +391,7 @@ exports.deleteMultiHistorico = (req, res) => {
 };
 
 exports.deleteSingleHistorico = (req, res) => {
-  const { id } = req.body;
+  const id = req.query.id;
 
   db.query(
     "DELETE FROM " + historicoTable + " WHERE id = ?",
@@ -401,4 +405,41 @@ exports.deleteSingleHistorico = (req, res) => {
       res.status(200).json("Historico individual deletado com sucesso ");
     }
   );
+};
+
+exports.deleteFamilyById = (req, res) => {
+  const familyId = req.query.id;
+
+  const selectQuery = `SELECT id FROM ${memberTable} WHERE familia_id = ?`;
+
+  db.query(selectQuery, [familyId], (error, results, fields) => {
+    if (error) {
+      console.error("Erro ao selecionar membros da família:", error);
+      res.status(500).json("Erro ao selecionar membros da família");
+      return;
+    }
+    const memberIds = results.map((result) => result.id);
+
+    const deleteMembersQuery = `DELETE FROM ${memberTable} WHERE familia_id = ?`;
+
+    db.query(deleteMembersQuery, [familyId], (error, results, fields) => {
+      if (error) {
+        console.error("Erro ao deletar membros da família:", error);
+        res.status(500).json("Erro ao deletar membros da família");
+        return;
+      }
+
+      const deleteFamilyQuery = `DELETE FROM ${familyTable} WHERE id = ?`;
+
+      db.query(deleteFamilyQuery, [familyId], (error, results, fields) => {
+        if (error) {
+          console.error("Erro ao deletar família:", error);
+          res.status(500).json("Erro ao deletar família");
+          return;
+        }
+
+        res.status(200).json("Família deletada com sucesso");
+      });
+    });
+  });
 };
